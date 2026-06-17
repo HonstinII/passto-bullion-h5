@@ -1,0 +1,3127 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+  <meta name="theme-color" content="#0a0a0a">
+  <title>Passto Bullion — 實物黃金</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0a0a0a;
+      --surface: #111111;
+      --surface-2: #1a1a1a;
+      --surface-3: #242424;
+      --gold: #C9A96E;
+      --gold-light: #E8D5B7;
+      --gold-dim: #8B7355;
+      --text: #FAFAFA;
+      --text-secondary: #A1A1AA;
+      --text-muted: #71717A;
+      --border: #27272A;
+      --success: #10B981;
+      --error: #EF4444;
+      --warning: #F59E0B;
+    }
+    [data-theme="light"] {
+      --bg: #F5F5F0;
+      --surface: #FFFFFF;
+      --surface-2: #F0F0EB;
+      --surface-3: #E8E8E3;
+      --gold: #B8954F;
+      --gold-light: #D4B896;
+      --gold-dim: #8B7355;
+      --text: #1A1A1A;
+      --text-secondary: #52525B;
+      --text-muted: #A1A1AA;
+      --border: #E4E4E7;
+      --success: #059669;
+      --error: #DC2626;
+      --warning: #D97706;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    html { font-size: 16px; }
+    body {
+      font-family: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #000;
+      color: var(--text);
+      min-height: 100dvh;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .chat-bubble {
+      position: fixed;
+      bottom: 100px;
+      right: 20px;
+      z-index: 200;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--gold), var(--gold-dim));
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+      cursor: pointer;
+      font-size: 24px;
+      color: #000;
+    }
+    .chat-menu-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 300;
+      background: rgba(0,0,0,0.5);
+      display: none;
+    }
+    .chat-menu-overlay.open { display: block; }
+    .chat-menu {
+      position: fixed;
+      left: 50%;
+      bottom: 0;
+      transform: translateX(-50%) translateY(100%);
+      max-width: 430px;
+      width: 100%;
+      z-index: 301;
+      background: var(--surface);
+      border-radius: 20px 20px 0 0;
+      padding: 20px 24px calc(24px + env(safe-area-inset-bottom));
+      transition: transform 300ms ease;
+    }
+    .chat-menu.open { transform: translateX(-50%) translateY(0); }
+    .chat-menu-title {
+      font-size: 16px;
+      font-weight: 600;
+      text-align: center;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    .chat-menu-item {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      padding: 16px;
+      border-radius: 12px;
+      background: var(--surface-2);
+      margin-bottom: 12px;
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+      border: 1px solid var(--border);
+      color: var(--text);
+      text-decoration: none;
+    }
+    .chat-menu-close {
+      text-align: center;
+      padding: 12px;
+      font-size: 13px;
+      color: var(--text-muted);
+      cursor: pointer;
+    }
+    /* Contact Dropdown (top bubble) */
+    .contact-dropdown-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 300;
+      background: rgba(0,0,0,0.5);
+      display: none;
+    }
+    .contact-dropdown-overlay.open { display: block; }
+    .contact-dropdown {
+      position: fixed;
+      left: 50%;
+      top: 60px;
+      transform: translateX(-50%) translateY(-20px);
+      max-width: 320px;
+      width: 90%;
+      z-index: 301;
+      background: var(--surface);
+      border-radius: 16px;
+      padding: 20px 24px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 250ms ease, transform 250ms ease;
+    }
+    .contact-dropdown.open {
+      opacity: 1;
+      pointer-events: all;
+      transform: translateX(-50%) translateY(0);
+    }
+    .contact-dropdown-item {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      padding: 14px;
+      border-radius: 12px;
+      background: var(--surface-2);
+      margin-bottom: 10px;
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+      border: 1px solid var(--border);
+      color: var(--text);
+      text-decoration: none;
+    }
+    .contact-dropdown-item:last-child { margin-bottom: 0; }
+    /* Cart Added Popup */
+    .cart-popup-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 300;
+      background: rgba(0,0,0,0.5);
+      display: none;
+    }
+    .cart-popup-overlay.open { display: block; }
+    .cart-popup {
+      position: fixed;
+      left: 50%;
+      bottom: 0;
+      transform: translateX(-50%) translateY(100%);
+      max-width: 430px;
+      width: 100%;
+      z-index: 301;
+      background: var(--surface);
+      border-radius: 20px 20px 0 0;
+      padding: 20px 24px calc(24px + env(safe-area-inset-bottom));
+      transition: transform 300ms ease;
+    }
+    .cart-popup.open { transform: translateX(-50%) translateY(0); }
+    .cart-popup-title {
+      font-size: 16px;
+      font-weight: 600;
+      text-align: center;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    .cart-popup-item {
+      display: flex;
+      gap: 14px;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    .cart-popup-item img {
+      width: 60px;
+      height: 60px;
+      border-radius: 10px;
+      object-fit: cover;
+      background: var(--surface-2);
+    }
+    .cart-popup-item-body {
+      flex: 1;
+    }
+    .cart-popup-item-name {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    .cart-popup-item-spec {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+    .cart-popup-item-price {
+      font-family: 'Noto Serif SC', serif;
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--gold);
+    }
+    .cart-popup-actions {
+      display: flex;
+      gap: 12px;
+    }
+    /* App Container */
+    #app {
+      max-width: 430px;
+      margin: 0 auto;
+      min-height: 100dvh;
+      background: var(--bg);
+      position: relative;
+      overflow: hidden;
+    }
+    /* Theme Toggle */
+    .theme-toggle {
+      position: fixed;
+      top: 12px;
+      right: 12px;
+      z-index: 1000;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+
+    /* Screen system */
+    .screen {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      overflow-y: auto;
+      overflow-x: hidden;
+      background: var(--bg);
+      opacity: 0;
+      pointer-events: none;
+      transform: translateX(40px);
+      transition: opacity 350ms cubic-bezier(0.4,0,0.2,1), transform 350ms cubic-bezier(0.4,0,0.2,1);
+      z-index: 1;
+      padding-bottom: 100px;
+    }
+    .screen.active {
+      opacity: 1;
+      pointer-events: all;
+      transform: translateX(0);
+      z-index: 10;
+    }
+    .screen.slide-out {
+      opacity: 0;
+      transform: translateX(-40px);
+    }
+
+    /* Scrollbar hide */
+    .screen::-webkit-scrollbar { display: none; }
+    .screen { scrollbar-width: none; -ms-overflow-style: none; }
+
+    /* Typography */
+    .font-serif { font-family: 'Noto Serif SC', serif; }
+    .text-gold { color: var(--gold); }
+    .text-muted { color: var(--text-muted); }
+    .text-secondary { color: var(--text-secondary); }
+
+    /* Header */
+    .page-header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(10,10,10,0.92);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .page-header h1 {
+      font-family: 'Noto Serif SC', serif;
+      font-size: 18px;
+      font-weight: 600;
+      letter-spacing: 2px;
+    }
+    .page-header > h1 {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      white-space: nowrap;
+      margin: 0;
+    }
+    .back-btn {
+      width: 36px; height: 36px;
+      border-radius: 10px;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 18px;
+    }
+    .header-actions {
+      display: flex;
+      gap: 8px;
+    }
+    .icon-btn {
+      width: 36px; height: 36px;
+      border-radius: 10px;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      position: relative;
+    }
+    .badge {
+      position: absolute;
+      top: -2px; right: -2px;
+      background: var(--gold);
+      color: #000;
+      font-size: 10px;
+      font-weight: 600;
+      width: 16px; height: 16px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Gold Price Banner */
+    .gold-banner {
+      background: linear-gradient(135deg, #1a1510 0%, #0f0d0a 50%, #1a1510 100%);
+      border-bottom: 1px solid rgba(201,169,110,0.15);
+      padding: 24px 20px;
+      position: relative;
+      overflow: hidden;
+    }
+    .gold-banner::before {
+      content: '';
+      position: absolute;
+      top: -50%; right: -30%;
+      width: 300px; height: 300px;
+      background: radial-gradient(circle, rgba(201,169,110,0.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .gold-banner-label {
+      font-size: 12px;
+      color: var(--gold-dim);
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .gold-price-main {
+      font-family: 'Noto Serif SC', serif;
+      font-size: 42px;
+      font-weight: 700;
+      color: var(--gold);
+      line-height: 1;
+      display: flex;
+      align-items: baseline;
+      gap: 4px;
+    }
+    .gold-price-main .unit {
+      font-size: 16px;
+      font-weight: 400;
+      color: var(--gold-dim);
+    }
+    .gold-price-change {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: rgba(16,185,129,0.15);
+      color: var(--success);
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 12px;
+      margin-top: 8px;
+      font-weight: 500;
+    }
+    .gold-banner-time {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 12px;
+    }
+
+    /* Section */
+    .section { padding: 24px 20px; }
+    .section-title {
+      font-family: 'Noto Serif SC', serif;
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .section-title .more {
+      font-family: 'Noto Sans SC', sans-serif;
+      font-size: 13px;
+      color: var(--gold);
+      font-weight: 400;
+    }
+
+    /* Product Cards */
+    .product-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    .product-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform 200ms, border-color 200ms;
+    }
+    .product-card:active { transform: scale(0.98); }
+    .product-card-img {
+      width: 100%;
+      aspect-ratio: 1;
+      background: linear-gradient(135deg, #1a1a1a, #242424);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 48px;
+      position: relative;
+      overflow: hidden;
+    }
+    .product-card-img::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, transparent 60%, rgba(0,0,0,0.4) 100%);
+    }
+    .product-card-body { padding: 12px; }
+    .product-card-name {
+      font-size: 14px;
+      font-weight: 500;
+      margin-bottom: 4px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .product-card-purity {
+      font-size: 11px;
+      color: var(--gold-dim);
+      margin-bottom: 8px;
+    }
+    .product-card-price {
+      font-family: 'Noto Serif SC', serif;
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--gold);
+    }
+    .product-card-price .from {
+      font-size: 11px;
+      color: var(--text-muted);
+      font-family: 'Noto Sans SC', sans-serif;
+      font-weight: 400;
+    }
+
+    /* Product Detail */
+    .product-hero {
+      width: 100%;
+      aspect-ratio: 1;
+      background: linear-gradient(135deg, #141210, #1a1814);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+    .product-hero img.product-img-container {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+    .product-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 300ms ease-out, opacity 300ms ease-out;
+      position: absolute;
+      top: 0; left: 0;
+    }
+    .product-img[src=""] {
+      opacity: 0;
+    }
+    .product-img.slide-out-left { transform: translateX(-100%); opacity: 0; }
+    .product-img.slide-out-right { transform: translateX(100%); opacity: 0; }
+    .product-img.slide-in-left { transform: translateX(-100%); opacity: 0; }
+    .product-img.slide-in-right { transform: translateX(100%); opacity: 0; }
+    .product-img.active { transform: translateX(0); opacity: 1; }
+    .hero-nav-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: rgba(0,0,0,0.5);
+      border: 1px solid rgba(255,255,255,0.15);
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      cursor: pointer;
+      z-index: 5;
+      backdrop-filter: blur(4px);
+    }
+    .hero-nav-prev { left: 12px; }
+    .hero-nav-next { right: 12px; }
+    .product-hero-tag {
+      position: absolute;
+      top: 16px; left: 16px;
+      background: var(--gold);
+      color: #000;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .product-scroll {
+      flex: 1;
+      overflow: hidden;
+    }
+    .product-info { padding: 20px; }
+    .product-info-name {
+      font-family: 'Noto Serif SC', serif;
+      font-size: 22px;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+    .product-info-purity {
+      font-size: 13px;
+      color: var(--gold);
+      margin-bottom: 16px;
+    }
+    .product-info-price {
+      font-family: 'Noto Serif SC', serif;
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--gold);
+      margin-bottom: 4px;
+    }
+    .product-info-estimate {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+    }
+
+    /* Spec Selector */
+    .spec-group { margin-bottom: 20px; }
+    .spec-label {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-bottom: 10px;
+    }
+    .spec-options {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .spec-option {
+      padding: 10px 18px;
+      border-radius: 10px;
+      border: 1.5px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 200ms;
+      font-weight: 500;
+    }
+    .spec-option.active {
+      border-color: var(--gold);
+      background: rgba(201,169,110,0.1);
+      color: var(--gold);
+    }
+
+    /* Quantity */
+    .qty-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+    .qty-control {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .qty-btn {
+      width: 40px; height: 40px;
+      background: var(--surface-2);
+      border: none;
+      color: var(--text);
+      font-size: 18px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .qty-value {
+      width: 50px;
+      text-align: center;
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    /* Bottom Action Bar */
+    .bottom-bar {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 430px;
+      background: rgba(10,10,10,0.95);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      padding: 12px 20px calc(12px + env(safe-area-inset-bottom));
+      display: flex;
+      gap: 12px;
+      z-index: 100;
+    }
+    [data-theme="light"] .bottom-bar {
+      background: rgba(255,255,255,0.95);
+      border-top: 1px solid var(--border);
+    }
+    [data-theme="light"] .page-header {
+      background: rgba(255,255,255,0.92);
+    }
+    [data-theme="light"] .hero-nav-btn {
+      background: rgba(255,255,255,0.6);
+      border: 1px solid rgba(0,0,0,0.1);
+      color: var(--text);
+    }
+    [data-theme="light"] .gold-banner {
+      background: linear-gradient(135deg, #f5f0e8 0%, #ebe5d8 50%, #f5f0e8 100%);
+    }
+    [data-theme="light"] .btn-primary {
+      background: #000;
+      color: #fff;
+    }
+    [data-theme="light"] .btn-secondary {
+      background: #fff;
+      color: #000;
+      border: 1px solid var(--border);
+    }
+    [data-theme="light"] .btn-outline {
+      background: transparent;
+      color: var(--gold);
+      border: 1.5px solid var(--gold);
+    }
+    [data-theme="light"] .success-icon {
+      background: #fff;
+      color: #000;
+    }
+    .btn {
+      flex: 1;
+      padding: 14px 20px;
+      border-radius: 12px;
+      border: none;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 200ms;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+    .btn:active { transform: scale(0.98); }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--gold), var(--gold-dim));
+      color: #000;
+    }
+    .btn-secondary {
+      background: var(--surface-2);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .btn-outline {
+      background: transparent;
+      color: var(--gold);
+      border: 1.5px solid var(--gold);
+    }
+    .btn-full { width: 100%; }
+
+    /* Form Elements */
+    .form-group { margin-bottom: 20px; }
+    .form-label {
+      display: block;
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+    }
+    .form-input {
+      width: 100%;
+      padding: 14px 16px;
+      border-radius: 12px;
+      border: 1.5px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      font-size: 15px;
+      outline: none;
+      transition: border-color 200ms;
+      font-family: inherit;
+    }
+    .form-input:focus { border-color: var(--gold); }
+    .form-input::placeholder { color: var(--text-muted); }
+    select.form-input {
+      appearance: none;
+      -webkit-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%239CA3AF' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 4px center;
+      padding-right: 20px;
+    }
+    .input-row {
+      display: flex;
+      gap: 10px;
+    }
+    .input-row .form-input { flex: 1; }
+
+    /* KYC Level Indicator */
+    .kyc-levels {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 24px;
+    }
+    .kyc-level {
+      flex: 1;
+      text-align: center;
+      padding: 12px 4px;
+      border-radius: 12px;
+      border: 1.5px solid var(--border);
+      background: var(--surface);
+      transition: all 200ms;
+    }
+    .kyc-level.active {
+      border-color: var(--gold);
+      background: rgba(201,169,110,0.08);
+    }
+    .kyc-level.completed {
+      border-color: var(--success);
+      background: rgba(16,185,129,0.08);
+    }
+    .kyc-level .level-icon {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      background: var(--surface-3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 6px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .kyc-level.active .level-icon {
+      background: var(--gold);
+      color: #000;
+    }
+    .kyc-level.completed .level-icon {
+      background: var(--success);
+      color: #000;
+    }
+    .kyc-level .level-name {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+    .kyc-level.active .level-name {
+      color: var(--gold);
+    }
+
+    /* Info Card */
+    .info-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+    .info-card-title {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .info-card-text {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    /* Order Summary */
+    .order-summary {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 16px;
+    }
+    .order-summary-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      font-size: 14px;
+    }
+    .order-summary-row.total {
+      border-top: 1px solid var(--border);
+      padding-top: 12px;
+      margin-top: 12px;
+      font-size: 18px;
+      font-weight: 600;
+    }
+    .order-summary-row .label { color: var(--text-secondary); }
+    .order-summary-row .value { color: var(--gold); font-family: 'Noto Serif SC', serif; }
+
+    /* Upload Area */
+    .upload-area {
+      border: 2px dashed var(--border);
+      border-radius: 12px;
+      padding: 32px;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color 200ms;
+      background: var(--surface);
+    }
+    .upload-area:active { border-color: var(--gold); }
+    .upload-icon { font-size: 32px; margin-bottom: 8px; }
+    .upload-text { font-size: 13px; color: var(--text-secondary); }
+
+    /* Step Progress */
+    .step-progress {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 16px 20px;
+    }
+    .step-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--surface-3);
+    }
+    .step-dot.active { background: var(--gold); }
+    .step-dot.completed { background: var(--success); }
+    .step-line {
+      width: 24px; height: 2px;
+      background: var(--surface-3);
+    }
+    .step-line.completed { background: var(--success); }
+
+    /* Processing Screen */
+    .processing-screen {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      padding: 40px 20px;
+      text-align: center;
+    }
+    .processing-spinner {
+      width: 48px;
+      height: 48px;
+      border: 3px solid var(--border);
+      border-top-color: var(--gold);
+      border-radius: 50%;
+      animation: spin 800ms linear infinite;
+      margin-bottom: 24px;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    .processing-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    .processing-subtitle {
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+
+    /* Success Screen */
+    .success-icon {
+      width: 80px; height: 80px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--success), #059669);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 40px;
+      margin: 40px auto 24px;
+      animation: scaleIn 400ms cubic-bezier(0.34,1.56,0.64,1);
+    }
+    @keyframes scaleIn {
+      from { transform: scale(0); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+    .success-title {
+      font-family: 'Noto Serif SC', serif;
+      font-size: 24px;
+      text-align: center;
+      margin-bottom: 8px;
+    }
+    .success-subtitle {
+      text-align: center;
+      color: var(--text-secondary);
+      font-size: 14px;
+      margin-bottom: 32px;
+    }
+
+    /* Shimmer */
+    .shimmer {
+      background: linear-gradient(90deg, var(--gold-dim) 25%, var(--gold) 50%, var(--gold-dim) 75%);
+      background-size: 200% 100%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: shimmer 3s infinite;
+    }
+    @keyframes shimmer {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    /* Tooltip */
+    .tooltip {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 16px;
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+    .tooltip-icon { color: var(--gold); font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+
+    /* Divider */
+    .divider {
+      height: 1px;
+      background: var(--border);
+      margin: 20px 0;
+    }
+
+    /* Tag */
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 500;
+    }
+    .tag-gold { background: rgba(201,169,110,0.15); color: var(--gold); }
+    .tag-green { background: rgba(16,185,129,0.15); color: var(--success); }
+    .tag-red { background: rgba(239,68,68,0.15); color: var(--error); }
+
+    /* Checkbox row */
+    .checkbox-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 0;
+      cursor: pointer;
+    }
+    .checkbox {
+      width: 20px; height: 20px;
+      border-radius: 6px;
+      border: 2px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: all 200ms;
+    }
+    .checkbox.checked {
+      background: var(--gold);
+      border-color: var(--gold);
+      color: #000;
+      font-size: 12px;
+    }
+
+    /* Sticky bottom for forms */
+    .sticky-bottom {
+      position: sticky;
+      bottom: 0;
+      background: linear-gradient(to top, var(--bg), transparent);
+      padding: 20px 0 10px;
+      margin-top: 20px;
+    }
+
+    /* Empty state */
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+    }
+    .empty-state-icon {
+      font-size: 48px;
+      margin-bottom: 16px;
+      opacity: 0.5;
+    }
+    .empty-state-title {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    .empty-state-text {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    /* Recycle Card */
+    .recycle-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px 16px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      transition: border-color 200ms;
+    }
+    .recycle-card:active {
+      border-color: var(--gold);
+    }
+    .recycle-card-body {
+      flex: 1;
+      min-width: 0;
+    }
+    .recycle-card-title {
+      font-family: 'Noto Serif SC', serif;
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    .recycle-card-price {
+      font-size: 14px;
+      color: var(--gold);
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+    .recycle-card-desc {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+    .recycle-card-arrow {
+      color: var(--text-muted);
+      font-size: 12px;
+      flex-shrink: 0;
+    }
+
+    /* Flow Steps */
+    .flow-steps {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+    }
+    .flow-step {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--border);
+      cursor: pointer;
+    }
+    .flow-step:last-child { border-bottom: none; }
+    .flow-step-num {
+      width: 24px;
+      height: 24px;
+      border-radius: 4px;
+      border: 1px solid var(--text-muted);
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+    .flow-step.active .flow-step-num {
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+    .flow-step-label {
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+    .flow-step.active .flow-step-label {
+      color: var(--text);
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    /* Side Menu */
+    .side-menu {
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      z-index: 200;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 300ms ease;
+    }
+    .side-menu.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+    .side-menu-panel {
+      position: absolute;
+      top: 0; left: 0;
+      width: 260px; height: 100%;
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      transform: translateX(-100%);
+      transition: transform 300ms cubic-bezier(0.4,0,0.2,1);
+      display: flex;
+      flex-direction: column;
+    }
+    .side-menu.open .side-menu-panel {
+      transform: translateX(0);
+    }
+    .side-menu-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+    }
+    .side-menu-nav {
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .side-menu-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 12px;
+      border-radius: 12px;
+      color: var(--text);
+      text-decoration: none;
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 200ms;
+    }
+    .side-menu-item:active {
+      background: var(--surface-3);
+    }
+    .side-menu-icon {
+      width: 32px; height: 32px;
+      border-radius: 8px;
+      background: var(--surface-2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+  <button class="theme-toggle" onclick="toggleTheme()" title="切換主題">&#127769;</button>
+  <button class="chat-bubble" onclick="toggleChatMenu()">&#128172;</button>
+
+  <div class="chat-menu-overlay" id="chat-overlay" onclick="toggleChatMenu()"></div>
+  <div class="chat-menu" id="chat-menu">
+    <div class="chat-menu-title">聯繫客服</div>
+    <a class="chat-menu-item" href="tel:+85212345678">
+      <span>&#9742;</span>
+      <span>致電客服</span>
+    </a>
+    <a class="chat-menu-item" href="https://wa.me/85212345678" target="_blank">
+      <span>&#128172;</span>
+      <span>WhatsApp</span>
+    </a>
+    <div class="chat-menu-close" onclick="toggleChatMenu()">取消</div>
+  </div>
+
+  <!-- Contact Dropdown (top bubble) -->
+  <div class="contact-dropdown-overlay" id="contact-dropdown-overlay" onclick="toggleContactDropdown()"></div>
+  <div class="contact-dropdown" id="contact-dropdown">
+    <div style="font-size:15px; font-weight:600; text-align:center; margin-bottom:16px; color:var(--text);">聯繫客服</div>
+    <a class="contact-dropdown-item" href="tel:+85212345678">
+      <span style="font-size:18px;">&#9742;</span>
+      <span>電話聯繫</span>
+    </a>
+    <a class="contact-dropdown-item" href="https://wa.me/85212345678" target="_blank">
+      <span style="font-size:18px;">&#128172;</span>
+      <span>WhatsApp 聯繫</span>
+    </a>
+  </div>
+
+  <div class="cart-popup-overlay" id="cart-popup-overlay" onclick="toggleCartPopup()"></div>
+  <div class="cart-popup" id="cart-popup">
+    <div class="cart-popup-title">已加入購物袋</div>
+    <div id="cart-popup-items" style="max-height:320px; overflow-y:auto; margin-bottom:16px;">
+      <!-- Dynamic -->
+    </div>
+    <div class="cart-popup-actions">
+      <button class="btn btn-secondary" style="flex:1;" onclick="toggleCartPopup()">繼續瀏覽</button>
+      <button class="btn btn-primary" style="flex:1;" onclick="goToCartAndCheckout()">去購物袋結算</button>
+    </div>
+  </div>
+
+  <div id="app">
+
+    <!-- ==================== SIDE MENU ==================== -->
+    <div id="side-menu" class="side-menu" onclick="closeMenu(event)">
+      <div class="side-menu-panel" onclick="event.stopPropagation()">
+        <div class="side-menu-header">
+          <div style="font-family:'Noto Serif SC',serif; font-size:18px; font-weight:600; letter-spacing:2px;">PASSTO BULLION</div>
+          <button class="back-btn" onclick="toggleMenu()" style="background:transparent; border:none;">&#10005;</button>
+        </div>
+        <nav class="side-menu-nav">
+          <a class="side-menu-item" onclick="menuGoTo('home')">
+            <span>首頁</span>
+          </a>
+          <a class="side-menu-item" onclick="menuGoTo('product', {id:1,name:'傳世金條 50克',price:'122,800',purity:'Au 99.99%',img:'https://dev.passtobullion.com/profile/upload/2026/06/04/50g-traditional-final-set_20260604145016A006.png',specs:['50克']})">
+            <span>瀏覽商品</span>
+          </a>
+          <a class="side-menu-item" onclick="menuGoTo('recycle')">
+            <span>黃金回收</span>
+          </a>
+          <a class="side-menu-item" onclick="menuGoTo('profile')">
+            <span>個人中心</span>
+          </a>
+          <a class="side-menu-item" onclick="toggleContactDropdown(); toggleMenu();">
+            <span>聯繫客服</span>
+          </a>
+        </nav>
+      </div>
+    </div>
+
+    <!-- ==================== SCREEN: HOME ==================== -->
+    <div class="screen active" id="screen-home">
+      <div class="page-header" style="border-bottom:none;">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <button class="icon-btn" onclick="toggleMenu()" style="font-size:18px;">&#9776;</button>
+          <h1 style="font-size:16px; letter-spacing:3px;">PASSTO BULLION</h1>
+        </div>
+        <div class="header-actions">
+          <button class="icon-btn" onclick="goTo('cart')" style="width:auto; padding:0 12px; font-size:13px; font-weight:500;">
+            購物袋
+            <span class="badge" id="cart-badge" style="display:none; position:static; margin-left:4px;">0</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="gold-banner">
+        <div class="gold-banner-label">今日金價 / GOLD PRICE</div>
+        <div class="gold-price-main shimmer">HK$ 2,456<span class="unit">/g</span></div>
+        <div class="gold-price-change">
+          <span>&#9650;</span> +1.2% 較昨日
+        </div>
+        <div class="gold-banner-time">更新時間 2026-06-12 14:30 HKT</div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">
+          <span>熱銷商品</span>
+          <span class="more">查看全部 &rsaquo;</span>
+        </div>
+        <div class="product-grid">
+          <div class="product-card" onclick="goTo('product', {id:1,name:'傳世金條 50克',price:'122,800',purity:'Au 99.99%',img:'https://dev.passtobullion.com/profile/upload/2026/06/04/50g-traditional-final-set_20260604145016A006.png',specs:['50克']})">
+            <div class="product-card-img"><img src="https://dev.passtobullion.com/profile/upload/2026/06/04/50g-traditional-final-set_20260604145016A006.png" alt="50克金條" style="width:100%;height:100%;object-fit:cover;"></div>
+            <div class="product-card-body">
+              <div class="product-card-name">傳世金條 50克</div>
+              <div class="product-card-purity">Au 99.99%</div>
+              <div class="product-card-price"><span class="from">約</span> HK$122,800</div>
+            </div>
+          </div>
+          <div class="product-card" onclick="goTo('product', {id:2,name:'傳世金條 100克',price:'245,600',purity:'Au 99.99%',img:'https://dev.passtobullion.com/profile/upload/2026/06/04/100g-traditional-final-set_20260604145028A009.png',specs:['100克']})">
+            <div class="product-card-img"><img src="https://dev.passtobullion.com/profile/upload/2026/06/04/100g-traditional-final-set_20260604145028A009.png" alt="100克金條" style="width:100%;height:100%;object-fit:cover;"></div>
+            <div class="product-card-body">
+              <div class="product-card-name">傳世金條 100克</div>
+              <div class="product-card-purity">Au 99.99%</div>
+              <div class="product-card-price"><span class="from">約</span> HK$245,600</div>
+            </div>
+          </div>
+          <div class="product-card" onclick="goTo('product', {id:3,name:'傳世金條 1兩',price:'92,100',purity:'Au 99.99%',img:'https://dev.passtobullion.com/profile/upload/2026/06/04/one-tael-traditional-final-set_20260604144951A003.png',specs:['37.8克']})">
+            <div class="product-card-img"><img src="https://dev.passtobullion.com/profile/upload/2026/06/04/one-tael-traditional-final-set_20260604144951A003.png" alt="1兩金條" style="width:100%;height:100%;object-fit:cover;"></div>
+            <div class="product-card-body">
+              <div class="product-card-name">傳世金條 1兩</div>
+              <div class="product-card-purity">Au 99.99% · 37.5克</div>
+              <div class="product-card-price"><span class="from">約</span> HK$92,100</div>
+            </div>
+          </div>
+          <div class="product-card" onclick="goTo('product', {id:4,name:'傳世金條 1公斤',price:'2,456,000',purity:'Au 99.99%',img:'https://dev.passtobullion.com/profile/upload/2026/06/04/1kg-traditional-final-set_20260604145039A012.png',specs:['1000克']})">
+            <div class="product-card-img"><img src="https://dev.passtobullion.com/profile/upload/2026/06/04/1kg-traditional-final-set_20260604145039A012.png" alt="1公斤金條" style="width:100%;height:100%;object-fit:cover;"></div>
+            <div class="product-card-body">
+              <div class="product-card-name">傳世金條 1公斤</div>
+              <div class="product-card-purity">Au 99.99%</div>
+              <div class="product-card-price"><span class="from">約</span> HK$2,456,000</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section" style="padding-top:0;">
+        <div class="section-title">
+          <span>回收服務</span>
+          <span class="more">了解詳情 &rsaquo;</span>
+        </div>
+        <div class="recycle-card" onclick="goTo('recycle')" style="cursor:pointer;">
+          <div class="recycle-card-body">
+            <div class="recycle-card-title">黃金回收</div>
+            <div class="recycle-card-price">今日回收價 HK$2,380/g</div>
+            <div class="recycle-card-desc">預約到店 · 門店交割 · 當場打款</div>
+          </div>
+          <div class="recycle-card-arrow">&#10095;</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== SCREEN: PRODUCT DETAIL ==================== -->
+    <div class="screen" id="screen-product" style="display:flex; flex-direction:column;">
+      <div class="page-header" style="flex-shrink:0;">
+        <button class="icon-btn" onclick="toggleMenu()" style="font-size:18px;">&#9776;</button>
+        <h1>商品詳情</h1>
+        <div class="header-actions">
+          <button class="icon-btn" onclick="goTo('cart')" style="width:auto; padding:0 12px; font-size:13px; font-weight:500;">
+            購物袋
+            <span class="badge" id="cart-badge-2" style="display:none; position:static; margin-left:4px;">0</span>
+          </button>
+        </div>
+      </div>
+      <div class="product-hero" id="product-hero-img" ontouchstart="touchStart(event)" ontouchmove="touchMove(event)" ontouchend="touchEnd(event)">
+        <div class="product-img-container">
+          <img src="" id="product-img-current" alt="" class="product-img active">
+        <img src="" id="product-img-next" alt="" class="product-img">
+        </div>
+        <button class="hero-nav-btn hero-nav-prev" onclick="prevProduct()">&#10094;</button>
+        <button class="hero-nav-btn hero-nav-next" onclick="nextProduct()">&#10095;</button>
+      </div>
+      <div class="product-scroll" id="product-scroll">
+        <div class="product-info">
+          <div class="product-info-name" id="product-name">傳世金條 50克</div>
+          <div class="product-info-purity" id="product-purity">Au 99.99%</div>
+          <div class="product-info-price" id="product-price">HK$122,800</div>
+          <div class="product-info-estimate">以上價格為估算價，以實際成交價為準</div>
+
+          <div class="spec-group">
+            <div class="spec-label">規格</div>
+            <div class="spec-options" id="spec-options">
+              <div class="spec-option active" onclick="selectSpec(this, '50克')">50克</div>
+            </div>
+          </div>
+
+          <div class="qty-row">
+            <span class="spec-label">數量</span>
+            <div class="qty-control">
+              <button class="qty-btn" onclick="changeQty(-1)">&#8722;</button>
+              <div class="qty-value" id="qty-value">1</div>
+              <button class="qty-btn" onclick="changeQty(1)">+</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="bottom-bar" id="product-bottom-bar">
+        <button class="btn btn-primary btn-full" id="btn-add-cart" onclick="addToCart()">加入購物袋</button>
+      </div>
+    </div>
+
+    <!-- ==================== SCREEN: CART ==================== -->
+    <div class="screen" id="screen-cart">
+      <div class="page-header">
+        <button class="icon-btn" onclick="toggleMenu()" style="font-size:18px;">&#9776;</button>
+        <h1>購物袋</h1>
+        <div style="width:36px;"></div>
+      </div>
+      <div id="cart-content">
+        <!-- Dynamic -->
+      </div>
+    </div>
+
+    <!-- ==================== SCREEN: CONFIRM PRODUCT ==================== -->
+    <div class="screen" id="screen-confirm">
+      <div class="page-header">
+        <button class="icon-btn" onclick="toggleMenu()" style="font-size:18px;">&#9776;</button>
+        <h1 id="confirm-page-title">我的購物袋</h1>
+        <div style="width:36px;"></div>
+      </div>
+      <div class="flow-steps">
+        <div class="flow-step active" onclick="goTo('confirm')">
+          <div class="flow-step-num">1</div>
+          <div class="flow-step-label">我的購物袋</div>
+        </div>
+        <div class="flow-step" onclick="goTo('pickup-method')">
+          <div class="flow-step-num">2</div>
+          <div class="flow-step-label">取貨方式</div>
+        </div>
+        <div class="flow-step" onclick="goTo('service')">
+          <div class="flow-step-num">3</div>
+          <div class="flow-step-label">心意服務</div>
+        </div>
+        <div class="flow-step" onclick="goToCheckout()">
+          <div class="flow-step-num">4</div>
+          <div class="flow-step-label">訂單結算</div>
+        </div>
+      </div>
+      <div class="section">
+        <div id="confirm-items">
+          <!-- Dynamic -->
+        </div>
+        <div style="display:flex; justify-content:space-between; align-items:center; padding:16px 0; border-top:1px solid var(--border); margin-top:16px;">
+          <span style="font-size:14px; color:var(--text-secondary);">總額</span>
+          <span style="font-family:'Noto Serif SC',serif; font-size:20px; font-weight:600; color:var(--gold);" id="confirm-total">--</span>
+        </div>
+      </div>
+      <div class="bottom-bar">
+        <button class="btn btn-primary btn-full" onclick="goTo('pickup-method')">下一步：選擇取貨方式</button>
+      </div>
+    </div>
+
+    <!-- ==================== SCREEN: PICKUP METHOD ==================== -->
+    <div class="screen" id="screen-pickup-method">
+      <div class="page-header">
+        <button class="icon-btn" onclick="toggleMenu()" style="font-size:18px;">&#9776;</button>
+        <h1>取貨方式</h1>
+        <div style="width:36px;"></div>
+      </div>
+      <div class="flow-steps">
+        <div class="flow-step" onclick="goTo('confirm')">
+          <div class="flow-step-num">1</div>
+          <div class="flow-step-label">我的購物袋</div>
+        </div>
+        <div class="flow-step active">
+          <div class="flow-step-num">2</div>
+          <div class="flow-step-label">取貨方式</div>
+        </div>
+        <div class="flow-step" onclick="goTo('service')">
+          <div class="flow-step-num">3</div>
+          <div class="flow-step-label">心意服務</div>
+        </div>
+        <div class="flow-step" onclick="goToCheckout()">
+          <div class="flow-step-num">4</div>
+          <div class="flow-step-label">訂單結算</div>
+        </div>
+      </div>
+      <div class="section">
+        <div class="info-card" style="border-color:var(--gold);">
+          <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px;">
+            <div class="checkbox checked">&#10003;</div>
+            <span style="font-weight:600;">到店取貨</span>
+          </div>
+          <div style="font-size:13px; color:var(--text-secondary); line-height:1.8;">
+            <div>香港中環皇后大道中100號</div>
+            <div>營業時間：週一至週六 10:00 - 19:00</div>
+            <div>聯絡電話：+852 1234 5678</div>
+          </div>
+        </div>
+        <div class="info-card" style="opacity:0.5;">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <div class="checkbox"></div>
+            <span style="font-weight:600;">送貨服務（即將開放）</span>
+          </div>
+        </div>
+
+        <div style="margin-top:24px;">
+          <div style="font-size:16px; font-weight:600; margin-bottom:16px;">取貨人資料</div>
+          <div class="input-row" style="gap:10px; margin-bottom:12px;">
+            <select class="form-input" id="pickup-title" style="width:100px; flex:none;">
+              <option>先生</option>
+              <option>女士</option>
+            </select>
+            <input type="text" id="pickup-name" class="form-input" placeholder="請輸入姓名" style="flex:1;">
+          </div>
+          <div class="input-row" style="gap:10px; margin-bottom:12px;">
+            <select class="form-input" id="pickup-code" style="width:100px; flex:none;">
+              <option>+852</option>
+              <option>+86</option>
+            </select>
+            <input type="tel" id="pickup-phone" class="form-input" placeholder="請輸入手機號碼" style="flex:1;">
+          </div>
+          <div style="font-size:12px; color:var(--text-muted); line-height:1.6;">
+            * 取貨人須出示附有效的身份證明文件正本，而輸入的取貨人姓名資料必須與身份證明文件相符，以核實身份。
+          </div>
+        </div>
+      </div>
+      <div class="bottom-bar">
+        <button class="btn btn-primary btn-full" onclick="validatePickupAndGo()">下一步：心意服務</button>
+      </div>
+    </div>
+
+    <!-- ==================== SCREEN: SERVICE ==================== -->
+    <div class="screen" id="screen-service">
+      <div class="page-header">
+        <button class="icon-btn" onclick="toggleMenu()" style="font-size:18px;">&#9776;</button>
+        <h1>心意服務</h1>
+        <div style="width:36px;"></div>
+      </div>
+      <div class="flow-steps">
+        <div class="flow-step" onclick="goTo('confirm')">
+          <div class="flow-step-num">1</div>
+          <div class="flow-step-label">我的購物袋</div>
+        </div>
+        <div class="flow-step" onclick="goTo('pickup-method')">
+          <div class="flow-step-num">2</div>
+          <div class="flow-step-label">取貨方式</div>
+        </div>
+        <div class="flow-step active">
+          <div class="flow-step-num">3</div>
+          <div class="flow-step-label">心意服務</div>
+        </div>
+        <div class="flow-step" onclick="goToCheckout()">
+          <div class="flow-step-num">4</div>
+          <div class="flow-step-label">訂單結算</div>
+        </div>
+      </div>
+      <div class="section" id="service-scroll">
+        <div style="font-size:12px; color:var(--text-muted); margin-bottom:12px;">可選加配，可不選</div>
+        <div class="info-card" id="card-chars" style="cursor:pointer;" onclick="toggleService('chars')">
+          <div style="display:flex; align-items:center; justify-content:space-between;">
+            <div style="display:flex; align-items:center; gap:10px;">
+              <div class="checkbox" id="chk-chars"></div>
+              <span style="font-weight:600;">自選字元</span>
+            </div>
+            <span style="color:var(--gold); font-weight:600;">HK$260</span>
+          </div>
+          <div style="font-size:12px; color:var(--text-muted); margin-top:4px; padding-left:30px;">最多6個字元，刻於金條表面</div>
+        </div>
+        <div id="chars-input" style="display:none; margin:0 4px 12px; padding:12px; background:var(--surface); border-radius:0 0 12px 12px; border:1px solid var(--border); border-top:none;">
+          <input type="text" class="form-input" placeholder="請輸入字元（最多6個）" maxlength="6" id="input-chars" onclick="event.stopPropagation()">
+        </div>
+        <div class="info-card" style="cursor:pointer;" onclick="toggleService('big')">
+          <div style="display:flex; align-items:center; justify-content:space-between;">
+            <div style="display:flex; align-items:center; gap:10px;">
+              <div class="checkbox" id="chk-big"></div>
+              <span style="font-weight:600;">印圖案（大）</span>
+            </div>
+            <span style="color:var(--gold); font-weight:600;">HK$88</span>
+          </div>
+        </div>
+        <div class="info-card" style="cursor:pointer;" onclick="toggleService('small')">
+          <div style="display:flex; align-items:center; justify-content:space-between;">
+            <div style="display:flex; align-items:center; gap:10px;">
+              <div class="checkbox" id="chk-small"></div>
+              <span style="font-weight:600;">印圖案（小）</span>
+            </div>
+            <span style="color:var(--gold); font-weight:600;">HK$52</span>
+          </div>
+        </div>
+        <div class="info-card" id="service-wa" style="display:none; border-color:var(--gold);">
+          <div style="font-size:13px; color:var(--text-secondary); line-height:1.6;">
+            選擇圖案服務需要聯絡服務人員確認細節。<br>
+            <div style="display:flex; align-items:center; gap:8px; margin-top:10px;">
+              <a href="https://wa.me/85212345678" target="_blank" class="btn btn-secondary" style="flex:1; text-decoration:none; text-align:center; font-size:13px; padding:10px;">WhatsApp</a>
+              <span style="color:var(--text-muted); font-size:12px;">或</span>
+              <a href="tel:+85212345678" class="btn btn-secondary" style="flex:1; text-decoration:none; text-align:center; font-size:13px; padding:10px;">撥打電話</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="bottom-bar">
+        <button class="btn btn-primary btn-full" onclick="goToCheckout()">下一步：訂單結算</button>
+      </div>
+    </div>
+
+    <!-- ==================== SCREEN: LOGIN (L1) ==================== -->
+    <div class="screen" id="screen-login">
+      <div class="page-header">
+        <button class="icon-btn" onclick="toggleMenu()" style="font-size:18px;">&#9776;</button>
+        <h1>登入</h1>
+        <div style="width:36px;"></div>
+      </div>
+      <div class="section" style="padding-top:20px; max-width:360px; margin:0 auto;">
+        <!-- Tabs -->
+        <div style="display:flex; border-bottom:1px solid var(--border); margin-bottom:24px;">
+          <div id="login-tab-phone" style="flex:1; text-align:center; padding:12px 0; font-size:15px; border-bottom:2px solid var(--gold); cursor:pointer; color:var(--gold); font-weight:500;" onclick="switchLoginTab('phone')">電話號碼</div>
+          <div id="login-tab-email" style="flex:1; text-align:center; padding:12px 0; font-size:15px; border-bottom:2px solid transparent; cursor:pointer; color:var(--text-muted);" onclick="switchLoginTab('email')">電子郵件</div>
+        </div>
+
+        <!-- Phone Form -->
+        <div id="login-phone-form">
+          <div class="form-group">
+            <div class="input-row" style="border:1px solid var(--border); border-radius:12px; padding:0 14px; background:var(--surface);">
+              <div style="display:flex; align-items:center; position:relative;">
+                <select id="login-phone-code" style="border:none; background:transparent; color:var(--text); font-size:15px; padding:14px 0; outline:none; appearance:none; -webkit-appearance:none; padding-right:20px;">
+                  <option value="852">+852 香港</option>
+                  <option value="86">+86 中國內地</option>
+                  <option value="853">+853 中國澳門</option>
+                </select>
+                <span style="position:absolute; right:0; color:var(--text-muted); font-size:10px; pointer-events:none;">&#9662;</span>
+              </div>
+              <span style="color:var(--border); margin:0 8px;">|</span>
+              <input type="tel" style="border:none; background:transparent; flex:1; color:var(--text); font-size:15px; padding:14px 0; outline:none;" placeholder="請輸入電話號碼" id="phone-input" maxlength="11">
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="input-row" style="border:1px solid var(--border); border-radius:12px; padding:0 14px; background:var(--surface); align-items:center;">
+              <input type="password" style="border:none; background:transparent; flex:1; color:var(--text); font-size:15px; padding:14px 0; outline:none;" placeholder="密碼" id="password-input">
+            </div>
+          </div>
+        </div>
+
+        <!-- Email Form (hidden by default) -->
+        <div id="login-email-form" style="display:none;">
+          <div class="form-group">
+            <div class="input-row" style="border:1px solid var(--border); border-radius:12px; padding:0 14px; background:var(--surface);">
+              <input type="email" style="border:none; background:transparent; flex:1; color:var(--text); font-size:15px; padding:14px 0; outline:none;" placeholder="請輸入電子郵件" id="email-input">
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="input-row" style="border:1px solid var(--border); border-radius:12px; padding:0 14px; background:var(--surface); align-items:center;">
+              <input type="password" style="border:none; background:transparent; flex:1; color:var(--text); font-size:15px; padding:14px 0; outline:none;" placeholder="密碼" id="email-password-input">
+            </div>
+          </div>
+        </div>
+
+        <button class="btn btn-primary btn-full" style="background:transparent; border:1px solid var(--gold); color:var(--gold);" onclick="doLogin()">登入</button>
+
+        <div style="text-align:center; margin-top:40px; padding-bottom:40px;">
+          <span style="font-size:14px; color:var(--text-muted);">還未成為會員？</span>
+          <span style="font-size:14px; color:var(--gold); text-decoration:underline; cursor:pointer; font-weight:500;" onclick="goTo('register')">成為Passto CLUB會員</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== SCREEN: REGISTER ==================== -->
+    <div class="screen" id="screen-register">
+      <div class="page-header">
+        <button class="icon-btn" onclick="toggleMenu()" style="font-size:18px;">&#9776;</button>
+        <h1>新用戶註冊</h1>
+        <div style="width:36px;"></div>
+      </div>
+      <div class="section" style="padding-top:20px; max-width:360px; margin:0 auto;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+          <span></span>
+          <span style="font-size:12px; color:var(--text-muted);">*必填</span>
+        </div>
+
+        <!-- Title -->
+        <div class="form-group">
+          <label class="form-label" style="font-size:14px; color:var(--text-secondary);">稱謂 <span style="color:var(--gold);">*</span></label>
+          <div style="display:flex; gap:10px;">
+            <div class="register-title-option" data-value="先生" onclick="selectTitle(this)" style="flex:1; border:1px solid var(--border); border-radius:8px; padding:12px; text-align:center; cursor:pointer; font-size:14px;">先生</div>
+            <div class="register-title-option" data-value="女士" onclick="selectTitle(this)" style="flex:1; border:1px solid var(--border); border-radius:8px; padding:12px; text-align:center; cursor:pointer; font-size:14px;">女士</div>
+            <div class="register-title-option" data-value="小姐" onclick="selectTitle(this)" style="flex:1; border:1px solid var(--border); border-radius:8px; padding:12px; text-align:center; cursor:pointer; font-size:14px;">小姐</div>
+          </div>
+        </div>
+
+        <!-- Surname -->
+        <div class="form-group">
+          <label class="form-label" style="font-size:14px; color:var(--text-secondary);">姓氏 <span style="color:var(--gold);">*</span></label>
+          <input type="text" class="form-input" id="reg-surname" placeholder="請輸入姓氏" style="border-radius:12px;">
+        </div>
+
+        <!-- Given Name -->
+        <div class="form-group">
+          <label class="form-label" style="font-size:14px; color:var(--text-secondary);">名字 <span style="color:var(--gold);">*</span></label>
+          <input type="text" class="form-input" id="reg-given-name" placeholder="請輸入名字" style="border-radius:12px;">
+        </div>
+
+        <!-- DOB -->
+        <div class="form-group">
+          <label class="form-label" style="font-size:14px; color:var(--text-secondary);">出生日期 <span style="color:var(--gold);">*</span></label>
+          <div class="input-row">
+            <select class="form-input" id="reg-dob-day" style="border-radius:12px; flex:1;">
+              <option value="">日</option>
+              <script>
+                for(let i=1;i<=31;i++) document.write(`<option>${i}</option>`);
+              </script>
+            </select>
+            <select class="form-input" id="reg-dob-month" style="border-radius:12px; flex:1;">
+              <option value="">月</option>
+              <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option>
+              <option>7</option><option>8</option><option>9</option><option>10</option><option>11</option><option>12</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Age Group -->
+        <div class="form-group">
+          <label class="form-label" style="font-size:14px; color:var(--text-secondary);">年齡組別 <span style="color:var(--gold);">*</span></label>
+          <select class="form-input" id="reg-age-group" style="border-radius:12px;">
+            <option value="">請選擇</option>
+            <option>18-24</option>
+            <option>25-34</option>
+            <option>35-44</option>
+            <option>45-54</option>
+            <option>55-64</option>
+            <option>65+</option>
+          </select>
+        </div>
+
+        <!-- Phone -->
+        <div class="form-group">
+          <label class="form-label" style="font-size:14px; color:var(--text-secondary);">電話號碼 <span style="color:var(--gold);">*</span></label>
+          <div class="input-row" style="border:1px solid var(--border); border-radius:12px; padding:0 14px; background:var(--surface);">
+            <select style="border:none; background:transparent; color:var(--text); font-size:15px; padding:14px 0; outline:none; appearance:none; -webkit-appearance:none;">
+              <option>852</option>
+              <option>86</option>
+            </select>
+            <span style="color:var(--border); margin:0 8px;">|</span>
+            <input type="tel" style="border:none; background:transparent; flex:1; color:var(--text); font-size:15px; padding:14px 0; outline:none;" placeholder="請輸入電話號碼" id="reg-phone" maxlength="11">
+          </div>
+        </div>
+
+        <!-- Verification Code -->
+        <div class="form-group">
+          <label class="form-label" style="font-size:14px; color:var(--text-secondary);">輸入驗證碼 <span style="color:var(--gold);">*</span></label>
+          <div class="input-row">
+            <input type="text" class="form-input" id="reg-code" placeholder="請輸入驗證碼" maxlength="6" style="border-radius:12px; flex:1;">
+            <button class="btn btn-outline" style="flex:none; padding:14px 16px; border-radius:12px; white-space:nowrap;" onclick="sendCode(this)" id="reg-send-code-btn">發送驗證碼</button>
+          </div>
+        </div>
+
+        <!-- Email -->
+        <div class="form-group">
+          <label class="form-label" style="font-size:14px; color:var(--text-secondary);">電郵地址 <span style="color:var(--gold);">*</span></label>
+          <input type="email" class="form-input" id="reg-email" placeholder="請輸入電郵地址" style="border-radius:12px;">
+        </div>
+
+        <button class="btn btn-primary btn-full" style="margin-top:24px;" onclick="doRegister()">立即登記</button>
+      </div>
+    </div>
+
+    <!-- ==================== SCREEN: CHECKOUT LOW (L2) ==================== -->
+    <div class="screen" id="screen-checkout-low">
+      <div class="page-header">
+        <button class="icon-btn" onclick="toggleMenu()" style="font-size:18px;">&#9776;</button>
+        <h1>確認訂單</h1>
+        <div style="width:36px;"></div>
+      </div>
+      <div class="flow-steps">
+        <div class="flow-step" onclick="goTo('confirm')">
+          <div class="flow-step-num">1</div>
+          <div class="flow-step-label">我的購物袋</div>
+        </div>
+        <div class="flow-step" onclick="goTo('pickup-method')">
+          <div class="flow-step-num">2</div>
+          <div class="flow-step-label">取貨方式</div>
+        </div>
+        <div class="flow-step" onclick="goTo('service')">
+          <div class="flow-step-num">3</div>
+          <div class="flow-step-label">心意服務</div>
+        </div>
+        <div class="flow-step active">
+          <div class="flow-step-num">4</div>
+          <div class="flow-step-label">訂單結算</div>
+        </div>
+      </div>
+      <div class="section">
+        <div style="font-size:14px; font-weight:600; margin-bottom:16px;">訂單摘要</div>
+        <div id="checkout-summary">
+          <div style="margin-bottom:4px;">
+            <span id="checkout-low-product">足金金條 50g x 1</span>
+          </div>
+          <div class="order-summary-row">
+            <span class="label">商品總金額</span>
+            <span id="checkout-low-product-price">HK$122,800</span>
+          </div>
+          <div class="order-summary-row" id="row-service-chars" style="display:none;">
+            <span class="label">自選字元</span>
+            <span>HK$260</span>
+          </div>
+          <div class="order-summary-row" id="row-service-big" style="display:none;">
+            <span class="label">印圖案（大）</span>
+            <span>HK$88</span>
+          </div>
+          <div class="order-summary-row" id="row-service-small" style="display:none;">
+            <span class="label">印圖案（小）</span>
+            <span>HK$52</span>
+          </div>
+          <div class="order-summary-row">
+            <span class="label">運費</span>
+            <span>HK$0</span>
+          </div>
+          <div style="border-top:1px solid var(--border); margin:12px 0;"></div>
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <span style="font-size:14px; color:var(--text-secondary);">總計</span>
+            <span style="font-family:'Noto Serif SC',serif; font-size:22px; font-weight:600; color:var(--gold);" id="checkout-low-total">HK$122,800</span>
+          </div>
+          <div class="order-summary-row" style="margin-top:8px;">
+            <span class="label" style="font-size:12px;">預估關稅、稅項及費用</span>
+            <span style="font-size:12px;">HK$0</span>
+          </div>
+        </div>
+
+        <div class="bottom-bar">
+          <button class="btn btn-primary btn-full" onclick="goToPaymentFromCheckoutLow()">確認付款</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== SCREEN: KYC BASIC (L2) ==================== -->
+    <div class="screen" id="screen-kyc-basic">
+      <div class="page-header">
+        <button class="icon-btn" onclick="toggleMenu()" style="font-size:18px;">&#9776;</button>
+        <h1>基礎信息認證</h1>
+        <div style="width:36px;"></div>
+      </div>
+      <div class="section" style="padding-bottom:100px;">
+        <div style="margin-bottom:20px;">
+          <div style="font-size:14px; font-weight:600; margin-bottom:4px;">身份證資料</div>
+          <div style="font-size:12px; color:var(--text-muted);">請上傳香港身份證或護照</div>
+        </div>
+        <div style="display:flex; gap:12px; margin-bottom:20px;">
+          <div class="upload-area" style="flex:1;" onclick="alert('請上傳身份證正面')">
+            <div class="upload-arrow">&#8593;</div>
+            <div class="upload-text">點擊上傳正面</div>
+          </div>
+          <div class="upload-area" style="flex:1;" onclick="alert('請上傳身份證反面')">
+            <div class="upload-arrow">&#8593;</div>
+            <div class="upload-text">點擊上傳反面</div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">證件號碼</label>
+          <input type="text" class="form-input" placeholder="如：Y123456(7)">
+        </div>
+        <div class="form-group">
+          <label class="form-label">姓名（需與證件一致）</label>
+          <input type="text" class="form-input" placeholder="請輸入姓名">
+        </div>
+      </div>
+      <div class="bottom-bar">
+        <button class="btn btn-primary btn-full" onclick="submitBasicKYC()">提交並驗證</button>
+      </div>
+    </div>
+
+    <!-- ==================== SCREEN: CHECKOUT HIGH (L3) ==================== -->
+    <div class="screen" id="screen-checkout-high">
+      <div class="page-header">
+        <button class="icon-btn" onclick="toggleMenu()" style="font-size:18px;">&#9776;</button>
+        <h1>確認訂單</h1>
+        <div style="width:36px;"></div>
+      </div>
+      <div class="flow-steps">
+        <div class="flow-step" onclick="goTo('confirm')">
+          <div class="flow-step-num">1</div>
+          <div class="flow-step-label">我的購物袋</div>
+        </div>
+        <div class="flow-step" onclick="goTo('pickup-method')">
+          <div class="flow-step-num">2</div>
+          <div class="flow-step-label">取貨方式</div>
+        </div>
+        <div class="flow-step" onclick="goTo('service')">
+          <div class="flow-step-num">3</div>
+          <div class="flow-step-label">心意服務</div>
+        </div>
+        <div class="flow-step active">
+          <div class="flow-step-num">4</div>
+          <div class="flow-step-label">訂單結算</div>
+        </div>
+      </div>
+      <div class="section">
+        <div style="font-size:14px; font-weight:600; margin-bottom:16px;">訂單摘要</div>
+        <div>
+          <div style="margin-bottom:4px;">
+            <span id="checkout-high-product">金元寶 100g x 1</span>
+          </div>
+          <div class="order-summary-row">
+            <span class="label">商品總金額</span>
+            <span id="checkout-high-product-price">HK$245,600</span>
+          </div>
+          <div class="order-summary-row" id="row-high-service-chars" style="display:none;">
+            <span class="label">自選字元</span>
+            <span>HK$260</span>
+          </div>
+          <div class="order-summary-row" id="row-high-service-big" style="display:none;">
+            <span class="label">印圖案（大）</span>
+            <span>HK$88</span>
+          </div>
+          <div class="order-summary-row" id="row-high-service-small" style="display:none;">
+            <span class="label">印圖案（小）</span>
+            <span>HK$52</span>
+          </div>
+          <div class="order-summary-row">
+            <span class="label">運費</span>
+            <span>HK$0</span>
+          </div>
+          <div style="border-top:1px solid var(--border); margin:12px 0;"></div>
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <span style="font-size:14px; color:var(--text-secondary);">總計</span>
+            <span style="font-family:'Noto Serif SC',serif; font-size:22px; font-weight:600; color:var(--gold);" id="checkout-high-total">HK$245,600</span>
+          </div>
+          <div class="order-summary-row" style="margin-top:8px;">
+            <span class="label" style="font-size:12px;">預估關稅、稅項及費用</span>
+            <span style="font-size:12px;">HK$0</span>
+          </div>
+        </div>
+
+        <div class="bottom-bar">
+          <button class="btn btn-primary btn-full" onclick="goTo('kyc-full')">去填寫完整賬戶認證</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== SCREEN: KYC FULL (L3) ==================== -->
+    <div class="screen" id="screen-kyc-full">
+      <div class="page-header">
+        <button class="icon-btn" onclick="toggleMenu()" style="font-size:18px;">&#9776;</button>
+        <h1>完整賬戶認證</h1>
+        <div style="width:36px;"></div>
+      </div>
+      <div class="section">
+        <div style="margin-bottom:20px;">
+          <div style="font-size:14px; font-weight:600; margin-bottom:4px;">銀行卡流水</div>
+          <div style="font-size:12px; color:var(--text-muted);">近 3-6 個月銀行流水，PDF 或截圖</div>
+        </div>
+        <div class="upload-area" style="margin-bottom:24px;">
+            <div class="upload-text">&#8593; 點擊上傳銀行流水</div>
+        </div>
+
+        <div style="margin-bottom:20px;">
+          <div style="font-size:14px; font-weight:600; margin-bottom:4px;">資產證明（選填一項或多選）</div>
+          <div style="font-size:12px; color:var(--text-muted);">存款證明、投資賬戶、房產證等</div>
+        </div>
+        <div class="upload-area" style="margin-bottom:24px;">
+          <div class="upload-text">&#8593; 點擊上傳資產證明</div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">資產說明</label>
+          <textarea class="form-input" rows="3" placeholder="請簡要說明您的資產情況（如存款金額、房產數量、投資類型等）" style="resize:none;"></textarea>
+        </div>
+
+        <div class="sticky-bottom">
+          <button class="btn btn-primary btn-full" onclick="submitFullKYC()">提交審核</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== SCREEN: KYC PENDING ==================== -->
+    <div class="screen" id="screen-kyc-pending">
+      <div class="page-header">
+        <button class="icon-btn" onclick="toggleMenu()" style="font-size:18px;">&#9776;</button>
+        <h1>審核中</h1>
+        <div style="width:36px;"></div>
+      </div>
+      <div class="section" style="text-align:center; padding-top:60px;">
+        <div style="font-size:64px; margin-bottom:24px;">&#9203;</div>
+        <div class="success-title">資料已提交</div>
+        <div class="success-subtitle">後台正在審核您的完整賬戶認證 資料<br>預計 1-2 個工作日內完成</div>
+
+        <div style="display:flex; gap:12px; margin-top:40px;">
+          <button class="btn btn-secondary" style="flex:1;" onclick="goTo('home')">返回首頁</button>
+          <a class="btn btn-primary" style="flex:1; text-decoration:none; text-align:center;" href="https://wa.me/85212345678" target="_blank">聯絡 WhatsApp</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== SCREEN: PAYMENT ==================== -->
+    <div class="screen" id="screen-payment">
+      <div class="page-header">
+        <button class="icon-btn" onclick="toggleMenu()" style="font-size:18px;">&#9776;</button>
+        <h1>確認付款</h1>
+        <div style="width:36px;"></div>
+      </div>
+      <div class="section">
+        <div class="order-summary">
+          <div style="font-weight:600; margin-bottom:12px; font-size:15px;">付款資料</div>
+          <div class="order-summary-row">
+            <span class="label">訂單號</span>
+            <span style="font-family:'Inter','PingFang SC','Noto Sans SC',sans-serif; font-size:12px; letter-spacing:0.5px;">PT-20260612-001</span>
+          </div>
+          <div class="order-summary-row">
+            <span class="label">商品</span>
+            <span id="payment-product">足金金條 50g x 1</span>
+          </div>
+          <div class="order-summary-row total">
+            <span class="label">總額</span>
+            <span class="value" id="payment-total">HK$122,800</span>
+          </div>
+        </div>
+
+        <div style="font-size:14px; font-weight:600; margin-bottom:12px;">選擇支付方式</div>
+        <div class="info-card" style="cursor:pointer; border-color:var(--gold);" onclick="selectPayment(this)">
+          <div class="checkbox-row">
+            <div class="checkbox checked">&#10003;</div>
+            <div style="flex:1;">
+              <div style="font-weight:600; font-size:14px;">信用卡支付</div>
+              <div style="font-size:12px; color:var(--text-muted); margin-top:2px;">**** 8888</div>
+            </div>
+            <span style="font-size:20px;">&#128179;</span>
+          </div>
+        </div>
+        <div class="info-card" style="cursor:pointer;" onclick="selectPayment(this)">
+          <div class="checkbox-row">
+            <div class="checkbox"></div>
+            <div style="flex:1;">
+              <div style="font-weight:600; font-size:14px;">銀行轉賬</div>
+              <div style="font-size:12px; color:var(--text-muted); margin-top:2px;">轉賬後上傳憑證</div>
+            </div>
+            <span style="font-size:20px;">&#127974;</span>
+          </div>
+        </div>
+
+        <div class="sticky-bottom">
+          <button class="btn btn-primary btn-full" onclick="doPayment()">確認付款</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== SCREEN: PROCESSING ==================== -->
+    <div class="screen" id="screen-processing">
+      <div class="processing-screen">
+        <div class="processing-spinner"></div>
+        <div class="processing-title">正在跳轉 Passto Pay 收銀台</div>
+        <div class="processing-subtitle">請稍候，正在安全處理您的付款...</div>
+      </div>
+    </div>
+
+    <!-- ==================== SCREEN: SUCCESS ==================== -->
+    <div class="screen" id="screen-success">
+      <div class="section" style="padding-top:60px;">
+        <div class="success-icon">&#10003;</div>
+        <div class="success-title">付款成功</div>
+        <div class="success-subtitle">您的訂單已確認，我們會盡快安排發貨</div>
+
+        <div class="order-summary" style="margin-top:20px;">
+          <div class="order-summary-row">
+            <span class="label">訂單號</span>
+            <span style="font-family:'Inter','PingFang SC','Noto Sans SC',sans-serif; font-size:12px; letter-spacing:0.5px;">PT-20260612-001</span>
+          </div>
+          <div class="order-summary-row">
+            <span class="label">商品</span>
+            <span id="success-product">足金金條 50g x 1</span>
+          </div>
+          <div class="order-summary-row total">
+            <span class="label">實付金額</span>
+            <span class="value" id="success-total">HK$122,800</span>
+          </div>
+        </div>
+
+        <div style="display:flex; gap:10px; margin-top:24px;">
+          <button class="btn btn-secondary" style="flex:1;" onclick="goTo('home')">返回首頁</button>
+          <button class="btn btn-primary" style="flex:1;" onclick="goTo('pickup')">預約提金</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== SCREEN: RECYCLE (参考 hkkc) ==================== -->
+    <div class="screen" id="screen-recycle">
+      <div class="page-header">
+        <button class="icon-btn" onclick="toggleMenu()" style="font-size:18px;">&#9776;</button>
+        <h1>黃金回收</h1>
+        <div style="width:36px;"></div>
+      </div>
+      <div class="section">
+        <div class="gold-banner" style="border-radius:16px; border:1px solid rgba(201,169,110,0.15); margin-bottom:24px;">
+          <div class="gold-banner-label">今日回收價</div>
+          <div class="gold-price-main">HK$ 2,380<span class="unit">/g</span></div>
+          <div class="gold-banner-time">純度 ≥99.9% · 實時報價</div>
+        </div>
+
+        <div style="font-size:14px; font-weight:600; margin-bottom:16px;">回收流程</div>
+        <div class="info-card">
+          <div style="display:flex; gap:16px; align-items:center;">
+            <div style="text-align:center; flex:1;">
+              <div style="font-size:14px; font-weight:600; color:var(--gold); margin-bottom:4px; white-space:nowrap;">預約到店</div>
+              <div style="font-size:11px; color:var(--text-muted);">Step 1</div>
+            </div>
+            <div style="flex:1; padding-top:0;">
+              <div style="height:2px; background:var(--surface-3); border-radius:1px;"></div>
+            </div>
+            <div style="text-align:center; flex:1;">
+              <div style="font-size:14px; font-weight:500; color:var(--text-secondary); margin-bottom:4px;">到店核驗</div>
+              <div style="font-size:11px; color:var(--text-muted);">Step 2</div>
+            </div>
+            <div style="flex:1; padding-top:0;">
+              <div style="height:2px; background:var(--surface-3); border-radius:1px;"></div>
+            </div>
+            <div style="text-align:center; flex:1;">
+              <div style="font-size:14px; font-weight:500; color:var(--text-secondary); margin-bottom:4px;">當場打款</div>
+              <div style="font-size:11px; color:var(--text-muted);">Step 3</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="font-size:14px; font-weight:600; margin:24px 0 16px;">回收說明</div>
+        <div class="info-card">
+          <div class="info-card-title">如何估價？</div>
+          <div class="info-card-text">回收總價 = 當日回收基準價 × 克重 × 純度系數。足金 ≥99.9% 按基準價計算，K金按純度折算。</div>
+        </div>
+        <div class="info-card">
+          <div class="info-card-title">需要帶什麼？</div>
+          <div class="info-card-text">1. 本人身份證<br>2. 需要回收的黃金實物<br>3. 購買憑證（如有）</div>
+        </div>
+        <div class="info-card">
+          <div class="info-card-title">安全承諾</div>
+          <div class="info-card-text">全程透明操作：火槍檢測、光譜儀驗純、當面稱重、當場確認價格、先收款後交貨。</div>
+        </div>
+
+        <div class="bottom-bar">
+          <button class="btn btn-primary btn-full" onclick="goToRecycleAppointment()">預約到店回收</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== SCREEN: RECYCLE APPOINTMENT ==================== -->
+    <div class="screen" id="screen-recycle-appointment">
+      <div class="page-header">
+        <button class="icon-btn" onclick="toggleMenu()" style="font-size:18px;">&#9776;</button>
+        <h1>回收預約</h1>
+        <div style="width:36px;"></div>
+      </div>
+      <div class="section" style="padding-bottom:100px;">
+        <div style="margin-bottom:20px;">
+          <div style="font-size:14px; font-weight:600; margin-bottom:8px;">客戶姓名</div>
+          <input class="form-input" id="recycle-name" placeholder="請輸入真實姓名" type="text">
+        </div>
+        <div style="margin-bottom:20px;">
+          <div style="font-size:14px; font-weight:600; margin-bottom:8px;">手機號碼</div>
+          <div class="input-row">
+            <select class="form-input" style="width:100px; flex:none;">
+              <option>+852</option>
+              <option>+86</option>
+            </select>
+            <input class="form-input" id="recycle-phone" placeholder="請輸入手機號碼" type="tel">
+          </div>
+        </div>
+        <div style="margin-bottom:20px;">
+          <div style="font-size:14px; font-weight:600; margin-bottom:8px;">物品類型</div>
+          <div style="display:flex; flex-wrap:wrap; gap:8px;" id="recycle-type-options">
+            <div class="recycle-type-option" data-value="投資金條" onclick="selectRecycleType(this)" style="border:1px solid var(--border); border-radius:20px; padding:8px 16px; font-size:13px; cursor:pointer;">投資金條</div>
+            <div class="recycle-type-option" data-value="古法金飾" onclick="selectRecycleType(this)" style="border:1px solid var(--border); border-radius:20px; padding:8px 16px; font-size:13px; cursor:pointer;">古法金飾</div>
+            <div class="recycle-type-option" data-value="黃金首飾" onclick="selectRecycleType(this)" style="border:1px solid var(--border); border-radius:20px; padding:8px 16px; font-size:13px; cursor:pointer;">黃金首飾</div>
+            <div class="recycle-type-option" data-value="生肖吊墜" onclick="selectRecycleType(this)" style="border:1px solid var(--border); border-radius:20px; padding:8px 16px; font-size:13px; cursor:pointer;">生肖吊墜</div>
+            <div class="recycle-type-option" data-value="其他" onclick="selectRecycleType(this)" style="border:1px solid var(--border); border-radius:20px; padding:8px 16px; font-size:13px; cursor:pointer;">其他</div>
+          </div>
+        </div>
+        <div style="margin-bottom:20px;">
+          <div style="font-size:14px; font-weight:600; margin-bottom:8px;">預估重量</div>
+          <select class="form-input" id="recycle-weight">
+            <option value="">請選擇重量區間</option>
+            <option>10g以下</option>
+            <option>10-50g</option>
+            <option>50-100g</option>
+            <option>100g以上</option>
+          </select>
+        </div>
+        <div style="margin-bottom:20px;">
+          <div style="font-size:14px; font-weight:600; margin-bottom:8px;">預約門店</div>
+          <select class="form-input" id="recycle-store">
+            <option>中港城門店</option>
+          </select>
+        </div>
+        <div style="margin-bottom:20px;">
+          <div style="font-size:14px; font-weight:600; margin-bottom:8px;">預約日期</div>
+          <input class="form-input" id="recycle-date" type="date" value="2026-06-15">
+        </div>
+        <div style="margin-bottom:20px;">
+          <div style="font-size:14px; font-weight:600; margin-bottom:8px;">預約時間</div>
+          <select class="form-input" id="recycle-time">
+            <option>10:00 - 12:00</option>
+            <option>14:00 - 16:00</option>
+            <option>16:00 - 18:00</option>
+          </select>
+        </div>
+      </div>
+      <div class="bottom-bar">
+        <button class="btn btn-primary btn-full" onclick="submitRecycleAppointment()">提交預約</button>
+      </div>
+    </div>
+
+    <!-- ==================== SCREEN: PICKUP ==================== -->
+    <div class="screen" id="screen-pickup">
+      <div class="page-header">
+        <button class="icon-btn" onclick="toggleMenu()" style="font-size:18px;">&#9776;</button>
+        <h1>預約提金</h1>
+        <div style="width:36px;"></div>
+      </div>
+      <div class="section">
+        <div class="info-card">
+          <div class="info-card-title">&#128204; 選擇門店</div>
+          <div class="info-card-text">中港城門店 · 香港中環皇后大道中100號<br>營業時間：10:00 - 19:00</div>
+        </div>
+        <div class="info-card">
+          <div class="info-card-title">&#128197; 選擇時間</div>
+          <div class="info-card-text">2026-06-15（週一）14:00 - 15:00</div>
+        </div>
+        <div class="sticky-bottom">
+          <button class="btn btn-primary btn-full" onclick="alert('預約成功！請攜帶身份證到店提取。')">確認預約</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== SCREEN: PROFILE ==================== -->
+    <div class="screen" id="screen-profile">
+      <div class="page-header">
+        <button class="icon-btn" onclick="toggleMenu()" style="font-size:18px;">&#9776;</button>
+        <h1>個人中心</h1>
+        <div style="width:36px;"></div>
+      </div>
+      <div class="section" style="padding-top:20px;">
+        <!-- Welcome -->
+        <div style="margin-bottom:24px; text-align:center; padding:24px 0;">
+          <div id="profile-welcome" style="font-size:22px; font-weight:500; line-height:1.6;">歡迎回來</div>
+        </div>
+
+        <div class="info-card" style="cursor:pointer;" onclick="goTo('cart')">
+          <div style="display:flex; align-items:center; justify-content:space-between;">
+            <span style="font-weight:500;">我的購物袋</span>
+            <span style="color:var(--text-muted);">&#10095;</span>
+          </div>
+        </div>
+        <div class="info-card" style="cursor:pointer;" onclick="goTo('appointment-records')">
+          <div style="display:flex; align-items:center; justify-content:space-between;">
+            <span style="font-weight:500;">預約記錄</span>
+            <span style="color:var(--text-muted);">&#10095;</span>
+          </div>
+        </div>
+        <div class="info-card" style="cursor:pointer;" onclick="goTo('transaction-records')">
+          <div style="display:flex; align-items:center; justify-content:space-between;">
+            <span style="font-weight:500;">交易記錄</span>
+            <span style="color:var(--text-muted);">&#10095;</span>
+          </div>
+        </div>
+
+        <!-- Personal Info -->
+        <div style="margin-top:32px; border:1px solid var(--border); border-radius:12px; padding:20px;">
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;">
+            <span style="font-size:16px; font-weight:600;">個人資料</span>
+            <button class="btn btn-outline" style="padding:6px 14px; font-size:12px; border-radius:6px;" onclick="showToast('功能即將上線')">編輯/查看詳細資料</button>
+          </div>
+          <div style="height:1px; background:var(--border); margin-bottom:16px;"></div>
+          <div style="margin-bottom:14px;">
+            <div style="font-size:12px; color:var(--text-muted); margin-bottom:4px;">姓</div>
+            <div id="profile-surname" style="font-size:15px;">--</div>
+          </div>
+          <div style="margin-bottom:14px;">
+            <div style="font-size:12px; color:var(--text-muted); margin-bottom:4px;">手機號碼</div>
+            <div id="profile-phone" style="font-size:15px;">--</div>
+          </div>
+          <div>
+            <div style="font-size:12px; color:var(--text-muted); margin-bottom:4px;">電郵</div>
+            <div id="profile-email" style="font-size:15px;">--</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== SCREEN: APPOINTMENT RECORDS ==================== -->
+    <div class="screen" id="screen-appointment-records">
+      <div class="page-header">
+        <button class="icon-btn" onclick="toggleMenu()" style="font-size:18px;">&#9776;</button>
+        <h1>預約記錄</h1>
+        <div style="width:36px;"></div>
+      </div>
+      <div id="appointment-content" class="section" style="padding-top:20px;">
+        <!-- Dynamic -->
+      </div>
+    </div>
+
+    <!-- ==================== SCREEN: TRANSACTION RECORDS ==================== -->
+    <div class="screen" id="screen-transaction-records">
+      <div class="page-header">
+        <button class="icon-btn" onclick="toggleMenu()" style="font-size:18px;">&#9776;</button>
+        <h1>交易記錄</h1>
+        <div style="width:36px;"></div>
+      </div>
+      <div id="transaction-content" class="section" style="padding-top:20px;">
+        <!-- Dynamic -->
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // ==================== STATE ====================
+    const products = [
+      {id:1, name:'傳世金條 50克', price:'122,800', purity:'Au 99.99%', img:'https://dev.passtobullion.com/profile/upload/2026/06/04/50g-traditional-final-set_20260604145016A006.png', specs:['50克']},
+      {id:2, name:'傳世金條 100克', price:'245,600', purity:'Au 99.99%', img:'https://dev.passtobullion.com/profile/upload/2026/06/04/100g-traditional-final-set_20260604145028A009.png', specs:['100克']},
+      {id:3, name:'傳世金條 1兩', price:'92,100', purity:'Au 99.99%', img:'https://dev.passtobullion.com/profile/upload/2026/06/04/one-tael-traditional-final-set_20260604144951A003.png', specs:['37.8克']},
+      {id:4, name:'傳世金條 1公斤', price:'2,456,000', purity:'Au 99.99%', img:'https://dev.passtobullion.com/profile/upload/2026/06/04/1kg-traditional-final-set_20260604145039A012.png', specs:['1000克']}
+    ];
+    let state = {
+      user: null,
+      kycLevel: 0,
+      cart: [],
+      currentProduct: products[0],
+      qty: 1,
+      selectedSpec: '50克',
+      pendingAction: null
+    };
+
+    // ==================== PRODUCT SWIPE ====================
+    let touchStartX = 0;
+    let touchEndX = 0;
+    function touchStart(e) { touchStartX = e.changedTouches[0].screenX; }
+    function touchMove(e) { touchEndX = e.changedTouches[0].screenX; }
+    function touchEnd(e) {
+      const diff = touchStartX - touchEndX;
+      if (Math.abs(diff) > 50) {
+        diff > 0 ? nextProduct() : prevProduct();
+      }
+    }
+    let isAnimating = false;
+    function animateProductSlide(newProduct, direction) {
+      if (isAnimating) return;
+      isAnimating = true;
+      const current = document.getElementById('product-img-current');
+      const next = document.getElementById('product-img-next');
+      next.src = newProduct.img || '';
+      next.className = 'product-img ' + (direction === 'next' ? 'slide-in-right' : 'slide-in-left');
+      current.className = 'product-img active ' + (direction === 'next' ? 'slide-out-left' : 'slide-out-right');
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          next.className = 'product-img active';
+        });
+      });
+      setTimeout(() => {
+        loadProduct(newProduct);
+        next.className = 'product-img';
+        next.src = '';
+        isAnimating = false;
+      }, 300);
+    }
+    function prevProduct() {
+      const idx = products.findIndex(p => p.id === state.currentProduct.id);
+      const newIdx = idx <= 0 ? products.length - 1 : idx - 1;
+      animateProductSlide(products[newIdx], 'prev');
+    }
+    function nextProduct() {
+      const idx = products.findIndex(p => p.id === state.currentProduct.id);
+      const newIdx = idx >= products.length - 1 ? 0 : idx + 1;
+      animateProductSlide(products[newIdx], 'next');
+    }
+    function loadProduct(p) {
+      state.currentProduct = p;
+      state.qty = 1;
+      document.getElementById('product-img-current').src = p.img || '';
+      document.getElementById('product-img-next').src = '';
+      document.getElementById('product-name').textContent = p.name;
+      document.getElementById('product-purity').textContent = p.purity;
+      document.getElementById('product-price').textContent = 'HK$' + p.price;
+      document.getElementById('qty-value').textContent = '1';
+      const specContainer = document.getElementById('spec-options');
+      if (p.specs && p.specs.length) {
+        specContainer.innerHTML = p.specs.map((s, i) =>
+          `<div class="spec-option ${i===0?'active':''}" onclick="selectSpec(this, '${s}')">${s}</div>`
+        ).join('');
+        state.selectedSpec = p.specs[0];
+      }
+      document.getElementById('product-scroll').scrollTop = 0;
+      updateProductButtons();
+    }
+    function updateProductButtons() {
+      // Only one button now: add to cart (always visible)
+    }
+    function toggleTheme() {
+      const body = document.body;
+      const btn = document.querySelector('.theme-toggle');
+      if (body.dataset.theme === 'light') {
+        body.dataset.theme = 'dark';
+        btn.textContent = '\uD83C\udf19';
+      } else {
+        body.dataset.theme = 'light';
+        btn.textContent = '\u2600';
+      }
+    }
+
+    // ==================== SIDE MENU ====================
+    function toggleMenu() {
+      document.getElementById('side-menu').classList.toggle('open');
+    }
+    function closeMenu(e) {
+      if (e.target === e.currentTarget) toggleMenu();
+    }
+    function menuGoTo(screenId, data) {
+      toggleMenu();
+      // Close any active screen and go home first if needed
+      const current = document.querySelector('.screen.active');
+      if (current && current.id !== 'screen-' + screenId) {
+        current.classList.remove('active');
+        history.length = 0;
+        const target = document.getElementById('screen-' + screenId);
+        if (target) {
+          target.classList.add('active');
+          target.scrollTop = 0;
+        }
+      }
+      if (data) {
+        state.currentProduct = data;
+        updateProductDetail();
+      }
+    }
+
+    const history = [];
+
+    // ==================== NAVIGATION ====================
+    function goTo(screenId, data) {
+      const current = document.querySelector('.screen.active');
+      if (current) {
+        history.push(current.id);
+        current.classList.remove('active');
+      }
+
+      const next = document.getElementById('screen-' + screenId);
+      if (next) {
+        next.classList.add('active');
+        next.scrollTop = 0;
+      }
+
+      if (screenId === 'product') {
+        updateProductButtons();
+      }
+      if (data) {
+        state.currentProduct = data;
+        updateProductDetail();
+      }
+    }
+
+    function goBack() {
+      const current = document.querySelector('.screen.active');
+      if (current) current.classList.remove('active');
+
+      const prevId = history.pop() || 'screen-home';
+      const prev = document.getElementById(prevId);
+      if (prev) prev.classList.add('active');
+      if (prevId === 'screen-profile') updateProfileUser();
+    }
+
+    // ==================== PRODUCT ====================
+    function updateProductDetail() {
+      const p = state.currentProduct;
+      if (!p) return;
+      document.getElementById('product-name').textContent = p.name;
+      document.getElementById('product-purity').textContent = p.purity;
+      document.getElementById('product-price').textContent = 'HK$' + p.price;
+      document.getElementById('product-img-current').src = p.img || '';
+      document.getElementById('product-img-next').src = '';
+      // Render specs
+      const specContainer = document.getElementById('spec-options');
+      if (p.specs && p.specs.length) {
+        specContainer.innerHTML = p.specs.map((s, i) =>
+          `<div class="spec-option ${i===0?'active':''}" onclick="selectSpec(this, '${s}')">${s}</div>`
+        ).join('');
+        state.selectedSpec = p.specs[0];
+      }
+    }
+
+    function selectSpec(el, val) {
+      document.querySelectorAll('.spec-option').forEach(o => o.classList.remove('active'));
+      el.classList.add('active');
+      state.selectedSpec = val;
+    }
+
+    function changeQty(delta) {
+      state.qty = Math.max(1, state.qty + delta);
+      document.getElementById('qty-value').textContent = state.qty;
+    }
+
+    // ==================== CART ====================
+    function addToCart() {
+      if (!state.currentProduct) return;
+      if (!state.user) {
+        state.pendingAction = 'cart';
+        goTo('login');
+        return;
+      }
+      const existing = state.cart.find(item => item.id === state.currentProduct.id && item.spec === state.selectedSpec);
+      if (existing) {
+        existing.qty += state.qty;
+      } else {
+        state.cart.push({
+          ...state.currentProduct,
+          qty: state.qty,
+          spec: state.selectedSpec
+        });
+      }
+      updateCartBadge();
+      renderCartPopup();
+      toggleCartPopup();
+    }
+
+    function buyNow() {
+      if (!state.user) {
+        state.pendingAction = 'buyFlow';
+        goTo('login');
+        return;
+      }
+      goTo('confirm');
+    }
+    function goToCheckout() {
+      let baseTotal = 0;
+      let productText = '';
+      if (state.checkoutCart && state.checkoutCart.length > 0) {
+        state.checkoutCart.forEach(item => {
+          baseTotal += parseInt(item.price.replace(/,/g, '')) * item.qty;
+        });
+        productText = state.checkoutCart.map(item => item.name + ' x ' + item.qty).join('<br>');
+      } else {
+        const p = state.currentProduct;
+        baseTotal = parseInt(p.price.replace(/,/g, '')) * state.qty;
+        productText = p.name + ' x ' + state.qty;
+      }
+      let serviceTotal = 0;
+      if (serviceState.chars) serviceTotal += 260;
+      if (serviceState.big) serviceTotal += 88;
+      if (serviceState.small) serviceTotal += 52;
+      const finalTotal = baseTotal + serviceTotal;
+
+      // Update service rows visibility
+      document.getElementById('row-service-chars').style.display = serviceState.chars ? 'flex' : 'none';
+      document.getElementById('row-service-big').style.display = serviceState.big ? 'flex' : 'none';
+      document.getElementById('row-service-small').style.display = serviceState.small ? 'flex' : 'none';
+      document.getElementById('row-high-service-chars').style.display = serviceState.chars ? 'flex' : 'none';
+      document.getElementById('row-high-service-big').style.display = serviceState.big ? 'flex' : 'none';
+      document.getElementById('row-high-service-small').style.display = serviceState.small ? 'flex' : 'none';
+
+      if (baseTotal >= 120000) {
+        document.getElementById('checkout-high-product').innerHTML = productText;
+        document.getElementById('checkout-high-product-price').textContent = 'HK$' + baseTotal.toLocaleString();
+        document.getElementById('checkout-high-total').textContent = 'HK$' + finalTotal.toLocaleString();
+        goTo('checkout-high');
+      } else {
+        document.getElementById('checkout-low-product').innerHTML = productText;
+        document.getElementById('checkout-low-product-price').textContent = 'HK$' + baseTotal.toLocaleString();
+        document.getElementById('checkout-low-total').textContent = 'HK$' + finalTotal.toLocaleString();
+        goTo('checkout-low');
+      }
+    }
+
+    function updateProfileUser() {
+      const welcomeEl = document.getElementById('profile-welcome');
+      const surnameEl = document.getElementById('profile-surname');
+      const phoneEl = document.getElementById('profile-phone');
+      const emailEl = document.getElementById('profile-email');
+      if (state.user && state.user.name) {
+        if (welcomeEl) welcomeEl.textContent = state.user.name + '，歡迎回來';
+        if (surnameEl) surnameEl.textContent = state.user.name;
+        if (phoneEl) phoneEl.textContent = state.user.phone || '--';
+        if (emailEl) emailEl.textContent = state.user.email || '--';
+      } else {
+        if (welcomeEl) welcomeEl.textContent = '歡迎回來';
+        if (surnameEl) surnameEl.textContent = '--';
+        if (phoneEl) phoneEl.textContent = '--';
+        if (emailEl) emailEl.textContent = '--';
+      }
+    }
+
+    function updateCartBadge() {
+      const count = state.cart.length;
+      document.querySelectorAll('.badge').forEach(b => {
+        b.textContent = count;
+        b.style.display = count > 0 ? 'flex' : 'none';
+      });
+    }
+
+    function renderCart() {
+      const container = document.getElementById('cart-content');
+      if (state.cart.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-state-title">購物袋是空的</div>
+            <div class="empty-state-text">瀏覽商品，加入購物袋</div>
+          </div>`;
+        return;
+      }
+
+      let total = 0;
+      let html = '<div class="section">';
+      state.cart.forEach((item, i) => {
+        const price = parseInt(item.price.replace(/,/g, ''));
+        total += price * item.qty;
+        html += `
+          <div class="info-card" style="display:flex; gap:12px; align-items:center;">
+            <div style="width:60px; height:60px; background:var(--surface-2); border-radius:10px; display:flex; align-items:center; justify-content:center; overflow:hidden;"><img src="${item.img || ''}" alt="" style="width:100%;height:100%;object-fit:cover;"></div>
+            <div style="flex:1;">
+              <div style="font-weight:600; font-size:14px;">${item.name}</div>
+              <div style="font-size:12px; color:var(--text-muted); margin-top:2px;">${item.spec} · x${item.qty}</div>
+              <div style="color:var(--gold); font-family:'Noto Serif SC',serif; font-weight:600; margin-top:4px;">HK$${(price * item.qty).toLocaleString()}</div>
+            </div>
+            <button class="icon-btn" onclick="removeFromCart(${i})" style="background:transparent; border:none; color:var(--error);">&#10005;</button>
+          </div>`;
+      });
+      html += `
+        <div class="order-summary" style="margin-top:16px; border:none; background:transparent;">
+          <div class="order-summary-row total">
+            <span class="label">總額</span>
+            <span class="value">HK$${total.toLocaleString()}</span>
+          </div>
+        </div>
+        <button class="btn btn-primary btn-full" style="margin-top:16px;" onclick="checkoutFromCart()">去結算</button>
+        </div>`;
+      container.innerHTML = html;
+    }
+
+    function removeFromCart(index) {
+      state.cart.splice(index, 1);
+      updateCartBadge();
+      renderCart();
+    }
+
+    function checkoutFromCart() {
+      if (state.cart.length === 0) return;
+      state.checkoutCart = [...state.cart];
+      goTo('confirm');
+    }
+
+    // ==================== LOGIN ====================
+    function sendCode(btn) {
+      const phoneInput = document.getElementById('phone-input');
+      const regPhoneInput = document.getElementById('reg-phone');
+      const phone = phoneInput && phoneInput.value ? phoneInput.value : (regPhoneInput ? regPhoneInput.value : '');
+      if (!phone || phone.length < 8) {
+        showToast('請輸入有效的手機號碼');
+        return;
+      }
+      const originalText = btn.id === 'reg-send-code-btn' ? '發送驗證碼' : '獲取驗證碼';
+      btn.textContent = '60s';
+      btn.disabled = true;
+      let sec = 60;
+      const timer = setInterval(() => {
+        sec--;
+        btn.textContent = sec + 's';
+        if (sec <= 0) {
+          clearInterval(timer);
+          btn.textContent = originalText;
+          btn.disabled = false;
+        }
+      }, 1000);
+      showToast('驗證碼已發送');
+    }
+
+    function switchLoginTab(tab) {
+      const tabPhone = document.getElementById('login-tab-phone');
+      const tabEmail = document.getElementById('login-tab-email');
+      const formPhone = document.getElementById('login-phone-form');
+      const formEmail = document.getElementById('login-email-form');
+      if (tab === 'phone') {
+        tabPhone.style.borderBottomColor = 'var(--gold)';
+        tabPhone.style.color = 'var(--gold)';
+        tabPhone.style.fontWeight = '500';
+        tabEmail.style.borderBottomColor = 'transparent';
+        tabEmail.style.color = 'var(--text-muted)';
+        tabEmail.style.fontWeight = '400';
+        formPhone.style.display = 'block';
+        formEmail.style.display = 'none';
+      } else {
+        tabEmail.style.borderBottomColor = 'var(--gold)';
+        tabEmail.style.color = 'var(--gold)';
+        tabEmail.style.fontWeight = '500';
+        tabPhone.style.borderBottomColor = 'transparent';
+        tabPhone.style.color = 'var(--text-muted)';
+        tabPhone.style.fontWeight = '400';
+        formEmail.style.display = 'block';
+        formPhone.style.display = 'none';
+      }
+    }
+
+    function togglePasswordVisibility() {
+      const input = document.getElementById('password-input');
+      input.type = input.type === 'password' ? 'text' : 'password';
+    }
+
+    function toggleEmailPasswordVisibility() {
+      const input = document.getElementById('email-password-input');
+      input.type = input.type === 'password' ? 'text' : 'password';
+    }
+
+    function selectTitle(el) {
+      document.querySelectorAll('.register-title-option').forEach(opt => {
+        opt.style.borderColor = 'var(--border)';
+        opt.style.background = 'transparent';
+        opt.style.color = 'var(--text)';
+        opt.removeAttribute('data-selected');
+      });
+      el.style.borderColor = 'var(--gold)';
+      el.style.background = 'rgba(212, 175, 55, 0.1)';
+      el.style.color = 'var(--gold)';
+      el.setAttribute('data-selected', 'true');
+    }
+
+    function doRegister() {
+      const surname = document.getElementById('reg-surname').value.trim();
+      const givenName = document.getElementById('reg-given-name').value.trim();
+      const phone = document.getElementById('reg-phone').value.trim();
+      const code = document.getElementById('reg-code').value.trim();
+      const email = document.getElementById('reg-email').value.trim();
+      const dobDay = document.getElementById('reg-dob-day').value;
+      const dobMonth = document.getElementById('reg-dob-month').value;
+      const ageGroup = document.getElementById('reg-age-group').value;
+      const titleEl = document.querySelector('.register-title-option[data-selected="true"]');
+      const title = titleEl ? titleEl.dataset.value : '';
+
+      if (!title || !surname || !givenName || !phone || !code || !email || !dobDay || !dobMonth || !ageGroup) {
+        showToast('請填寫所有必填欄位');
+        return;
+      }
+      state.user = { phone, name: surname + givenName, email };
+      state.kycLevel = 1;
+      showToast('登記成功');
+      updateProfileUser();
+      goTo('home');
+    }
+
+    function doLogin() {
+      const phone = document.getElementById('phone-input').value;
+      const password = document.getElementById('password-input').value;
+      if (!phone || !password) {
+        showToast('請填寫手機號碼和密碼');
+        return;
+      }
+      state.user = { phone, name: '用戶' };
+      state.kycLevel = 1;
+      showToast('登入成功');
+      updateProfileUser();
+      const action = state.pendingAction;
+      state.pendingAction = null;
+      if (action === 'cart') {
+        addToCart();
+        updateProductButtons();
+        goBack();
+      } else if (action === 'recycleAppointment') {
+        goTo('recycle-appointment');
+      } else {
+        goBack();
+      }
+    }
+
+    function goToRecycleAppointment() {
+      if (!state.user) {
+        state.pendingAction = 'recycleAppointment';
+        goTo('login');
+        return;
+      }
+      // Auto-fill phone if logged in
+      if (state.user && state.user.phone) {
+        document.getElementById('recycle-phone').value = state.user.phone;
+      }
+      goTo('recycle-appointment');
+    }
+    function selectRecycleType(el) {
+      document.querySelectorAll('.recycle-type-option').forEach(opt => {
+        opt.style.borderColor = 'var(--border)';
+        opt.style.background = 'transparent';
+        opt.style.color = 'var(--text)';
+        opt.removeAttribute('data-selected');
+      });
+      el.style.borderColor = 'var(--gold)';
+      el.style.background = 'rgba(212, 175, 55, 0.1)';
+      el.style.color = 'var(--gold)';
+      el.setAttribute('data-selected', 'true');
+    }
+
+    function submitRecycleAppointment() {
+      if (!state.user) {
+        showToast('請先登入');
+        goTo('login');
+        return;
+      }
+      const name = document.getElementById('recycle-name').value.trim();
+      const phone = document.getElementById('recycle-phone').value.trim();
+      if (!name || !phone) {
+        showToast('請填寫姓名和手機號碼');
+        return;
+      }
+      const typeEl = document.querySelector('.recycle-type-option[data-selected="true"]');
+      const type = typeEl ? typeEl.dataset.value : '';
+      const weight = document.getElementById('recycle-weight').value;
+      if (!type || !weight) {
+        showToast('請選擇物品類型和預估重量');
+        return;
+      }
+      const store = document.getElementById('recycle-store').value;
+      const date = document.getElementById('recycle-date').value;
+      const time = document.getElementById('recycle-time').value;
+      mockAppointments.push({
+        type: 'recycle',
+        title: '黃金回收',
+        product: type + ' · ' + weight,
+        date: date + ' ' + time.split(' - ')[0],
+        store: store,
+        status: '待確認'
+      });
+      showToast('預約提交成功');
+      goTo('recycle');
+    }
+
+    function validatePickupAndGo() {
+      const name = document.getElementById('pickup-name').value.trim();
+      const phone = document.getElementById('pickup-phone').value.trim();
+      if (!name || !phone) {
+        showToast('請填寫取貨人姓名和手機號碼');
+        return;
+      }
+      goTo('service');
+    }
+
+    // ==================== KYC ====================
+    function getCheckoutSummary() {
+      if (state.checkoutCart && state.checkoutCart.length > 0) {
+        let total = 0;
+        state.checkoutCart.forEach(item => {
+          total += parseInt(item.price.replace(/,/g, '')) * item.qty;
+        });
+        const text = state.checkoutCart.map(item => item.name + ' x ' + item.qty).join('<br>');
+        return { total, text };
+      }
+      const p = state.currentProduct;
+      const total = p ? (parseInt(p.price.replace(/,/g, '')) * state.qty) : 122800;
+      const text = p ? p.name + ' x ' + state.qty : '足金金條 50g x 1';
+      return { total, text };
+    }
+
+    function goToPaymentFromCheckoutLow() {
+      const summary = getCheckoutSummary();
+      document.getElementById('payment-product').innerHTML = summary.text;
+      document.getElementById('payment-total').textContent = 'HK$' + summary.total.toLocaleString();
+      goTo('payment');
+    }
+
+    function submitBasicKYC() {
+      state.kycLevel = 2;
+      showToast('基礎信息認證 驗證通過');
+      const summary = getCheckoutSummary();
+      document.getElementById('payment-product').innerHTML = summary.text;
+      document.getElementById('payment-total').textContent = 'HK$' + summary.total.toLocaleString();
+      goTo('payment');
+    }
+
+    function submitFullKYC() {
+      state.kycLevel = 3;
+      showToast('資料已提交，等待審核');
+      goTo('kyc-pending');
+    }
+
+    // ==================== PAYMENT ====================
+    function selectPayment(card) {
+      document.querySelectorAll('.info-card').forEach(c => {
+        c.style.borderColor = 'var(--border)';
+        c.querySelector('.checkbox').classList.remove('checked');
+        c.querySelector('.checkbox').textContent = '';
+      });
+      card.style.borderColor = 'var(--gold)';
+      card.querySelector('.checkbox').classList.add('checked');
+      card.querySelector('.checkbox').textContent = '\u2713';
+    }
+
+    function doPayment() {
+      const summary = getCheckoutSummary();
+      document.getElementById('success-product').innerHTML = summary.text;
+      document.getElementById('success-total').textContent = 'HK$' + summary.total.toLocaleString();
+      document.getElementById('payment-product').innerHTML = summary.text;
+      document.getElementById('payment-total').textContent = 'HK$' + summary.total.toLocaleString();
+      goTo('processing');
+      setTimeout(() => {
+        goTo('success');
+      }, 2000);
+    }
+
+    // ==================== UTILS ====================
+    function showToast(msg) {
+      const toast = document.createElement('div');
+      toast.textContent = msg;
+      toast.style.cssText = `
+        position: fixed; top: 50%; left: 50%; transform: translate(-50%,-50%);
+        background: var(--surface-2); color: var(--text); padding: 12px 24px;
+        border-radius: 10px; border: 1px solid var(--border); z-index: 9999;
+        font-size: 14px; animation: fadeInOut 2s forwards;
+      `;
+      document.body.appendChild(toast);
+      setTimeout(() => toast.remove(), 2000);
+    }
+
+    function toggleChatMenu() {
+      document.getElementById('chat-overlay').classList.toggle('open');
+      document.getElementById('chat-menu').classList.toggle('open');
+    }
+
+    function toggleContactDropdown() {
+      document.getElementById('contact-dropdown-overlay').classList.toggle('open');
+      document.getElementById('contact-dropdown').classList.toggle('open');
+    }
+
+    function toggleCartPopup() {
+      document.getElementById('cart-popup-overlay').classList.toggle('open');
+      document.getElementById('cart-popup').classList.toggle('open');
+    }
+
+    function renderCartPopup() {
+      const container = document.getElementById('cart-popup-items');
+      if (!container) return;
+      let html = '';
+      state.cart.forEach(item => {
+        const price = parseInt(item.price.replace(/,/g, '')) * item.qty;
+        html += `
+          <div class="cart-popup-item">
+            <img src="${item.img || ''}" alt="">
+            <div class="cart-popup-item-body">
+              <div class="cart-popup-item-name">${item.name}</div>
+              <div class="cart-popup-item-spec">${item.spec || ''} · x${item.qty}</div>
+              <div class="cart-popup-item-price">HK$${price.toLocaleString()}</div>
+            </div>
+          </div>`;
+      });
+      container.innerHTML = html;
+    }
+
+    function goToCartAndCheckout() {
+      toggleCartPopup();
+      goTo('cart');
+    }
+
+    // Override navigation
+    const origGoTo = goTo;
+    goTo = function(screenId, data) {
+      if (screenId === 'cart') renderCart();
+      if (screenId === 'confirm') loadConfirm();
+      if (screenId === 'appointment-records') renderAppointmentRecords();
+      if (screenId === 'transaction-records') renderTransactionRecords();
+      if (screenId === 'profile') updateProfileUser();
+      if (screenId === 'pickup-method') {
+        if (state.user && state.user.phone) {
+          const phoneInput = document.getElementById('pickup-phone');
+          if (phoneInput) phoneInput.value = state.user.phone;
+        }
+      }
+      if (screenId === 'recycle-appointment') {
+        if (state.user && state.user.phone) {
+          const phoneInput = document.getElementById('recycle-phone');
+          if (phoneInput) phoneInput.value = state.user.phone;
+        }
+      }
+      origGoTo(screenId, data);
+    };
+    function loadConfirm() {
+      const container = document.getElementById('confirm-items');
+      if (!container) return;
+
+      if (state.checkoutCart && state.checkoutCart.length > 0) {
+        let html = '';
+        let total = 0;
+        let totalQty = 0;
+        state.checkoutCart.forEach(item => {
+          const price = parseInt(item.price.replace(/,/g, ''));
+          total += price * item.qty;
+          totalQty += item.qty;
+          html += `
+            <div class="info-card" style="display:flex; gap:14px; align-items:center; margin-bottom:12px;">
+              <img src="${item.img || ''}" alt="" style="width:80px; height:80px; object-fit:cover; border-radius:10px; background:var(--surface-2);">
+              <div style="flex:1;">
+                <div style="font-weight:600; font-size:15px;">${item.name}</div>
+                <div style="font-size:12px; color:var(--text-muted); margin-top:2px;">${item.spec || ''}</div>
+                <div style="color:var(--gold); font-family:'Noto Serif SC',serif; font-weight:600; margin-top:6px;">HK$${item.price}/件</div>
+              </div>
+              <div style="font-size:14px; color:var(--text-secondary);">x${item.qty}</div>
+            </div>`;
+        });
+        container.innerHTML = html;
+        document.getElementById('confirm-total').textContent = 'HK$' + total.toLocaleString();
+        document.getElementById('confirm-page-title').textContent = '我的購物袋（' + totalQty + '）';
+      } else {
+        const p = state.currentProduct;
+        if (!p) return;
+        container.innerHTML = `
+          <div class="info-card" style="display:flex; gap:14px; align-items:center;">
+            <img src="${p.img || ''}" alt="" style="width:80px; height:80px; object-fit:cover; border-radius:10px; background:var(--surface-2);">
+            <div style="flex:1;">
+              <div style="font-weight:600; font-size:15px;">${p.name}</div>
+              <div style="font-size:12px; color:var(--text-muted); margin-top:2px;">${state.selectedSpec || p.specs[0]}</div>
+              <div style="color:var(--gold); font-family:'Noto Serif SC',serif; font-weight:600; margin-top:6px;">HK$${p.price}/件</div>
+            </div>
+            <div style="font-size:14px; color:var(--text-secondary);">x${state.qty}</div>
+          </div>`;
+        const total = (parseInt(p.price.replace(/,/g, '')) * state.qty).toLocaleString();
+        document.getElementById('confirm-total').textContent = 'HK$' + total;
+        document.getElementById('confirm-page-title').textContent = '我的購物袋（' + state.qty + '）';
+      }
+    }
+    // Mock data for records
+    const mockAppointments = [
+      { type: 'pickup', title: '門店提金', product: '傳世金條 50克', date: '2026-06-15 14:00', store: '中港城門店', status: '已確認' },
+      { type: 'pickup', title: '門店提金', product: '傳世金條 100克', date: '2026-06-18 10:30', store: '中港城門店', status: '待確認' },
+      { type: 'recycle', title: '黃金回收', product: '舊金飾 20克', date: '2026-06-10 11:00', store: '中港城門店', status: '已完成' }
+    ];
+    const mockTransactions = [
+      { type: 'buy', product: '傳世金條 50克', amount: 'HK$122,800', date: '2026-06-12', status: '已付款' },
+      { type: 'buy', product: '傳世金條 100克', amount: 'HK$245,600', date: '2026-06-08', status: '已完成' },
+      { type: 'sell', product: '舊金飾 20克', amount: 'HK$47,600', date: '2026-06-10', status: '已報價' },
+      { type: 'sell', product: 'K金項鍊 15克', amount: 'HK$32,400', date: '2026-06-05', status: '已檢驗' },
+      { type: 'sell', product: '足金手鐲 30克', amount: 'HK$71,400', date: '2026-05-28', status: '已完成' }
+    ];
+
+    function renderAppointmentRecords() {
+      const container = document.getElementById('appointment-content');
+      if (!state.user) {
+        container.innerHTML = `<div style="text-align:center; padding:40px 20px; color:var(--text-muted);">
+          <div style="font-size:15px; margin-bottom:8px;">暫無預約記錄</div>
+          <div style="font-size:13px;">登入後即可查看預約記錄</div>
+        </div>`;
+        return;
+      }
+      let html = '';
+      mockAppointments.forEach(item => {
+        const statusColor = item.status === '已完成' ? 'var(--success)' : item.status === '已確認' ? 'var(--gold)' : 'var(--warning)';
+        html += `<div class="info-card" style="margin-bottom:12px;">
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:8px;">
+            <div style="font-weight:600; font-size:15px;">${item.title}</div>
+            <span style="font-size:12px; color:${statusColor}; font-weight:500;">${item.status}</span>
+          </div>
+          <div style="font-size:13px; color:var(--text-secondary); margin-bottom:4px;">${item.product}</div>
+          <div style="font-size:12px; color:var(--text-muted);">${item.date} · ${item.store}</div>
+        </div>`;
+      });
+      container.innerHTML = html || '<div style="text-align:center; padding:40px; color:var(--text-muted);">暫無預約記錄</div>';
+    }
+
+    function renderTransactionRecords() {
+      const container = document.getElementById('transaction-content');
+      let html = '';
+      mockTransactions.forEach(item => {
+        const typeLabel = item.type === 'buy' ? '買入' : '賣出';
+        const typeColor = item.type === 'buy' ? 'var(--gold)' : 'var(--success)';
+        const statusColor = item.status === '已完成' ? 'var(--success)' : item.status === '已付款' ? 'var(--gold)' : 'var(--text-muted)';
+        html += `<div class="info-card" style="margin-bottom:12px;">
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:8px;">
+            <div style="display:flex; align-items:center; gap:8px;">
+              <span style="font-size:12px; color:${typeColor}; border:1px solid ${typeColor}; padding:2px 8px; border-radius:4px;">${typeLabel}</span>
+              <span style="font-weight:600; font-size:15px;">${item.product}</span>
+            </div>
+            <span style="font-size:12px; color:${statusColor}; font-weight:500;">${item.status}</span>
+          </div>
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <div style="font-size:12px; color:var(--text-muted);">${item.date}</div>
+            <div style="font-weight:600; color:var(--text);">${item.amount}</div>
+          </div>
+        </div>`;
+      });
+      container.innerHTML = html || '<div style="text-align:center; padding:40px; color:var(--text-muted);">暫無交易記錄</div>';
+    }
+
+    const serviceState = { chars: false, big: false, small: false };
+    function toggleService(type) {
+      serviceState[type] = !serviceState[type];
+      const chkId = type === 'chars' ? 'chk-chars' : type === 'big' ? 'chk-big' : 'chk-small';
+      const chk = document.getElementById(chkId);
+      if (serviceState[type]) {
+        chk.classList.add('checked');
+        chk.textContent = '\u2713';
+      } else {
+        chk.classList.remove('checked');
+        chk.textContent = '';
+      }
+      if (type === 'chars') {
+        document.getElementById('chars-input').style.display = serviceState.chars ? 'block' : 'none';
+      }
+      // Show WA hint if any pattern selected
+      const patternCount = (serviceState.big ? 1 : 0) + (serviceState.small ? 1 : 0);
+      document.getElementById('service-wa').style.display = patternCount >= 1 ? 'block' : 'none';
+    }
+
+    // Toast animation
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes fadeInOut {
+        0% { opacity: 0; transform: translate(-50%,-50%) scale(0.9); }
+        15% { opacity: 1; transform: translate(-50%,-50%) scale(1); }
+        85% { opacity: 1; transform: translate(-50%,-50%) scale(1); }
+        100% { opacity: 0; transform: translate(-50%,-50%) scale(0.9); }
+      }
+    `;
+    document.head.appendChild(style);
+    loadProduct(products[0]);
+  </script>
+</body>
+</html>
