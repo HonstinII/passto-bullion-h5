@@ -52,124 +52,6 @@
       -webkit-font-smoothing: antialiased;
     }
 
-    .chat-bubble {
-      position: absolute;
-      bottom: 20px;
-      right: 20px;
-      z-index: 200;
-      width: 56px;
-      height: 56px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, var(--gold), var(--gold-dim));
-      border: none;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.3);
-      cursor: pointer;
-      font-size: 24px;
-      color: #000;
-    }
-    .chat-menu-overlay {
-      position: fixed;
-      inset: 0;
-      z-index: 300;
-      background: rgba(0,0,0,0.5);
-      display: none;
-    }
-    .chat-menu-overlay.open { display: block; }
-    .chat-menu {
-      position: fixed;
-      left: 50%;
-      bottom: 0;
-      transform: translateX(-50%) translateY(100%);
-      max-width: 430px;
-      width: 100%;
-      z-index: 301;
-      background: var(--surface);
-      border-radius: 20px 20px 0 0;
-      padding: 20px 24px calc(24px + env(safe-area-inset-bottom));
-      transition: transform 300ms ease;
-    }
-    .chat-menu.open { transform: translateX(-50%) translateY(0); }
-    .chat-menu-title {
-      font-size: 16px;
-      font-weight: 600;
-      text-align: center;
-      margin-bottom: 16px;
-      padding-bottom: 12px;
-      border-bottom: 1px solid var(--border);
-    }
-    .chat-menu-item {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 12px;
-      padding: 16px;
-      border-radius: 12px;
-      background: var(--surface-2);
-      margin-bottom: 12px;
-      font-size: 15px;
-      font-weight: 500;
-      cursor: pointer;
-      border: 1px solid var(--border);
-      color: var(--text);
-      text-decoration: none;
-    }
-    .chat-menu-close {
-      text-align: center;
-      padding: 12px;
-      font-size: 13px;
-      color: var(--text-muted);
-      cursor: pointer;
-    }
-    /* Contact Dropdown (top bubble) */
-    .contact-dropdown-overlay {
-      position: fixed;
-      inset: 0;
-      z-index: 300;
-      background: rgba(0,0,0,0.5);
-      display: none;
-    }
-    .contact-dropdown-overlay.open { display: block; }
-    .contact-dropdown {
-      position: fixed;
-      left: 50%;
-      top: 60px;
-      transform: translateX(-50%) translateY(-20px);
-      max-width: 320px;
-      width: 90%;
-      z-index: 301;
-      background: var(--surface);
-      border-radius: 16px;
-      padding: 20px 24px;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 250ms ease, transform 250ms ease;
-    }
-    .contact-dropdown.open {
-      opacity: 1;
-      pointer-events: all;
-      transform: translateX(-50%) translateY(0);
-    }
-    .contact-dropdown-item {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 12px;
-      padding: 14px;
-      border-radius: 12px;
-      background: var(--surface-2);
-      margin-bottom: 10px;
-      font-size: 15px;
-      font-weight: 500;
-      cursor: pointer;
-      border: 1px solid var(--border);
-      color: var(--text);
-      text-decoration: none;
-    }
-    .contact-dropdown-item:last-child { margin-bottom: 0; }
     /* Cart Added Popup */
     .cart-popup-overlay {
       position: fixed;
@@ -238,6 +120,63 @@
       max-width: 360px;
       width: 100%;
       text-align: center;
+    }
+    .contact-popup-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 350;
+      background: rgba(0,0,0,0.6);
+      display: none;
+      align-items: flex-end;
+      justify-content: center;
+      padding: 0;
+    }
+    .contact-popup-overlay.active { display: flex; }
+    .contact-popup {
+      background: var(--surface);
+      border-radius: 20px 20px 0 0;
+      padding: 24px 20px calc(24px + env(safe-area-inset-bottom));
+      max-width: 430px;
+      width: 100%;
+      transform: translateY(100%);
+      transition: transform 300ms ease;
+    }
+    .contact-popup-overlay.active .contact-popup {
+      transform: translateY(0);
+    }
+    .contact-popup-title {
+      font-size: 16px;
+      font-weight: 600;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .contact-popup-option {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 16px;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      margin-bottom: 12px;
+      color: var(--text);
+      text-decoration: none;
+      font-size: 15px;
+      font-weight: 500;
+    }
+    .contact-popup-option:active { background: var(--surface-3); }
+    .contact-popup-cancel {
+      display: block;
+      width: 100%;
+      padding: 14px;
+      margin-top: 8px;
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      color: var(--text-secondary);
+      font-size: 15px;
+      text-align: center;
+      cursor: pointer;
     }
     .cart-popup-item {
       display: flex;
@@ -342,17 +281,27 @@
 
     /* Header */
     .page-header {
+      position: -webkit-sticky;
       position: sticky;
       top: 0;
-      z-index: 50;
+      z-index: 100;
       background: rgba(10,10,10,0.92);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
       border-bottom: 1px solid var(--border);
-      padding: 12px 20px;
+      padding: 12px max(20px, calc((100vw - 430px) / 2));
       display: flex;
       align-items: center;
       justify-content: space-between;
+      width: 100vw;
+      margin-left: calc(50% - 50vw);
+      min-height: 60px;
+    }
+    .page-header > div,
+    .page-header > button,
+    .page-header > .header-actions {
+      position: relative;
+      z-index: 2;
     }
     .page-header h1 {
       font-family: 'Noto Serif SC', serif;
@@ -387,18 +336,28 @@
     .icon-btn {
       width: 36px; height: 36px;
       border-radius: 10px;
-      background: var(--surface-2);
-      border: 1px solid var(--border);
-      color: var(--text);
+      background: transparent;
+      border: none;
+      color: var(--gold);
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
       position: relative;
+      padding: 0;
+    }
+    .icon-btn svg {
+      display: block;
+      width: 22px;
+      height: 22px;
+      fill: currentColor;
+    }
+    .page-header > button.icon-btn:first-of-type {
+      margin-left: 4px;
     }
     .badge {
       position: absolute;
-      top: -2px; right: -2px;
+      top: -2px; right: 2px;
       background: var(--gold);
       color: #000;
       font-size: 10px;
@@ -414,9 +373,11 @@
     .gold-banner {
       background: linear-gradient(135deg, #1a1510 0%, #0f0d0a 50%, #1a1510 100%);
       border-bottom: 1px solid rgba(201,169,110,0.15);
-      padding: 24px 20px;
+      padding: 24px max(20px, calc((100vw - 430px) / 2));
       position: relative;
       overflow: hidden;
+      width: 100vw;
+      margin-left: calc(50% - 50vw);
     }
     .gold-banner::before {
       content: '';
@@ -432,6 +393,7 @@
       letter-spacing: 3px;
       text-transform: uppercase;
       margin-bottom: 8px;
+      text-align: center;
     }
     .gold-price-main {
       font-family: 'Noto Serif SC', serif;
@@ -441,6 +403,7 @@
       line-height: 1;
       display: flex;
       align-items: baseline;
+      justify-content: center;
       gap: 4px;
     }
     .gold-price-main .unit {
@@ -464,6 +427,7 @@
       font-size: 11px;
       color: var(--text-muted);
       margin-top: 12px;
+      text-align: center;
     }
 
     /* Section */
@@ -609,7 +573,8 @@
     }
     .product-scroll {
       flex: 1;
-      overflow: hidden;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
     }
     .product-info { padding: 20px; }
     .product-info-name {
@@ -814,54 +779,131 @@
     }
     .input-row .form-input { flex: 1; }
 
-    /* KYC Level Indicator */
-    .kyc-levels {
-      display: flex;
-      gap: 8px;
+    /* Converter */
+    .converter-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 24px;
+      position: relative;
       margin-bottom: 24px;
     }
-    .kyc-level {
+    .converter-row {
+      margin-bottom: 8px;
+    }
+    .converter-row:last-child {
+      margin-bottom: 0;
+    }
+    .converter-label {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+    .converter-input-wrap {
+      display: flex;
+      align-items: center;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: var(--surface-2);
+      padding: 14px 16px;
+      margin-bottom: 10px;
+    }
+    .converter-unit-label {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-right: 12px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .converter-input {
       flex: 1;
-      text-align: center;
-      padding: 12px 4px;
+      border: none;
+      background: transparent;
+      color: var(--text);
+      font-size: 24px;
+      font-weight: 600;
+      text-align: left;
+      outline: none;
+      font-family: inherit;
+      width: 100%;
+    }
+    .converter-output {
+      flex: 1;
+      border: none;
+      background: transparent;
+      color: var(--gold);
+      font-size: 24px;
+      font-weight: 600;
+      text-align: left;
+      outline: none;
+      font-family: inherit;
+      width: 100%;
+    }
+    .converter-unit-select {
+      appearance: none;
+      -webkit-appearance: none;
+      border: 1px solid var(--border);
       border-radius: 12px;
-      border: 1.5px solid var(--border);
-      background: var(--surface);
-      transition: all 200ms;
+      background: var(--surface-2);
+      color: var(--text);
+      font-size: 14px;
+      padding: 14px 16px;
+      width: 100%;
+      outline: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23c9a96e' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      padding-right: 36px;
     }
-    .kyc-level.active {
-      border-color: var(--gold);
-      background: rgba(201,169,110,0.08);
-    }
-    .kyc-level.completed {
-      border-color: var(--success);
-      background: rgba(16,185,129,0.08);
-    }
-    .kyc-level .level-icon {
-      width: 28px; height: 28px;
+    .converter-swap {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: 44px;
+      height: 44px;
       border-radius: 50%;
-      background: var(--surface-3);
+      border: 1px solid var(--border);
+      background: var(--surface-2);
+      color: var(--gold);
+      font-size: 20px;
       display: flex;
       align-items: center;
       justify-content: center;
-      margin: 0 auto 6px;
-      font-size: 12px;
-      font-weight: 600;
+      cursor: pointer;
+      z-index: 2;
     }
-    .kyc-level.active .level-icon {
-      background: var(--gold);
-      color: #000;
+    .converter-reference {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px;
     }
-    .kyc-level.completed .level-icon {
-      background: var(--success);
-      color: #000;
+    .converter-ref-title {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-bottom: 12px;
+      font-weight: 500;
     }
-    .kyc-level .level-name {
-      font-size: 11px;
-      color: var(--text-muted);
+    .converter-ref-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
     }
-    .kyc-level.active .level-name {
+    .converter-ref-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--surface-2);
+      border-radius: 10px;
+      padding: 12px 14px;
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+    .converter-ref-item span {
       color: var(--gold);
+      font-weight: 600;
     }
 
     /* Info Card */
@@ -884,6 +926,118 @@
       font-size: 13px;
       color: var(--text-secondary);
       line-height: 1.6;
+    }
+
+    /* Profile */
+    .profile-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 24px;
+      margin-bottom: 16px;
+    }
+    .profile-user-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+    .profile-avatar {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+      color: #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+    .profile-welcome-text {
+      font-size: 20px;
+      font-weight: 600;
+      line-height: 1.4;
+    }
+    .profile-welcome-sub {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+    .profile-info-grid {
+      display: grid;
+      gap: 16px;
+    }
+    .profile-info-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+    .profile-info-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: var(--surface-2);
+      color: var(--gold);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+    .profile-info-body {
+      flex: 1;
+      min-width: 0;
+    }
+    .profile-info-label {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 2px;
+    }
+    .profile-info-value {
+      font-size: 15px;
+      font-weight: 500;
+      word-break: break-all;
+    }
+    .profile-menu-list {
+      display: grid;
+      gap: 12px;
+    }
+    .profile-menu-item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      cursor: pointer;
+      transition: background 200ms ease, border-color 200ms ease;
+    }
+    .profile-menu-item:active {
+      background: var(--surface-2);
+    }
+    .profile-menu-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      background: var(--surface-2);
+      color: var(--gold);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+    .profile-menu-text {
+      flex: 1;
+      font-size: 15px;
+      font-weight: 500;
+    }
+    .profile-menu-arrow {
+      color: var(--text-muted);
+      font-size: 14px;
     }
 
     /* Order Summary */
@@ -1080,6 +1234,96 @@
       font-size: 12px;
     }
 
+    /* Service panel on confirm page */
+    .service-toggle {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 12px;
+      border: 1.5px dashed var(--gold-dim);
+      border-radius: 12px;
+      color: var(--gold);
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      margin: 16px 0;
+      transition: all 200ms;
+    }
+    .service-toggle:active { background: rgba(201,169,110,0.08); }
+    .service-panel {
+      display: none;
+      margin-top: 4px;
+      margin-bottom: 16px;
+    }
+    .service-panel.open { display: block; }
+    .service-option {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 14px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      margin-bottom: 10px;
+      cursor: pointer;
+    }
+    .service-option-title { font-weight: 600; font-size: 14px; }
+    .service-option-desc { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
+    .service-option-price { font-size: 13px; color: var(--gold); margin-top: 4px; }
+    .service-option .checkbox { margin-top: 2px; }
+    .service-chars-input {
+      display: none;
+      margin-top: 10px;
+    }
+    .service-wa {
+      display: none;
+      font-size: 12px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin-top: 10px;
+      padding: 10px;
+      background: var(--surface-2);
+      border-radius: 10px;
+    }
+
+    /* Cart inline service */
+    .cart-item-service-labels {
+      display: flex;
+      flex-wrap: nowrap;
+      gap: 6px;
+      margin-top: 6px;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+    .cart-item-service-labels::-webkit-scrollbar { display: none; }
+    .cart-item-service-label {
+      flex-shrink: 0;
+      font-size: 11px;
+      color: var(--gold);
+      border: 1px solid var(--gold-dim);
+      padding: 2px 8px;
+      border-radius: 4px;
+      white-space: nowrap;
+    }
+    .cart-service-panel {
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border);
+    }
+    .cart-service-panel .service-option {
+      padding: 10px 12px;
+      margin-bottom: 8px;
+    }
+    .cart-service-panel .service-option-title { font-size: 13px; }
+    .cart-service-panel .service-option-desc { font-size: 11px; }
+    .cart-service-panel .service-option-price { font-size: 12px; }
+    .cart-service-panel .service-wa {
+      margin-top: 8px;
+      font-size: 11px;
+    }
+
     /* Sticky bottom for forms */
     .sticky-bottom {
       position: sticky;
@@ -1148,6 +1392,172 @@
       color: var(--text-muted);
       font-size: 12px;
       flex-shrink: 0;
+    }
+
+    /* Home Sections */
+    .home-section {
+      min-height: auto;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 48px 20px;
+      position: relative;
+    }
+    .home-section:first-of-type {
+      justify-content: flex-start;
+      padding-top: 0;
+      padding-bottom: 0;
+      overflow: visible;
+    }
+    .home-section:nth-of-type(2) {
+      padding-top: 64px;
+      padding-bottom: 64px;
+    }
+    .brand-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 28px 24px;
+      text-align: center;
+    }
+    .brand-card h2 {
+      font-family: 'Noto Serif SC', serif;
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: var(--gold);
+    }
+    .brand-card .subtitle {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-bottom: 24px;
+    }
+    .feature-list {
+      text-align: left;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .feature-list li {
+      list-style: none;
+      font-size: 14px;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .feature-list li::before {
+      content: '✓';
+      color: var(--gold);
+      font-weight: 700;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+    .store-photo {
+      width: 100%;
+      aspect-ratio: 16/9;
+      background: linear-gradient(135deg, var(--surface-2), var(--surface-3));
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-muted);
+      font-size: 13px;
+      overflow: hidden;
+    }
+    .store-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .whatsapp-fab {
+      position: fixed;
+      right: 16px;
+      top: 62%;
+      transform: translateY(-50%);
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--gold), var(--gold-dim));
+      color: #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      z-index: 1000;
+      box-shadow: 0 4px 20px rgba(201,169,110,0.35);
+      transition: transform 200ms, box-shadow 200ms;
+    }
+    .whatsapp-fab:active {
+      transform: translateY(-50%) scale(0.95);
+    }
+    .about-section {
+      text-align: center;
+    }
+    .about-title {
+      font-family: 'Noto Serif SC', serif;
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      color: var(--gold);
+    }
+    .about-desc {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      margin-bottom: 28px;
+    }
+    .features-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    .feature-item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 22px 16px;
+      text-align: center;
+      transition: border-color 200ms;
+    }
+    .feature-item .title {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--gold);
+      margin-bottom: 8px;
+    }
+    .feature-item .label {
+      font-size: 12px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+    .recycle-calc-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 24px 20px;
+    }
+    .recycle-calc-result {
+      border-radius: 14px;
+      padding: 18px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 8px;
+      color: #000;
+      border: 1px solid var(--border);
+    }
+    .recycle-calc-result > div:first-child {
+      color: var(--text-secondary);
+      font-weight: 600;
+      font-size: 14px;
+    }
+    .recycle-calc-result > div:last-child {
+      color: #000;
+      font-family: 'Noto Serif SC', serif;
+      font-size: 22px;
+      font-weight: 700;
     }
 
     /* Flow Steps */
@@ -1261,36 +1671,6 @@
 </head>
 <body>
   <button class="theme-toggle" onclick="toggleTheme()" title="切換主題">&#127769;</button>
-  <button class="chat-bubble" onclick="toggleChatMenu()"><svg viewBox="0 0 1024 1024" width="22" height="22" style="flex-shrink:0;"><path d="M511.872427 0h0.256C794.45376 0 1024.000427 229.674667 1024.000427 512s-229.589333 512-511.872 512c-104.106667 0-200.704-31.018667-281.6-84.565333L33.707093 1002.325333l63.786667-190.250666A508.245333 508.245333 0 0 1 0.000427 512C0.000427 229.674667 229.58976 0 511.872427 0zM365.39776 281.429333c-9.770667-23.338667-17.194667-24.234667-32-24.832A285.525333 285.525333 0 0 0 316.50176 256c-19.285333 0-39.424 5.632-51.626667 18.048C250.155093 289.109333 213.33376 324.266667 213.33376 396.501333c0 72.149333 52.778667 141.952 59.861333 151.722667 7.424 9.728 102.912 160 251.093334 221.226667 115.925333 47.914667 150.314667 43.477333 176.725333 37.845333 38.528-8.277333 86.826667-36.693333 98.986667-70.954667 12.16-34.346667 12.16-63.616 8.618666-69.845333-3.584-6.186667-13.354667-9.728-28.16-17.152-14.848-7.381333-86.869333-42.88-100.522666-47.616-13.354667-4.992-26.069333-3.242667-36.138667 10.965333-14.250667 19.797333-28.16 39.936-39.466667 52.053334-8.874667 9.472-23.424 10.666667-35.541333 5.632-16.298667-6.826667-61.952-22.784-118.314667-72.789334-43.562667-38.741333-73.216-86.954667-81.792-101.418666-8.618667-14.805333-0.896-23.381333 5.930667-31.36 7.381333-9.173333 14.506667-15.658667 21.930667-24.234667 7.424-8.576 11.52-13.013333 16.298666-23.082667 5.034667-9.770667 1.493333-19.84-2.090666-27.221333-3.541333-7.381333-33.194667-79.573333-45.354667-108.8z" fill="currentColor"/></svg></button>
-
-  <div class="chat-menu-overlay" id="chat-overlay" onclick="toggleChatMenu()"></div>
-  <div class="chat-menu" id="chat-menu">
-    <div class="chat-menu-title">聯繫客服</div>
-    <a class="chat-menu-item" href="tel:+85212345678">
-      <span>&#9742;</span>
-      <span>致電客服</span>
-    </a>
-    <a class="chat-menu-item" href="https://wa.me/85212345678" target="_blank">
-      <svg viewBox="0 0 1024 1024" width="20" height="20" style="flex-shrink:0;"><path d="M511.872427 0h0.256C794.45376 0 1024.000427 229.674667 1024.000427 512s-229.589333 512-511.872 512c-104.106667 0-200.704-31.018667-281.6-84.565333L33.707093 1002.325333l63.786667-190.250666A508.245333 508.245333 0 0 1 0.000427 512C0.000427 229.674667 229.58976 0 511.872427 0zM365.39776 281.429333c-9.770667-23.338667-17.194667-24.234667-32-24.832A285.525333 285.525333 0 0 0 316.50176 256c-19.285333 0-39.424 5.632-51.626667 18.048C250.155093 289.109333 213.33376 324.266667 213.33376 396.501333c0 72.149333 52.778667 141.952 59.861333 151.722667 7.424 9.728 102.912 160 251.093334 221.226667 115.925333 47.914667 150.314667 43.477333 176.725333 37.845333 38.528-8.277333 86.826667-36.693333 98.986667-70.954667 12.16-34.346667 12.16-63.616 8.618666-69.845333-3.584-6.186667-13.354667-9.728-28.16-17.152-14.848-7.381333-86.869333-42.88-100.522666-47.616-13.354667-4.992-26.069333-3.242667-36.138667 10.965333-14.250667 19.797333-28.16 39.936-39.466667 52.053334-8.874667 9.472-23.424 10.666667-35.541333 5.632-16.298667-6.826667-61.952-22.784-118.314667-72.789334-43.562667-38.741333-73.216-86.954667-81.792-101.418666-8.618667-14.805333-0.896-23.381333 5.930667-31.36 7.381333-9.173333 14.506667-15.658667 21.930667-24.234667 7.424-8.576 11.52-13.013333 16.298666-23.082667 5.034667-9.770667 1.493333-19.84-2.090666-27.221333-3.541333-7.381333-33.194667-79.573333-45.354667-108.8z" fill="currentColor"/></svg>
-      <span>WhatsApp</span>
-    </a>
-    <div class="chat-menu-close" onclick="toggleChatMenu()">取消</div>
-  </div>
-
-  <!-- Contact Dropdown (top bubble) -->
-  <div class="contact-dropdown-overlay" id="contact-dropdown-overlay" onclick="toggleContactDropdown()"></div>
-  <div class="contact-dropdown" id="contact-dropdown">
-    <div style="font-size:15px; font-weight:600; text-align:center; margin-bottom:16px; color:var(--text);">聯繫客服</div>
-    <a class="contact-dropdown-item" href="tel:+85212345678">
-      <span style="font-size:18px;">&#9742;</span>
-      <span>電話聯繫</span>
-    </a>
-    <a class="contact-dropdown-item" href="https://wa.me/85212345678" target="_blank">
-      <svg viewBox="0 0 1024 1024" width="20" height="20" style="flex-shrink:0;"><path d="M511.872427 0h0.256C794.45376 0 1024.000427 229.674667 1024.000427 512s-229.589333 512-511.872 512c-104.106667 0-200.704-31.018667-281.6-84.565333L33.707093 1002.325333l63.786667-190.250666A508.245333 508.245333 0 0 1 0.000427 512C0.000427 229.674667 229.58976 0 511.872427 0zM365.39776 281.429333c-9.770667-23.338667-17.194667-24.234667-32-24.832A285.525333 285.525333 0 0 0 316.50176 256c-19.285333 0-39.424 5.632-51.626667 18.048C250.155093 289.109333 213.33376 324.266667 213.33376 396.501333c0 72.149333 52.778667 141.952 59.861333 151.722667 7.424 9.728 102.912 160 251.093334 221.226667 115.925333 47.914667 150.314667 43.477333 176.725333 37.845333 38.528-8.277333 86.826667-36.693333 98.986667-70.954667 12.16-34.346667 12.16-63.616 8.618666-69.845333-3.584-6.186667-13.354667-9.728-28.16-17.152-14.848-7.381333-86.869333-42.88-100.522666-47.616-13.354667-4.992-26.069333-3.242667-36.138667 10.965333-14.250667 19.797333-28.16 39.936-39.466667 52.053334-8.874667 9.472-23.424 10.666667-35.541333 5.632-16.298667-6.826667-61.952-22.784-118.314667-72.789334-43.562667-38.741333-73.216-86.954667-81.792-101.418666-8.618667-14.805333-0.896-23.381333 5.930667-31.36 7.381333-9.173333 14.506667-15.658667 21.930667-24.234667 7.424-8.576 11.52-13.013333 16.298666-23.082667 5.034667-9.770667 1.493333-19.84-2.090666-27.221333-3.541333-7.381333-33.194667-79.573333-45.354667-108.8z" fill="currentColor"/></svg>
-      <span>WhatsApp 聯繫</span>
-    </a>
-  </div>
-
   <div class="cart-popup-overlay" id="cart-popup-overlay" onclick="toggleCartPopup()"></div>
   <div class="cart-popup" id="cart-popup">
     <div class="cart-popup-title">已加入購物袋</div>
@@ -1300,6 +1680,21 @@
     <div class="cart-popup-actions">
       <button class="btn btn-secondary" style="flex:1;" onclick="toggleCartPopup()">繼續瀏覽</button>
       <button class="btn btn-primary" style="flex:1;" onclick="goToCartAndCheckout()">去購物袋結算</button>
+    </div>
+  </div>
+
+  <div class="contact-popup-overlay" id="contact-popup-overlay" onclick="toggleContactPopup(false)">
+    <div class="contact-popup" onclick="event.stopPropagation()">
+      <div class="contact-popup-title">联系客服</div>
+      <a class="contact-popup-option" href="tel:+85212345678">
+        <span style="font-size:20px;">&#9742;</span>
+        <span>电话联系</span>
+      </a>
+      <a class="contact-popup-option" href="https://wa.me/85212345678" target="_blank">
+        <span style="font-size:20px;">&#128172;</span>
+        <span>WhatsApp 联系</span>
+      </a>
+      <button class="contact-popup-cancel" onclick="toggleContactPopup(false)">取消</button>
     </div>
   </div>
 
@@ -1328,6 +1723,37 @@
       <div style="font-size:12px; color:var(--text-muted); margin-bottom:8px;">提貨碼</div>
       <div id="qr-code-text" style="font-size:20px; font-weight:600; letter-spacing:2px; margin-bottom:24px; font-family:monospace;">--</div>
       <button class="btn btn-primary btn-full" onclick="closeQRPopup()">完成</button>
+    </div>
+  </div>
+
+  <div class="qr-popup-overlay" id="store-appointment-popup" onclick="closeStoreAppointmentPopup()">
+    <div class="qr-popup" onclick="event.stopPropagation()">
+      <div style="font-size:18px; font-weight:600; margin-bottom:8px;">預約成功</div>
+      <div style="font-size:14px; color:var(--text-secondary); margin-bottom:24px;">請到店出示以下預約信息</div>
+      <div style="width:180px; height:180px; margin:0 auto 16px; background:var(--bg); border-radius:12px; display:flex; align-items:center; justify-content:center; border:1px solid var(--border);">
+        <svg viewBox="0 0 180 180" width="160" height="160">
+          <rect x="0" y="0" width="180" height="180" fill="white"/>
+          <rect x="10" y="10" width="50" height="50" fill="black"/><rect x="20" y="20" width="30" height="30" fill="white"/><rect x="25" y="25" width="20" height="20" fill="black"/>
+          <rect x="120" y="10" width="50" height="50" fill="black"/><rect x="130" y="20" width="30" height="30" fill="white"/><rect x="135" y="25" width="20" height="20" fill="black"/>
+          <rect x="10" y="120" width="50" height="50" fill="black"/><rect x="20" y="130" width="30" height="30" fill="white"/><rect x="25" y="135" width="20" height="20" fill="black"/>
+          <rect x="70" y="10" width="10" height="10" fill="black"/><rect x="90" y="20" width="10" height="10" fill="black"/><rect x="70" y="40" width="10" height="10" fill="black"/>
+          <rect x="80" y="30" width="10" height="10" fill="black"/><rect x="100" y="40" width="10" height="10" fill="black"/><rect x="70" y="70" width="10" height="10" fill="black"/>
+          <rect x="90" y="80" width="10" height="10" fill="black"/><rect x="110" y="70" width="10" height="10" fill="black"/><rect x="70" y="100" width="10" height="10" fill="black"/>
+          <rect x="80" y="110" width="10" height="10" fill="black"/><rect x="100" y="100" width="10" height="10" fill="black"/><rect x="110" y="120" width="10" height="10" fill="black"/>
+          <rect x="130" y="70" width="10" height="10" fill="black"/><rect x="150" y="80" width="10" height="10" fill="black"/><rect x="140" y="100" width="10" height="10" fill="black"/>
+          <rect x="130" y="130" width="10" height="10" fill="black"/><rect x="150" y="140" width="10" height="10" fill="black"/><rect x="10" y="70" width="10" height="10" fill="black"/>
+          <rect x="30" y="80" width="10" height="10" fill="black"/><rect x="40" y="100" width="10" height="10" fill="black"/><rect x="10" y="100" width="10" height="10" fill="black"/>
+          <rect x="40" y="70" width="10" height="10" fill="black"/><rect x="70" y="130" width="10" height="10" fill="black"/><rect x="90" y="150" width="10" height="10" fill="black"/>
+          <rect x="100" y="140" width="10" height="10" fill="black"/><rect x="120" y="150" width="10" height="10" fill="black"/><rect x="140" y="160" width="10" height="10" fill="black"/>
+          <rect x="160" y="120" width="10" height="10" fill="black"/>
+        </svg>
+      </div>
+      <div style="font-size:12px; color:var(--text-muted); margin-bottom:8px;">預約信息</div>
+      <div id="store-appointment-code-text" style="font-size:20px; font-weight:600; letter-spacing:2px; margin-bottom:24px; font-family:monospace;">--</div>
+      <div style="display:flex; gap:10px;">
+        <button class="btn btn-secondary" style="flex:1;" onclick="closeStoreAppointmentPopup()">關閉</button>
+        <a class="btn btn-primary" style="flex:1; text-align:center; text-decoration:none;" href="https://wa.me/85212345678" target="_blank">WhatsApp 联系</a>
+      </div>
     </div>
   </div>
 
@@ -1362,24 +1788,27 @@
     <div id="side-menu" class="side-menu" onclick="closeMenu(event)">
       <div class="side-menu-panel" onclick="event.stopPropagation()">
         <div class="side-menu-header">
-          <div style="font-family:'Noto Serif SC',serif; font-size:18px; font-weight:600; letter-spacing:2px;">PASSTO BULLION</div>
+          <img src="https://i.postimg.cc/LXxDf7wY/passto-trust-black-1.png" alt="Passto Bullion" style="height:24px; object-fit:contain; max-width:180px;">
           <button class="back-btn" onclick="toggleMenu()" style="background:transparent; border:none;">&#10005;</button>
         </div>
         <nav class="side-menu-nav">
           <a class="side-menu-item" onclick="menuGoTo('home')">
             <span>首頁</span>
           </a>
-          <a class="side-menu-item" onclick="menuGoTo('product', {id:1,name:'傳世金條 50克',price:'122,800',purity:'Au 99.99%',img:'https://dev.passtobullion.com/profile/upload/2026/06/04/50g-traditional-final-set_20260604145016A006.png',specs:['50克']})">
+          <a class="side-menu-item" onclick="menuGoTo('shop')">
             <span>瀏覽商品</span>
           </a>
           <a class="side-menu-item" onclick="menuGoTo('recycle')">
             <span>黃金回收</span>
           </a>
+          <a class="side-menu-item" onclick="menuGoTo('converter')">
+            <span>黃金重量換算</span>
+          </a>
           <a class="side-menu-item" onclick="menuGoTo('profile')">
             <span>個人中心</span>
           </a>
-          <a class="side-menu-item" onclick="toggleChatMenu(); toggleMenu();">
-            <span>聯繫客服</span>
+          <a class="side-menu-item" onclick="toggleMenu(); toggleContactPopup(true);">
+            <span>联系客服</span>
           </a>
         </nav>
       </div>
@@ -1387,30 +1816,175 @@
 
     <!-- ==================== SCREEN: HOME ==================== -->
     <div class="screen active" id="screen-home">
-      <div class="page-header" style="border-bottom:none;">
-        <div style="display:flex; align-items:center; gap:10px;">
-          <button class="icon-btn" onclick="toggleMenu()" style="font-size:18px;">&#9776;</button>
-          <h1 style="font-size:16px; letter-spacing:3px;">PASSTO BULLION</h1>
+      <!-- 第一屏：今日金價 -->
+      <div class="home-section">
+        <div class="page-header" style="border-bottom:none;">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <button class="icon-btn" onclick="toggleMenu()">
+              <svg viewBox="0 0 1024 1024" width="22" height="22"><path d="M867.995 459.647h-711.99c-27.921 0-52.353 24.434-52.353 52.353s24.434 52.353 52.353 52.353h711.99c27.921 0 52.353-24.434 52.353-52.353s-24.434-52.353-52.353-52.353z"/><path d="M867.995 763.291h-711.99c-27.921 0-52.353 24.434-52.353 52.353s24.434 52.353 52.353 52.353h711.99c27.921 0 52.353-24.434 52.353-52.353s-24.434-52.353-52.353-52.353z"/><path d="M156.005 260.709h711.99c27.921 0 52.353-24.434 52.353-52.353s-24.434-52.353-52.353-52.353h-711.99c-27.921 0-52.353 24.434-52.353 52.353s24.434 52.353 52.353 52.353z"/></svg>
+            </button>
+            <img src="https://i.postimg.cc/LXxDf7wY/passto-trust-black-1.png" alt="Passto Bullion" style="height:22px; object-fit:contain; max-width:160px;">
+          </div>
+          <div class="header-actions">
+            <button class="icon-btn" onclick="goTo('cart')" style="width:40px; height:40px; padding:0; background:transparent; border:none; position:relative;">
+              <svg viewBox="0 0 1024 1024" width="22" height="22" style="display:block;"><path d="M384 256a128 128 0 1 1 256 0H384zM298.666667 256H170.666667a42.666667 42.666667 0 0 0-42.666667 42.666667v597.333333a42.666667 42.666667 0 0 0 42.666667 42.666667h682.666666a42.666667 42.666667 0 0 0 42.666667-42.666667V298.666667a42.666667 42.666667 0 0 0-42.666667-42.666667h-128A213.333333 213.333333 0 0 0 298.666667 256z m85.333333 170.666667a128 128 0 1 0 256 0h85.333333a213.333333 213.333333 0 0 1-426.666666 0h85.333333z" fill="currentColor"/></svg>
+              <span class="badge" id="cart-badge" style="display:none; position:absolute; top:-2px; right:2px; min-width:18px; height:18px; padding:0 4px; font-size:10px;">0</span>
+            </button>
+          </div>
         </div>
-        <div class="header-actions">
-          <button class="icon-btn" onclick="goTo('cart')" style="width:auto; padding:0 12px; font-size:13px; font-weight:500;">
-            購物袋
-            <span class="badge" id="cart-badge" style="display:none; position:static; margin-left:4px;">0</span>
-          </button>
+        <div class="gold-banner">
+          <div class="gold-banner-label">今日金價 / GOLD PRICE</div>
+          <div class="gold-price-main shimmer">HK$ 2,456<span class="unit">/g</span></div>
+          <div class="gold-banner-time">更新時間 2026-06-12 14:30 HKT</div>
+          <video autoplay muted loop playsinline style="width:100%; max-width:260px; margin:20px auto 16px; display:block; border-radius:12px; object-fit:cover;">
+            <source src="video/金店視頻.mp4" type="video/mp4">
+          </video>
         </div>
       </div>
 
+      <!-- 第二屏：認證說明 -->
+      <div class="home-section" style="padding-top:32px; padding-bottom:32px;">
+        <div class="trust-summary-card" onclick="goTo('trust')" style="background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:20px; text-align:center; cursor:pointer;">
+          <div style="display:flex; align-items:center; justify-content:center; gap:12px; margin-bottom:12px;">
+            <img src="https://upload.wikimedia.org/wikipedia/zh/thumb/8/82/Customs_and_Excise_Department_%28Hong_Kong%29.svg/1280px-Customs_and_Excise_Department_%28Hong_Kong%29.svg.png" alt="香港海關" style="width:48px; height:48px; object-fit:contain;">
+            <div style="text-align:left;">
+              <div style="font-size:15px; font-weight:600; color:var(--gold); line-height:1.4;">- 信賴證明 -</div>
+              <div style="font-size:15px; font-weight:600; color:var(--gold); line-height:1.4;">香港海關認可</div>
+            </div>
+          </div>
+          <div style="font-size:13px; color:var(--text-secondary); line-height:1.6;">
+            Passto Bullion 已註冊貴金屬及寶石交易商<br>
+            註冊號碼：A-B-26-06-11046
+          </div>
+          <div style="margin-top:10px; font-size:12px; color:var(--gold);">查看詳情 ›</div>
+        </div>
+      </div>
+
+      <!-- 第三屏：線下門店 -->
+      <div class="home-section">
+        <div class="store-photo" style="aspect-ratio:16/10; margin-bottom:20px; border-radius:16px;">
+          <img src="icon/store.png" alt="Passto Bullion 門店" style="width:100%; height:100%; object-fit:cover;">
+        </div>
+        <div style="text-align:center;">
+          <div style="font-family:'Noto Serif SC',serif; font-size:28px; font-weight:700; color:var(--gold); margin-bottom:10px;">NEW OPEN!</div>
+          <div style="font-size:14px; color:var(--text-secondary); line-height:1.6; margin-bottom:8px;">
+            Passto Bullion 香港中港城門店
+          </div>
+          <div style="font-size:13px; color:var(--text-muted); line-height:1.6; margin-bottom:20px;">
+            香港九龍廣東道33號中港城2座平台1&5號舖
+          </div>
+          <a class="btn btn-primary" style="width:100%; max-width:280px; display:inline-flex; align-items:center; justify-content:center; gap:8px; text-decoration:none;" href="https://wa.me/85212345678" target="_blank">
+            WhatsApp諮詢 <span>&#10095;</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- 第三屏：熱銷商品 + 黃金回收 -->
+      <div class="home-section" style="padding-top:48px; padding-bottom:48px;">
+        <div class="section-title" style="margin-bottom:16px;">
+          <span>熱銷商品</span>
+          <span class="more" onclick="goTo('shop')">查看全部 ›</span>
+        </div>
+        <div class="product-grid">
+          <div class="product-card" onclick="goTo('product', {id:1,name:'傳世金條 50克',price:'122,800',purity:'Au 99.99%',img:'https://dev.passtobullion.com/profile/upload/2026/06/04/50g-traditional-final-set_20260604145016A006.png',specs:['50克']})">
+            <div class="product-card-img"><img src="https://dev.passtobullion.com/profile/upload/2026/06/04/50g-traditional-final-set_20260604145016A006.png" alt="50克金條" style="width:100%;height:100%;object-fit:cover;"></div>
+            <div class="product-card-body">
+              <div class="product-card-name">傳世金條 50克</div>
+              <div class="product-card-purity">Au 99.99%</div>
+              <div class="product-card-price"><span class="from">約</span> HK$122,800</div>
+            </div>
+          </div>
+          <div class="product-card" onclick="goTo('product', {id:2,name:'傳世金條 100克',price:'245,600',purity:'Au 99.99%',img:'https://dev.passtobullion.com/profile/upload/2026/06/04/100g-traditional-final-set_20260604145028A009.png',specs:['100克']})">
+            <div class="product-card-img"><img src="https://dev.passtobullion.com/profile/upload/2026/06/04/100g-traditional-final-set_20260604145028A009.png" alt="100克金條" style="width:100%;height:100%;object-fit:cover;"></div>
+            <div class="product-card-body">
+              <div class="product-card-name">傳世金條 100克</div>
+              <div class="product-card-purity">Au 99.99%</div>
+              <div class="product-card-price"><span class="from">約</span> HK$245,600</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-title" style="margin-top:28px; margin-bottom:16px;">
+          <span>黃金回收</span>
+        </div>
+
+        <!-- 黃金回收計算器 -->
+        <div class="recycle-calc-card">
+          <div class="form-group" style="display:flex; align-items:center; gap:12px; margin-bottom:16px;">
+            <label style="color:var(--gold); font-weight:600; font-size:14px; flex-shrink:0; width:48px; text-align:right;">成色</label>
+            <div class="form-input" style="flex:1; display:flex; align-items:center; color:var(--text); min-height:48px; padding:10px 14px;">足金 99.99%</div>
+          </div>
+          <div class="form-group" style="display:flex; align-items:center; gap:12px; margin-bottom:16px;">
+            <label style="color:var(--gold); font-weight:600; font-size:14px; flex-shrink:0; width:48px; text-align:right;">重量</label>
+            <div style="display:flex; gap:10px; flex:1;">
+              <input type="number" class="form-input" id="home-recycle-weight" value="100" oninput="calcHomeRecycle()" style="flex:1; min-width:0;">
+              <select class="form-input" id="home-recycle-unit" onchange="calcHomeRecycle()" style="width:72px; padding:10px 8px; padding-right:18px; background-position:right 2px center;">
+                <option value="g">g</option>
+                <option value="tael">兩</option>
+                <option value="oz">oz</option>
+                <option value="kg">kg</option>
+                <option value="tola">tola</option>
+                <option value="pennyweight">dwt</option>
+              </select>
+            </div>
+          </div>
+          <div class="recycle-calc-result">
+            <div style="font-size:13px; color:var(--text-secondary);">參考價格</div>
+            <div style="font-family:'Noto Serif SC',serif; font-size:28px; font-weight:700; color:var(--gold);" id="home-recycle-price">HKD 245,600</div>
+          </div>
+          <button class="btn btn-primary btn-full" onclick="goTo('recycle-appointment')" style="margin-top:16px;">立即預約</button>
+          <div style="font-size:11px; color:var(--text-muted); text-align:center; margin-top:12px; line-height:1.5;">
+            ※本參考收購價以市場公佈為準，實際收購金額或會有差異。
+          </div>
+        </div>
+      </div>
+
+      <!-- 第四屏：關於 PASSTO BULLION -->
+      <div class="home-section about-section">
+        <div class="about-title">關於 PASSTO BULLION</div>
+        <div class="about-desc">PASSTO BULLION 是香港持牌貴金屬經銷商，致力於提供專業的實體黃金交易服務。我們與 LBMA 認證精煉廠合作，確保每件黃金產品符合最高品質標準。</div>
+        <div class="features-grid">
+          <div class="feature-item">
+            <div class="title">持牌經銷商</div>
+            <div class="label">香港海關持牌貴金屬經銷商</div>
+          </div>
+          <div class="feature-item">
+            <div class="title">XRF 檢測</div>
+            <div class="label">先進 XRF 光譜儀精確驗證純度</div>
+          </div>
+          <div class="feature-item">
+            <div class="title">LBMA 認證</div>
+            <div class="label">所有產品來自 LBMA 合格交割精煉廠</div>
+          </div>
+          <div class="feature-item">
+            <div class="title">全面透明</div>
+            <div class="label">完全透明的交易流程，實時掛鉤市場定價</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ==================== SCREEN: SHOP ==================== -->
+    <div class="screen" id="screen-shop">
+      <div class="page-header">
+        <button class="icon-btn" onclick="toggleMenu()">
+          <svg viewBox="0 0 1024 1024" width="22" height="22"><path d="M867.995 459.647h-711.99c-27.921 0-52.353 24.434-52.353 52.353s24.434 52.353 52.353 52.353h711.99c27.921 0 52.353-24.434 52.353-52.353s-24.434-52.353-52.353-52.353z"/><path d="M867.995 763.291h-711.99c-27.921 0-52.353 24.434-52.353 52.353s24.434 52.353 52.353 52.353h711.99c27.921 0 52.353-24.434 52.353-52.353s-24.434-52.353-52.353-52.353z"/><path d="M156.005 260.709h711.99c27.921 0 52.353-24.434 52.353-52.353s-24.434-52.353-52.353-52.353h-711.99c-27.921 0-52.353 24.434-52.353 52.353s24.434 52.353 52.353 52.353z"/></svg>
+        </button>
+        <h1>瀏覽商品</h1>
+        <button class="icon-btn" onclick="goTo('cart')" style="width:40px; height:40px; padding:0; background:transparent; border:none; position:relative;">
+          <svg viewBox="0 0 1024 1024" width="22" height="22" style="display:block;"><path d="M384 256a128 128 0 1 1 256 0H384zM298.666667 256H170.666667a42.666667 42.666667 0 0 0-42.666667 42.666667v597.333333a42.666667 42.666667 0 0 0 42.666667 42.666667h682.666666a42.666667 42.666667 0 0 0 42.666667-42.666667V298.666667a42.666667 42.666667 0 0 0-42.666667-42.666667h-128A213.333333 213.333333 0 0 0 298.666667 256z m85.333333 170.666667a128 128 0 1 0 256 0h85.333333a213.333333 213.333333 0 0 1-426.666666 0h85.333333z" fill="currentColor"/></svg>
+          <span class="badge" id="cart-badge-shop" style="display:none; position:absolute; top:-2px; right:2px; min-width:18px; height:18px; padding:0 4px; font-size:10px;">0</span>
+        </button>
+      </div>
       <div class="gold-banner">
         <div class="gold-banner-label">今日金價 / GOLD PRICE</div>
         <div class="gold-price-main shimmer">HK$ 2,456<span class="unit">/g</span></div>
-
         <div class="gold-banner-time">更新時間 2026-06-12 14:30 HKT</div>
       </div>
-
       <div class="section">
         <div class="section-title">
           <span>熱銷商品</span>
-
         </div>
         <div class="product-grid">
           <div class="product-card" onclick="goTo('product', {id:1,name:'傳世金條 50克',price:'122,800',purity:'Au 99.99%',img:'https://dev.passtobullion.com/profile/upload/2026/06/04/50g-traditional-final-set_20260604145016A006.png',specs:['50克']})">
@@ -1447,11 +2021,9 @@
           </div>
         </div>
       </div>
-
       <div class="section" style="padding-top:0;">
         <div class="section-title">
           <span>回收服務</span>
-
         </div>
         <div class="recycle-card" onclick="goTo('recycle')" style="cursor:pointer;">
           <div class="recycle-card-body">
@@ -1467,12 +2039,14 @@
     <!-- ==================== SCREEN: PRODUCT DETAIL ==================== -->
     <div class="screen" id="screen-product" style="display:flex; flex-direction:column;">
       <div class="page-header" style="flex-shrink:0;">
-        <button class="icon-btn" onclick="toggleMenu()" style="font-size:18px;">&#9776;</button>
+        <button class="icon-btn" onclick="toggleMenu()">
+          <svg viewBox="0 0 1024 1024" width="22" height="22"><path d="M867.995 459.647h-711.99c-27.921 0-52.353 24.434-52.353 52.353s24.434 52.353 52.353 52.353h711.99c27.921 0 52.353-24.434 52.353-52.353s-24.434-52.353-52.353-52.353z"/><path d="M867.995 763.291h-711.99c-27.921 0-52.353 24.434-52.353 52.353s24.434 52.353 52.353 52.353h711.99c27.921 0 52.353-24.434 52.353-52.353s-24.434-52.353-52.353-52.353z"/><path d="M156.005 260.709h711.99c27.921 0 52.353-24.434 52.353-52.353s-24.434-52.353-52.353-52.353h-711.99c-27.921 0-52.353 24.434-52.353 52.353s24.434 52.353 52.353 52.353z"/></svg>
+        </button>
         <h1>商品詳情</h1>
         <div class="header-actions">
-          <button class="icon-btn" onclick="goTo('cart')" style="width:auto; padding:0 12px; font-size:13px; font-weight:500;">
-            購物袋
-            <span class="badge" id="cart-badge-2" style="display:none; position:static; margin-left:4px;">0</span>
+          <button class="icon-btn" onclick="goTo('cart')" style="width:40px; height:40px; padding:0; background:transparent; border:none; position:relative;">
+            <svg viewBox="0 0 1024 1024" width="22" height="22" style="display:block;"><path d="M384 256a128 128 0 1 1 256 0H384zM298.666667 256H170.666667a42.666667 42.666667 0 0 0-42.666667 42.666667v597.333333a42.666667 42.666667 0 0 0 42.666667 42.666667h682.666666a42.666667 42.666667 0 0 0 42.666667-42.666667V298.666667a42.666667 42.666667 0 0 0-42.666667-42.666667h-128A213.333333 213.333333 0 0 0 298.666667 256z m85.333333 170.666667a128 128 0 1 0 256 0h85.333333a213.333333 213.333333 0 0 1-426.666666 0h85.333333z" fill="currentColor"/></svg>
+            <span class="badge" id="cart-badge-2" style="display:none; position:absolute; top:-2px; right:2px; min-width:18px; height:18px; padding:0 4px; font-size:10px;">0</span>
           </button>
         </div>
       </div>
@@ -1518,7 +2092,9 @@
     <!-- ==================== SCREEN: CART ==================== -->
     <div class="screen" id="screen-cart">
       <div class="page-header">
-        <button class="icon-btn" onclick="toggleMenu()" style="font-size:18px;">&#9776;</button>
+        <button class="icon-btn" onclick="toggleMenu()">
+          <svg viewBox="0 0 1024 1024" width="22" height="22"><path d="M867.995 459.647h-711.99c-27.921 0-52.353 24.434-52.353 52.353s24.434 52.353 52.353 52.353h711.99c27.921 0 52.353-24.434 52.353-52.353s-24.434-52.353-52.353-52.353z"/><path d="M867.995 763.291h-711.99c-27.921 0-52.353 24.434-52.353 52.353s24.434 52.353 52.353 52.353h711.99c27.921 0 52.353-24.434 52.353-52.353s-24.434-52.353-52.353-52.353z"/><path d="M156.005 260.709h711.99c27.921 0 52.353-24.434 52.353-52.353s-24.434-52.353-52.353-52.353h-711.99c-27.921 0-52.353 24.434-52.353 52.353s24.434 52.353 52.353 52.353z"/></svg>
+        </button>
         <h1>購物袋</h1>
         <div style="width:36px;"></div>
       </div>
@@ -1530,7 +2106,9 @@
     <!-- ==================== SCREEN: CONFIRM PRODUCT ==================== -->
     <div class="screen" id="screen-confirm">
       <div class="page-header">
-        <button class="icon-btn" onclick="toggleMenu()" style="font-size:18px;">&#9776;</button>
+        <button class="icon-btn" onclick="toggleMenu()">
+          <svg viewBox="0 0 1024 1024" width="22" height="22"><path d="M867.995 459.647h-711.99c-27.921 0-52.353 24.434-52.353 52.353s24.434 52.353 52.353 52.353h711.99c27.921 0 52.353-24.434 52.353-52.353s-24.434-52.353-52.353-52.353z"/><path d="M867.995 763.291h-711.99c-27.921 0-52.353 24.434-52.353 52.353s24.434 52.353 52.353 52.353h711.99c27.921 0 52.353-24.434 52.353-52.353s-24.434-52.353-52.353-52.353z"/><path d="M156.005 260.709h711.99c27.921 0 52.353-24.434 52.353-52.353s-24.434-52.353-52.353-52.353h-711.99c-27.921 0-52.353 24.434-52.353 52.353s24.434 52.353 52.353 52.353z"/></svg>
+        </button>
         <h1 id="confirm-page-title">我的購物袋</h1>
         <div style="width:36px;"></div>
       </div>
@@ -1543,12 +2121,8 @@
           <div class="flow-step-num">2</div>
           <div class="flow-step-label">取貨方式</div>
         </div>
-        <div class="flow-step" onclick="goTo('service')">
-          <div class="flow-step-num">3</div>
-          <div class="flow-step-label">心意服務</div>
-        </div>
         <div class="flow-step" onclick="goToCheckout()">
-          <div class="flow-step-num">4</div>
+          <div class="flow-step-num">3</div>
           <div class="flow-step-label">訂單結算</div>
         </div>
       </div>
@@ -1556,6 +2130,7 @@
         <div id="confirm-items">
           <!-- Dynamic -->
         </div>
+
         <div style="display:flex; justify-content:space-between; align-items:center; padding:16px 0; border-top:1px solid var(--border); margin-top:16px;">
           <span style="font-size:14px; color:var(--text-secondary);">總額</span>
           <span style="font-family:'Noto Serif SC',serif; font-size:20px; font-weight:600; color:var(--gold);" id="confirm-total">--</span>
@@ -1569,7 +2144,9 @@
     <!-- ==================== SCREEN: PICKUP METHOD ==================== -->
     <div class="screen" id="screen-pickup-method">
       <div class="page-header">
-        <button class="icon-btn" onclick="toggleMenu()" style="font-size:18px;">&#9776;</button>
+        <button class="icon-btn" onclick="toggleMenu()">
+          <svg viewBox="0 0 1024 1024" width="22" height="22"><path d="M867.995 459.647h-711.99c-27.921 0-52.353 24.434-52.353 52.353s24.434 52.353 52.353 52.353h711.99c27.921 0 52.353-24.434 52.353-52.353s-24.434-52.353-52.353-52.353z"/><path d="M867.995 763.291h-711.99c-27.921 0-52.353 24.434-52.353 52.353s24.434 52.353 52.353 52.353h711.99c27.921 0 52.353-24.434 52.353-52.353s-24.434-52.353-52.353-52.353z"/><path d="M156.005 260.709h711.99c27.921 0 52.353-24.434 52.353-52.353s-24.434-52.353-52.353-52.353h-711.99c-27.921 0-52.353 24.434-52.353 52.353s24.434 52.353 52.353 52.353z"/></svg>
+        </button>
         <h1>取貨方式</h1>
         <div style="width:36px;"></div>
       </div>
@@ -1582,12 +2159,8 @@
           <div class="flow-step-num">2</div>
           <div class="flow-step-label">取貨方式</div>
         </div>
-        <div class="flow-step" onclick="goTo('service')">
-          <div class="flow-step-num">3</div>
-          <div class="flow-step-label">心意服務</div>
-        </div>
         <div class="flow-step" onclick="goToCheckout()">
-          <div class="flow-step-num">4</div>
+          <div class="flow-step-num">3</div>
           <div class="flow-step-label">訂單結算</div>
         </div>
       </div>
@@ -1598,7 +2171,7 @@
             <span style="font-weight:600;">到店取貨</span>
           </div>
           <div style="font-size:13px; color:var(--text-secondary); line-height:1.8;">
-            <div>香港中環皇后大道中100號</div>
+            <div>香港九龍廣東道33號中港城2座平台1&5號舖</div>
             <div>營業時間：週一至週六 10:00 - 19:00</div>
             <div>聯絡電話：+852 1234 5678</div>
           </div>
@@ -1632,88 +2205,16 @@
         </div>
       </div>
       <div class="bottom-bar">
-        <button class="btn btn-primary btn-full" onclick="validatePickupAndGo()">下一步：心意服務</button>
-      </div>
-    </div>
-
-    <!-- ==================== SCREEN: SERVICE ==================== -->
-    <div class="screen" id="screen-service">
-      <div class="page-header">
-        <button class="icon-btn" onclick="toggleMenu()" style="font-size:18px;">&#9776;</button>
-        <h1>心意服務</h1>
-        <div style="width:36px;"></div>
-      </div>
-      <div class="flow-steps">
-        <div class="flow-step" onclick="goTo('confirm')">
-          <div class="flow-step-num">1</div>
-          <div class="flow-step-label">我的購物袋</div>
-        </div>
-        <div class="flow-step" onclick="goTo('pickup-method')">
-          <div class="flow-step-num">2</div>
-          <div class="flow-step-label">取貨方式</div>
-        </div>
-        <div class="flow-step active">
-          <div class="flow-step-num">3</div>
-          <div class="flow-step-label">心意服務</div>
-        </div>
-        <div class="flow-step" onclick="goToCheckout()">
-          <div class="flow-step-num">4</div>
-          <div class="flow-step-label">訂單結算</div>
-        </div>
-      </div>
-      <div class="section" id="service-scroll">
-        <div style="font-size:12px; color:var(--text-muted); margin-bottom:12px;">可選加配，可不選</div>
-        <div class="info-card" id="card-chars" style="cursor:pointer;" onclick="toggleService('chars')">
-          <div style="display:flex; align-items:center; justify-content:space-between;">
-            <div style="display:flex; align-items:center; gap:10px;">
-              <div class="checkbox" id="chk-chars"></div>
-              <span style="font-weight:600;">自選字元</span>
-            </div>
-            <span style="color:var(--gold); font-weight:600;">HK$260</span>
-          </div>
-          <div style="font-size:12px; color:var(--text-muted); margin-top:4px; padding-left:30px;">最多6個字元，刻於金條表面</div>
-        </div>
-        <div id="chars-input" style="display:none; margin:0 4px 12px; padding:12px; background:var(--surface); border-radius:0 0 12px 12px; border:1px solid var(--border); border-top:none;">
-          <input type="text" class="form-input" placeholder="請輸入字元（最多6個）" maxlength="6" id="input-chars" onclick="event.stopPropagation()">
-        </div>
-        <div class="info-card" style="cursor:pointer;" onclick="toggleService('big')">
-          <div style="display:flex; align-items:center; justify-content:space-between;">
-            <div style="display:flex; align-items:center; gap:10px;">
-              <div class="checkbox" id="chk-big"></div>
-              <span style="font-weight:600;">印圖案（大）</span>
-            </div>
-            <span style="color:var(--gold); font-weight:600;">HK$88</span>
-          </div>
-        </div>
-        <div class="info-card" style="cursor:pointer;" onclick="toggleService('small')">
-          <div style="display:flex; align-items:center; justify-content:space-between;">
-            <div style="display:flex; align-items:center; gap:10px;">
-              <div class="checkbox" id="chk-small"></div>
-              <span style="font-weight:600;">印圖案（小）</span>
-            </div>
-            <span style="color:var(--gold); font-weight:600;">HK$52</span>
-          </div>
-        </div>
-        <div class="info-card" id="service-wa" style="display:none; border-color:var(--gold);">
-          <div style="font-size:13px; color:var(--text-secondary); line-height:1.6;">
-            選擇圖案服務需要聯絡服務人員確認細節。<br>
-            <div style="display:flex; align-items:center; gap:8px; margin-top:10px;">
-              <a href="https://wa.me/85212345678" target="_blank" class="btn btn-secondary" style="flex:1; text-decoration:none; text-align:center; font-size:13px; padding:10px;">WhatsApp</a>
-              <span style="color:var(--text-muted); font-size:12px;">或</span>
-              <a href="tel:+85212345678" class="btn btn-secondary" style="flex:1; text-decoration:none; text-align:center; font-size:13px; padding:10px;">撥打電話</a>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="bottom-bar">
-        <button class="btn btn-primary btn-full" onclick="goToCheckout()">下一步：訂單結算</button>
+        <button class="btn btn-primary btn-full" onclick="validatePickupAndGo()">下一步：訂單結算</button>
       </div>
     </div>
 
     <!-- ==================== SCREEN: LOGIN (L1) ==================== -->
     <div class="screen" id="screen-login">
       <div class="page-header">
-        <button class="icon-btn" onclick="toggleMenu()" style="font-size:18px;">&#9776;</button>
+        <button class="icon-btn" onclick="toggleMenu()">
+          <svg viewBox="0 0 1024 1024" width="22" height="22"><path d="M867.995 459.647h-711.99c-27.921 0-52.353 24.434-52.353 52.353s24.434 52.353 52.353 52.353h711.99c27.921 0 52.353-24.434 52.353-52.353s-24.434-52.353-52.353-52.353z"/><path d="M867.995 763.291h-711.99c-27.921 0-52.353 24.434-52.353 52.353s24.434 52.353 52.353 52.353h711.99c27.921 0 52.353-24.434 52.353-52.353s-24.434-52.353-52.353-52.353z"/><path d="M156.005 260.709h711.99c27.921 0 52.353-24.434 52.353-52.353s-24.434-52.353-52.353-52.353h-711.99c-27.921 0-52.353 24.434-52.353 52.353s24.434 52.353 52.353 52.353z"/></svg>
+        </button>
         <h1>登入</h1>
         <div style="width:36px;"></div>
       </div>
@@ -1773,68 +2274,15 @@
     <!-- ==================== SCREEN: REGISTER ==================== -->
     <div class="screen" id="screen-register">
       <div class="page-header">
-        <button class="icon-btn" onclick="toggleMenu()" style="font-size:18px;">&#9776;</button>
-        <h1>新用戶註冊</h1>
+        <button class="icon-btn" onclick="toggleMenu()"><svg viewBox="0 0 1024 1024" width="22" height="22"><path d="M867.995 459.647h-711.99c-27.921 0-52.353 24.434-52.353 52.353s24.434 52.353 52.353 52.353h711.99c27.921 0 52.353-24.434 52.353-52.353s-24.434-52.353-52.353-52.353z"/><path d="M867.995 763.291h-711.99c-27.921 0-52.353 24.434-52.353 52.353s24.434 52.353 52.353 52.353h711.99c27.921 0 52.353-24.434 52.353-52.353s-24.434-52.353-52.353-52.353z"/><path d="M156.005 260.709h711.99c27.921 0 52.353-24.434 52.353-52.353s-24.434-52.353-52.353-52.353h-711.99c-27.921 0-52.353 24.434-52.353 52.353s24.434 52.353 52.353 52.353z"/></svg></button>
+        <h1>成為Passto CLUB會員</h1>
         <div style="width:36px;"></div>
       </div>
       <div class="section" style="padding-top:20px; max-width:360px; margin:0 auto;">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-          <span></span>
-          <span style="font-size:12px; color:var(--text-muted);">*必填</span>
-        </div>
-
-        <!-- Title -->
+        <!-- Name -->
         <div class="form-group">
-          <label class="form-label" style="font-size:14px; color:var(--text-secondary);">稱謂 <span style="color:var(--gold);">*</span></label>
-          <div style="display:flex; gap:10px;">
-            <div class="register-title-option" data-value="先生" onclick="selectTitle(this)" style="flex:1; border:1px solid var(--border); border-radius:8px; padding:12px; text-align:center; cursor:pointer; font-size:14px;">先生</div>
-            <div class="register-title-option" data-value="女士" onclick="selectTitle(this)" style="flex:1; border:1px solid var(--border); border-radius:8px; padding:12px; text-align:center; cursor:pointer; font-size:14px;">女士</div>
-            <div class="register-title-option" data-value="小姐" onclick="selectTitle(this)" style="flex:1; border:1px solid var(--border); border-radius:8px; padding:12px; text-align:center; cursor:pointer; font-size:14px;">小姐</div>
-          </div>
-        </div>
-
-        <!-- Surname -->
-        <div class="form-group">
-          <label class="form-label" style="font-size:14px; color:var(--text-secondary);">姓氏 <span style="color:var(--gold);">*</span></label>
-          <input type="text" class="form-input" id="reg-surname" placeholder="請輸入姓氏" style="border-radius:12px;">
-        </div>
-
-        <!-- Given Name -->
-        <div class="form-group">
-          <label class="form-label" style="font-size:14px; color:var(--text-secondary);">名字 <span style="color:var(--gold);">*</span></label>
-          <input type="text" class="form-input" id="reg-given-name" placeholder="請輸入名字" style="border-radius:12px;">
-        </div>
-
-        <!-- DOB -->
-        <div class="form-group">
-          <label class="form-label" style="font-size:14px; color:var(--text-secondary);">出生日期 <span style="color:var(--gold);">*</span></label>
-          <div class="input-row">
-            <select class="form-input" id="reg-dob-day" style="border-radius:12px; flex:1;">
-              <option value="">日</option>
-              <script>
-                for(let i=1;i<=31;i++) document.write(`<option>${i}</option>`);
-              </script>
-            </select>
-            <select class="form-input" id="reg-dob-month" style="border-radius:12px; flex:1;">
-              <option value="">月</option>
-              <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option>
-              <option>7</option><option>8</option><option>9</option><option>10</option><option>11</option><option>12</option>
-            </select>
-          </div>
-        </div>
-
-        <!-- Age Group -->
-        <div class="form-group">
-          <label class="form-label" style="font-size:14px; color:var(--text-secondary);">年齡組別 <span style="color:var(--gold);">*</span></label>
-          <select class="form-input" id="reg-age-group" style="border-radius:12px;">
-            <option value="">請選擇</option>
-            <option>18-24</option>
-            <option>25-34</option>
-            <option>35-44</option>
-            <option>45-54</option>
-            <option>55-64</option>
-            <option>65+</option>
-          </select>
+          <label class="form-label" style="font-size:14px; color:var(--text-secondary);">姓名 <span style="color:var(--gold);">*</span></label>
+          <input type="text" class="form-input" id="reg-name" placeholder="請輸入姓名" style="border-radius:12px;">
         </div>
 
         <!-- Phone -->
@@ -1850,19 +2298,31 @@
           </div>
         </div>
 
-        <!-- Verification Code -->
-        <div class="form-group">
-          <label class="form-label" style="font-size:14px; color:var(--text-secondary);">輸入驗證碼 <span style="color:var(--gold);">*</span></label>
-          <div class="input-row">
-            <input type="text" class="form-input" id="reg-code" placeholder="請輸入驗證碼" maxlength="6" style="border-radius:12px; flex:1;">
-            <button class="btn btn-outline" style="flex:none; padding:14px 16px; border-radius:12px; white-space:nowrap;" onclick="sendCode(this)" id="reg-send-code-btn">發送驗證碼</button>
-          </div>
-        </div>
-
         <!-- Email -->
         <div class="form-group">
           <label class="form-label" style="font-size:14px; color:var(--text-secondary);">電郵地址 <span style="color:var(--gold);">*</span></label>
           <input type="email" class="form-input" id="reg-email" placeholder="請輸入電郵地址" style="border-radius:12px;">
+        </div>
+
+        <!-- Password -->
+        <div class="form-group">
+          <label class="form-label" style="font-size:14px; color:var(--text-secondary);">輸入密碼 <span style="color:var(--gold);">*</span></label>
+          <input type="password" class="form-input" id="reg-password" placeholder="請輸入密碼" style="border-radius:12px;">
+          <div style="font-size:12px; color:var(--gold-dim); margin-top:6px;">密碼長度最少8至15位字符，同時包含大寫字母、小寫字母和數字。</div>
+        </div>
+
+        <!-- Confirm Password -->
+        <div class="form-group">
+          <label class="form-label" style="font-size:14px; color:var(--text-secondary);">確認密碼 <span style="color:var(--gold);">*</span></label>
+          <input type="password" class="form-input" id="reg-password-confirm" placeholder="請再次輸入密碼" style="border-radius:12px;">
+        </div>
+
+        <!-- Agreement -->
+        <div class="form-group">
+          <label style="display:flex; align-items:flex-start; gap:10px; cursor:pointer; font-size:13px; color:var(--text-secondary); line-height:1.6;">
+            <input type="checkbox" id="reg-agree" style="width:18px; height:18px; margin-top:2px; accent-color:var(--gold); flex-shrink:0;">
+            <span>閣下確認已閱讀並同意 Passto Bullion 之<span style="color:var(--gold); text-decoration:underline; cursor:pointer;" onclick="event.stopPropagation(); goTo('terms')">條款及細則</span>。我們對使用閣下個人資料作直接促銷及自動化處理，以為閣下提供最新消息、優惠及推廣禮遇等資訊。</span>
+          </label>
         </div>
 
         <button class="btn btn-primary btn-full" style="margin-top:24px;" onclick="doRegister()">立即登記</button>
@@ -1872,7 +2332,7 @@
     <!-- ==================== SCREEN: CHECKOUT LOW (L2) ==================== -->
     <div class="screen" id="screen-checkout-low">
       <div class="page-header">
-        <button class="icon-btn" onclick="toggleMenu()" style="font-size:18px;">&#9776;</button>
+        <button class="icon-btn" onclick="toggleMenu()"><svg viewBox="0 0 1024 1024" width="22" height="22"><path d="M867.995 459.647h-711.99c-27.921 0-52.353 24.434-52.353 52.353s24.434 52.353 52.353 52.353h711.99c27.921 0 52.353-24.434 52.353-52.353s-24.434-52.353-52.353-52.353z"/><path d="M867.995 763.291h-711.99c-27.921 0-52.353 24.434-52.353 52.353s24.434 52.353 52.353 52.353h711.99c27.921 0 52.353-24.434 52.353-52.353s-24.434-52.353-52.353-52.353z"/><path d="M156.005 260.709h711.99c27.921 0 52.353-24.434 52.353-52.353s-24.434-52.353-52.353-52.353h-711.99c-27.921 0-52.353 24.434-52.353 52.353s24.434 52.353 52.353 52.353z"/></svg></button>
         <h1>確認訂單</h1>
         <div style="width:36px;"></div>
       </div>
@@ -1885,12 +2345,8 @@
           <div class="flow-step-num">2</div>
           <div class="flow-step-label">取貨方式</div>
         </div>
-        <div class="flow-step" onclick="goTo('service')">
-          <div class="flow-step-num">3</div>
-          <div class="flow-step-label">心意服務</div>
-        </div>
         <div class="flow-step active">
-          <div class="flow-step-num">4</div>
+          <div class="flow-step-num">3</div>
           <div class="flow-step-label">訂單結算</div>
         </div>
       </div>
@@ -1905,16 +2361,16 @@
             <span id="checkout-low-product-price">HK$122,800</span>
           </div>
           <div class="order-summary-row" id="row-service-chars" style="display:none;">
-            <span class="label">自選字元</span>
-            <span>HK$260</span>
+            <span class="label" id="label-service-chars">自選字元</span>
+            <span id="price-service-chars">HK$260</span>
           </div>
           <div class="order-summary-row" id="row-service-big" style="display:none;">
-            <span class="label">印圖案（大）</span>
-            <span>HK$88</span>
+            <span class="label" id="label-service-big">印圖案（大）</span>
+            <span id="price-service-big">HK$88</span>
           </div>
           <div class="order-summary-row" id="row-service-small" style="display:none;">
-            <span class="label">印圖案（小）</span>
-            <span>HK$52</span>
+            <span class="label" id="label-service-small">印圖案（小）</span>
+            <span id="price-service-small">HK$52</span>
           </div>
           <div class="order-summary-row">
             <span class="label">運費</span>
@@ -1937,47 +2393,36 @@
       </div>
     </div>
 
-    <!-- ==================== SCREEN: KYC BASIC (L2) ==================== -->
+    <!-- ==================== SCREEN: KYC BASIC ==================== -->
     <div class="screen" id="screen-kyc-basic">
       <div class="page-header">
-        <button class="icon-btn" onclick="toggleMenu()" style="font-size:18px;">&#9776;</button>
-        <h1>基礎信息認證</h1>
+        <button class="icon-btn" onclick="toggleMenu()"><svg viewBox="0 0 1024 1024" width="22" height="22"><path d="M867.995 459.647h-711.99c-27.921 0-52.353 24.434-52.353 52.353s24.434 52.353 52.353 52.353h711.99c27.921 0 52.353-24.434 52.353-52.353s-24.434-52.353-52.353-52.353z"/><path d="M867.995 763.291h-711.99c-27.921 0-52.353 24.434-52.353 52.353s24.434 52.353 52.353 52.353h711.99c27.921 0 52.353-24.434 52.353-52.353s-24.434-52.353-52.353-52.353z"/><path d="M156.005 260.709h711.99c27.921 0 52.353-24.434 52.353-52.353s-24.434-52.353-52.353-52.353h-711.99c-27.921 0-52.353 24.434-52.353 52.353s24.434 52.353 52.353 52.353z"/></svg></button>
+        <h1>基本信息</h1>
         <div style="width:36px;"></div>
       </div>
       <div class="section" style="padding-bottom:100px;">
-        <div style="margin-bottom:20px;">
-          <div style="font-size:14px; font-weight:600; margin-bottom:4px;">身份證資料</div>
-          <div style="font-size:12px; color:var(--text-muted);">請上傳香港身份證或護照</div>
-        </div>
-        <div style="display:flex; gap:12px; margin-bottom:20px;">
-          <div class="upload-area" style="flex:1;" onclick="alert('請上傳身份證正面')">
-            <div class="upload-arrow">&#8593;</div>
-            <div class="upload-text">點擊上傳正面</div>
-          </div>
-          <div class="upload-area" style="flex:1;" onclick="alert('請上傳身份證反面')">
-            <div class="upload-arrow">&#8593;</div>
-            <div class="upload-text">點擊上傳反面</div>
-          </div>
-        </div>
-
         <div class="form-group">
-          <label class="form-label">證件號碼</label>
-          <input type="text" class="form-input" placeholder="如：Y123456(7)">
+          <label class="form-label">姓名</label>
+          <input type="text" class="form-input" id="kyc-name" placeholder="請輸入姓名">
         </div>
         <div class="form-group">
-          <label class="form-label">姓名（需與證件一致）</label>
-          <input type="text" class="form-input" placeholder="請輸入姓名">
+          <label class="form-label">電話</label>
+          <input type="tel" class="form-input" id="kyc-phone" placeholder="請輸入電話號碼">
+        </div>
+        <div class="form-group">
+          <label class="form-label">電子郵件</label>
+          <input type="email" class="form-input" id="kyc-email" placeholder="請輸入電子郵件">
         </div>
       </div>
       <div class="bottom-bar">
-        <button class="btn btn-primary btn-full" onclick="submitBasicKYC()">提交並驗證</button>
+        <button class="btn btn-primary btn-full" onclick="submitBasicKYC()">提交</button>
       </div>
     </div>
 
     <!-- ==================== SCREEN: CHECKOUT HIGH (L3) ==================== -->
     <div class="screen" id="screen-checkout-high">
       <div class="page-header">
-        <button class="icon-btn" onclick="toggleMenu()" style="font-size:18px;">&#9776;</button>
+        <button class="icon-btn" onclick="toggleMenu()"><svg viewBox="0 0 1024 1024" width="22" height="22"><path d="M867.995 459.647h-711.99c-27.921 0-52.353 24.434-52.353 52.353s24.434 52.353 52.353 52.353h711.99c27.921 0 52.353-24.434 52.353-52.353s-24.434-52.353-52.353-52.353z"/><path d="M867.995 763.291h-711.99c-27.921 0-52.353 24.434-52.353 52.353s24.434 52.353 52.353 52.353h711.99c27.921 0 52.353-24.434 52.353-52.353s-24.434-52.353-52.353-52.353z"/><path d="M156.005 260.709h711.99c27.921 0 52.353-24.434 52.353-52.353s-24.434-52.353-52.353-52.353h-711.99c-27.921 0-52.353 24.434-52.353 52.353s24.434 52.353 52.353 52.353z"/></svg></button>
         <h1>確認訂單</h1>
         <div style="width:36px;"></div>
       </div>
@@ -1990,12 +2435,8 @@
           <div class="flow-step-num">2</div>
           <div class="flow-step-label">取貨方式</div>
         </div>
-        <div class="flow-step" onclick="goTo('service')">
-          <div class="flow-step-num">3</div>
-          <div class="flow-step-label">心意服務</div>
-        </div>
         <div class="flow-step active">
-          <div class="flow-step-num">4</div>
+          <div class="flow-step-num">3</div>
           <div class="flow-step-label">訂單結算</div>
         </div>
       </div>
@@ -2010,16 +2451,16 @@
             <span id="checkout-high-product-price">HK$245,600</span>
           </div>
           <div class="order-summary-row" id="row-high-service-chars" style="display:none;">
-            <span class="label">自選字元</span>
-            <span>HK$260</span>
+            <span class="label" id="label-high-service-chars">自選字元</span>
+            <span id="price-high-service-chars">HK$260</span>
           </div>
           <div class="order-summary-row" id="row-high-service-big" style="display:none;">
-            <span class="label">印圖案（大）</span>
-            <span>HK$88</span>
+            <span class="label" id="label-high-service-big">印圖案（大）</span>
+            <span id="price-high-service-big">HK$88</span>
           </div>
           <div class="order-summary-row" id="row-high-service-small" style="display:none;">
-            <span class="label">印圖案（小）</span>
-            <span>HK$52</span>
+            <span class="label" id="label-high-service-small">印圖案（小）</span>
+            <span id="price-high-service-small">HK$52</span>
           </div>
           <div class="order-summary-row">
             <span class="label">運費</span>
@@ -2037,61 +2478,7 @@
         </div>
 
         <div class="bottom-bar">
-          <button class="btn btn-primary btn-full" onclick="goTo('kyc-full')">去填寫完整賬戶認證</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- ==================== SCREEN: KYC FULL (L3) ==================== -->
-    <div class="screen" id="screen-kyc-full">
-      <div class="page-header">
-        <button class="icon-btn" onclick="toggleMenu()" style="font-size:18px;">&#9776;</button>
-        <h1>完整賬戶認證</h1>
-        <div style="width:36px;"></div>
-      </div>
-      <div class="section">
-        <div style="margin-bottom:20px;">
-          <div style="font-size:14px; font-weight:600; margin-bottom:4px;">銀行卡流水</div>
-          <div style="font-size:12px; color:var(--text-muted);">近 3-6 個月銀行流水，PDF 或截圖</div>
-        </div>
-        <div class="upload-area" style="margin-bottom:24px;">
-            <div class="upload-text">&#8593; 點擊上傳銀行流水</div>
-        </div>
-
-        <div style="margin-bottom:20px;">
-          <div style="font-size:14px; font-weight:600; margin-bottom:4px;">資產證明（選填一項或多選）</div>
-          <div style="font-size:12px; color:var(--text-muted);">存款證明、投資賬戶、房產證等</div>
-        </div>
-        <div class="upload-area" style="margin-bottom:24px;">
-          <div class="upload-text">&#8593; 點擊上傳資產證明</div>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label">資產說明</label>
-          <textarea class="form-input" rows="3" placeholder="請簡要說明您的資產情況（如存款金額、房產數量、投資類型等）" style="resize:none;"></textarea>
-        </div>
-
-        <div class="sticky-bottom">
-          <button class="btn btn-primary btn-full" onclick="submitFullKYC()">提交審核</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- ==================== SCREEN: KYC PENDING ==================== -->
-    <div class="screen" id="screen-kyc-pending">
-      <div class="page-header">
-        <button class="icon-btn" onclick="toggleMenu()" style="font-size:18px;">&#9776;</button>
-        <h1>審核中</h1>
-        <div style="width:36px;"></div>
-      </div>
-      <div class="section" style="text-align:center; padding-top:60px;">
-        <div style="font-size:64px; margin-bottom:24px;">&#9203;</div>
-        <div class="success-title">資料已提交</div>
-        <div class="success-subtitle">後台正在審核您的完整賬戶認證 資料<br>預計 1-2 個工作日內完成</div>
-
-        <div style="display:flex; gap:12px; margin-top:40px;">
-          <button class="btn btn-secondary" style="flex:1;" onclick="goTo('home')">返回首頁</button>
-          <a class="btn btn-primary" style="flex:1; text-decoration:none; text-align:center; display:flex; align-items:center; justify-content:center; gap:8px;" href="https://wa.me/85212345678" target="_blank"><svg viewBox="0 0 1024 1024" width="18" height="18" style="flex-shrink:0;"><path d="M511.872427 0h0.256C794.45376 0 1024.000427 229.674667 1024.000427 512s-229.589333 512-511.872 512c-104.106667 0-200.704-31.018667-281.6-84.565333L33.707093 1002.325333l63.786667-190.250666A508.245333 508.245333 0 0 1 0.000427 512C0.000427 229.674667 229.58976 0 511.872427 0zM365.39776 281.429333c-9.770667-23.338667-17.194667-24.234667-32-24.832A285.525333 285.525333 0 0 0 316.50176 256c-19.285333 0-39.424 5.632-51.626667 18.048C250.155093 289.109333 213.33376 324.266667 213.33376 396.501333c0 72.149333 52.778667 141.952 59.861333 151.722667 7.424 9.728 102.912 160 251.093334 221.226667 115.925333 47.914667 150.314667 43.477333 176.725333 37.845333 38.528-8.277333 86.826667-36.693333 98.986667-70.954667 12.16-34.346667 12.16-63.616 8.618666-69.845333-3.584-6.186667-13.354667-9.728-28.16-17.152-14.848-7.381333-86.869333-42.88-100.522666-47.616-13.354667-4.992-26.069333-3.242667-36.138667 10.965333-14.250667 19.797333-28.16 39.936-39.466667 52.053334-8.874667 9.472-23.424 10.666667-35.541333 5.632-16.298667-6.826667-61.952-22.784-118.314667-72.789334-43.562667-38.741333-73.216-86.954667-81.792-101.418666-8.618667-14.805333-0.896-23.381333 5.930667-31.36 7.381333-9.173333 14.506667-15.658667 21.930667-24.234667 7.424-8.576 11.52-13.013333 16.298666-23.082667 5.034667-9.770667 1.493333-19.84-2.090666-27.221333-3.541333-7.381333-33.194667-79.573333-45.354667-108.8z" fill="currentColor"/></svg> WhatsApp</a>
+          <button class="btn btn-primary btn-full" onclick="goToPaymentFromCheckoutLow()">確認付款</button>
         </div>
       </div>
     </div>
@@ -2099,7 +2486,7 @@
     <!-- ==================== SCREEN: PAYMENT ==================== -->
     <div class="screen" id="screen-payment">
       <div class="page-header">
-        <button class="icon-btn" onclick="toggleMenu()" style="font-size:18px;">&#9776;</button>
+        <button class="icon-btn" onclick="toggleMenu()"><svg viewBox="0 0 1024 1024" width="22" height="22"><path d="M867.995 459.647h-711.99c-27.921 0-52.353 24.434-52.353 52.353s24.434 52.353 52.353 52.353h711.99c27.921 0 52.353-24.434 52.353-52.353s-24.434-52.353-52.353-52.353z"/><path d="M867.995 763.291h-711.99c-27.921 0-52.353 24.434-52.353 52.353s24.434 52.353 52.353 52.353h711.99c27.921 0 52.353-24.434 52.353-52.353s-24.434-52.353-52.353-52.353z"/><path d="M156.005 260.709h711.99c27.921 0 52.353-24.434 52.353-52.353s-24.434-52.353-52.353-52.353h-711.99c-27.921 0-52.353 24.434-52.353 52.353s24.434 52.353 52.353 52.353z"/></svg></button>
         <h1>確認付款</h1>
         <div style="width:36px;"></div>
       </div>
@@ -2189,12 +2576,12 @@
     <!-- ==================== SCREEN: RECYCLE (参考 hkkc) ==================== -->
     <div class="screen" id="screen-recycle">
       <div class="page-header">
-        <button class="icon-btn" onclick="toggleMenu()" style="font-size:18px;">&#9776;</button>
+        <button class="icon-btn" onclick="toggleMenu()"><svg viewBox="0 0 1024 1024" width="22" height="22"><path d="M867.995 459.647h-711.99c-27.921 0-52.353 24.434-52.353 52.353s24.434 52.353 52.353 52.353h711.99c27.921 0 52.353-24.434 52.353-52.353s-24.434-52.353-52.353-52.353z"/><path d="M867.995 763.291h-711.99c-27.921 0-52.353 24.434-52.353 52.353s24.434 52.353 52.353 52.353h711.99c27.921 0 52.353-24.434 52.353-52.353s-24.434-52.353-52.353-52.353z"/><path d="M156.005 260.709h711.99c27.921 0 52.353-24.434 52.353-52.353s-24.434-52.353-52.353-52.353h-711.99c-27.921 0-52.353 24.434-52.353 52.353s24.434 52.353 52.353 52.353z"/></svg></button>
         <h1>黃金回收</h1>
         <div style="width:36px;"></div>
       </div>
       <div class="section">
-        <div class="gold-banner" style="border-radius:16px; margin-bottom:24px;">
+        <div class="gold-banner" style="border-radius:0 0 16px 16px; margin-top:-24px; margin-bottom:24px;">
           <div class="gold-banner-label">今日回收價</div>
           <div class="gold-price-main shimmer">HK$ 2,380<span class="unit">/g</span></div>
           <div class="gold-banner-time">純度 ≥99.9% · 實時報價</div>
@@ -2247,7 +2634,7 @@
     <!-- ==================== SCREEN: RECYCLE APPOINTMENT ==================== -->
     <div class="screen" id="screen-recycle-appointment">
       <div class="page-header">
-        <button class="icon-btn" onclick="toggleMenu()" style="font-size:18px;">&#9776;</button>
+        <button class="icon-btn" onclick="toggleMenu()"><svg viewBox="0 0 1024 1024" width="22" height="22"><path d="M867.995 459.647h-711.99c-27.921 0-52.353 24.434-52.353 52.353s24.434 52.353 52.353 52.353h711.99c27.921 0 52.353-24.434 52.353-52.353s-24.434-52.353-52.353-52.353z"/><path d="M867.995 763.291h-711.99c-27.921 0-52.353 24.434-52.353 52.353s24.434 52.353 52.353 52.353h711.99c27.921 0 52.353-24.434 52.353-52.353s-24.434-52.353-52.353-52.353z"/><path d="M156.005 260.709h711.99c27.921 0 52.353-24.434 52.353-52.353s-24.434-52.353-52.353-52.353h-711.99c-27.921 0-52.353 24.434-52.353 52.353s24.434 52.353 52.353 52.353z"/></svg></button>
         <h1>回收預約</h1>
         <div style="width:36px;"></div>
       </div>
@@ -2313,11 +2700,15 @@
     <!-- ==================== SCREEN: PICKUP ==================== -->
     <div class="screen" id="screen-pickup">
       <div class="page-header">
-        <button class="icon-btn" onclick="toggleMenu()" style="font-size:18px;">&#9776;</button>
+        <button class="icon-btn" onclick="toggleMenu()"><svg viewBox="0 0 1024 1024" width="22" height="22"><path d="M867.995 459.647h-711.99c-27.921 0-52.353 24.434-52.353 52.353s24.434 52.353 52.353 52.353h711.99c27.921 0 52.353-24.434 52.353-52.353s-24.434-52.353-52.353-52.353z"/><path d="M867.995 763.291h-711.99c-27.921 0-52.353 24.434-52.353 52.353s24.434 52.353 52.353 52.353h711.99c27.921 0 52.353-24.434 52.353-52.353s-24.434-52.353-52.353-52.353z"/><path d="M156.005 260.709h711.99c27.921 0 52.353-24.434 52.353-52.353s-24.434-52.353-52.353-52.353h-711.99c-27.921 0-52.353 24.434-52.353 52.353s24.434 52.353 52.353 52.353z"/></svg></button>
         <h1>預約提金</h1>
         <div style="width:36px;"></div>
       </div>
       <div class="section">
+        <div class="info-card" id="pickup-summary" style="display:none;">
+          <div class="info-card-title" style="font-size:16px;">訂單摘要</div>
+          <div class="info-card-text" id="pickup-summary-content"></div>
+        </div>
         <div class="info-card">
           <div class="info-card-title" style="font-size:16px;">選擇門店</div>
           <div class="info-card-text">中港城門店 · 香港中環皇后大道中100號<br>營業時間：10:00 - 19:00</div>
@@ -2345,55 +2736,96 @@
       </div>
     </div>
 
+    <!-- ==================== SCREEN: STORE APPOINTMENT ==================== -->
+    <div class="screen" id="screen-store-appointment">
+      <div class="page-header">
+        <button class="icon-btn" onclick="toggleMenu()"><svg viewBox="0 0 1024 1024" width="22" height="22"><path d="M867.995 459.647h-711.99c-27.921 0-52.353 24.434-52.353 52.353s24.434 52.353 52.353 52.353h711.99c27.921 0 52.353-24.434 52.353-52.353s-24.434-52.353-52.353-52.353z"/><path d="M867.995 763.291h-711.99c-27.921 0-52.353 24.434-52.353 52.353s24.434 52.353 52.353 52.353h711.99c27.921 0 52.353-24.434 52.353-52.353s-24.434-52.353-52.353-52.353z"/><path d="M156.005 260.709h711.99c27.921 0 52.353-24.434 52.353-52.353s-24.434-52.353-52.353-52.353h-711.99c-27.921 0-52.353 24.434-52.353 52.353s24.434 52.353 52.353 52.353z"/></svg></button>
+        <h1>預約看金</h1>
+        <div style="width:36px;"></div>
+      </div>
+      <div class="section">
+        <div class="info-card" id="store-appointment-summary" style="display:none;">
+          <div class="info-card-title" style="font-size:16px;">訂單摘要</div>
+          <div class="info-card-text" id="store-appointment-summary-content"></div>
+        </div>
+        <div class="info-card">
+          <div class="info-card-title" style="font-size:16px;">選擇門店</div>
+          <div class="info-card-text">中港城門店 · 香港中環皇后大道中100號<br>營業時間：10:00 - 19:00</div>
+        </div>
+        <div class="info-card">
+          <div class="info-card-title" style="font-size:16px;">選擇時間</div>
+          <div style="display:flex; gap:10px; margin-bottom:10px;">
+            <input type="date" id="store-appointment-date" class="form-input" style="flex:1; font-size:14px;">
+            <select id="store-appointment-time" class="form-input" style="flex:1; font-size:14px;">
+              <option>10:00 - 11:00</option>
+              <option>11:00 - 12:00</option>
+              <option>12:00 - 13:00</option>
+              <option>13:00 - 14:00</option>
+              <option>14:00 - 15:00</option>
+              <option>15:00 - 16:00</option>
+              <option>16:00 - 17:00</option>
+              <option>17:00 - 18:00</option>
+              <option>18:00 - 19:00</option>
+            </select>
+          </div>
+        </div>
+        <div class="sticky-bottom">
+          <button class="btn btn-primary btn-full" onclick="confirmStoreAppointmentAndShowQR()">確認預約</button>
+        </div>
+      </div>
+    </div>
+
     <!-- ==================== SCREEN: PROFILE ==================== -->
     <div class="screen" id="screen-profile">
       <div class="page-header">
-        <button class="icon-btn" onclick="toggleMenu()" style="font-size:18px;">&#9776;</button>
+        <button class="icon-btn" onclick="toggleMenu()"><svg viewBox="0 0 1024 1024" width="22" height="22"><path d="M867.995 459.647h-711.99c-27.921 0-52.353 24.434-52.353 52.353s24.434 52.353 52.353 52.353h711.99c27.921 0 52.353-24.434 52.353-52.353s-24.434-52.353-52.353-52.353z"/><path d="M867.995 763.291h-711.99c-27.921 0-52.353 24.434-52.353 52.353s24.434 52.353 52.353 52.353h711.99c27.921 0 52.353-24.434 52.353-52.353s-24.434-52.353-52.353-52.353z"/><path d="M156.005 260.709h711.99c27.921 0 52.353-24.434 52.353-52.353s-24.434-52.353-52.353-52.353h-711.99c-27.921 0-52.353 24.434-52.353 52.353s24.434 52.353 52.353 52.353z"/></svg></button>
         <h1>個人中心</h1>
         <div style="width:36px;"></div>
       </div>
       <div class="section" style="padding-top:20px;">
-        <!-- Welcome -->
-        <div style="margin-bottom:24px; text-align:center; padding:24px 0;">
-          <div id="profile-welcome" style="font-size:22px; font-weight:500; line-height:1.6;">歡迎回來</div>
-        </div>
-
         <!-- Personal Info -->
-        <div id="profile-info-card" style="margin-bottom:20px; padding:20px 0; cursor:pointer;" onclick="handleProfileInfoClick()">
-          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;">
-            <span style="font-size:18px; font-weight:600;">個人資料</span>
+        <div class="profile-card" id="profile-info-card" onclick="handleProfileInfoClick()">
+          <div class="profile-user-header">
+            <div>
+              <div class="profile-welcome-text" id="profile-welcome">歡迎回來</div>
+              <div class="profile-welcome-sub" id="profile-welcome-sub">查看並管理您的個人資料</div>
+            </div>
           </div>
-          <div style="height:1px; background:var(--border); margin-bottom:16px;"></div>
-          <div style="margin-bottom:14px;">
-            <div style="font-size:12px; color:var(--text-muted); margin-bottom:4px;">姓</div>
-            <div id="profile-surname" style="font-size:15px;">--</div>
-          </div>
-          <div style="margin-bottom:14px;">
-            <div style="font-size:12px; color:var(--text-muted); margin-bottom:4px;">手機號碼</div>
-            <div id="profile-phone" style="font-size:15px;">--</div>
-          </div>
-          <div>
-            <div style="font-size:12px; color:var(--text-muted); margin-bottom:4px;">電郵</div>
-            <div id="profile-email" style="font-size:15px;">--</div>
+          <div class="profile-info-grid">
+            <div class="profile-info-item">
+              <div class="profile-info-body">
+                <div class="profile-info-label">姓名</div>
+                <div class="profile-info-value" id="profile-surname">--</div>
+              </div>
+            </div>
+            <div class="profile-info-item">
+              <div class="profile-info-body">
+                <div class="profile-info-label">手機號碼</div>
+                <div class="profile-info-value" id="profile-phone">--</div>
+              </div>
+            </div>
+            <div class="profile-info-item">
+              <div class="profile-info-body">
+                <div class="profile-info-label">電郵</div>
+                <div class="profile-info-value" id="profile-email">--</div>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div class="info-card" style="cursor:pointer;" onclick="goTo('cart')">
-          <div style="display:flex; align-items:center; justify-content:space-between;">
-            <span style="font-weight:500;">我的購物袋</span>
-            <span style="color:var(--text-muted);">&#10095;</span>
+        <!-- Menu -->
+        <div class="profile-menu-list">
+          <div class="profile-menu-item" onclick="goTo('cart')">
+            <div class="profile-menu-text">我的購物袋</div>
+            <div class="profile-menu-arrow">&#10095;</div>
           </div>
-        </div>
-        <div class="info-card" style="cursor:pointer;" onclick="goTo('appointment-records')">
-          <div style="display:flex; align-items:center; justify-content:space-between;">
-            <span style="font-weight:500;">預約記錄</span>
-            <span style="color:var(--text-muted);">&#10095;</span>
+          <div class="profile-menu-item" onclick="goTo('appointment-records')">
+            <div class="profile-menu-text">預約記錄</div>
+            <div class="profile-menu-arrow">&#10095;</div>
           </div>
-        </div>
-        <div class="info-card" style="cursor:pointer;" onclick="goTo('transaction-records')">
-          <div style="display:flex; align-items:center; justify-content:space-between;">
-            <span style="font-weight:500;">交易記錄</span>
-            <span style="color:var(--text-muted);">&#10095;</span>
+          <div class="profile-menu-item" onclick="goTo('transaction-records')">
+            <div class="profile-menu-text">交易記錄</div>
+            <div class="profile-menu-arrow">&#10095;</div>
           </div>
         </div>
       </div>
@@ -2402,7 +2834,7 @@
     <!-- ==================== SCREEN: APPOINTMENT RECORDS ==================== -->
     <div class="screen" id="screen-appointment-records">
       <div class="page-header">
-        <button class="icon-btn" onclick="toggleMenu()" style="font-size:18px;">&#9776;</button>
+        <button class="icon-btn" onclick="toggleMenu()"><svg viewBox="0 0 1024 1024" width="22" height="22"><path d="M867.995 459.647h-711.99c-27.921 0-52.353 24.434-52.353 52.353s24.434 52.353 52.353 52.353h711.99c27.921 0 52.353-24.434 52.353-52.353s-24.434-52.353-52.353-52.353z"/><path d="M867.995 763.291h-711.99c-27.921 0-52.353 24.434-52.353 52.353s24.434 52.353 52.353 52.353h711.99c27.921 0 52.353-24.434 52.353-52.353s-24.434-52.353-52.353-52.353z"/><path d="M156.005 260.709h711.99c27.921 0 52.353-24.434 52.353-52.353s-24.434-52.353-52.353-52.353h-711.99c-27.921 0-52.353 24.434-52.353 52.353s24.434 52.353 52.353 52.353z"/></svg></button>
         <h1>預約記錄</h1>
         <div style="width:36px;"></div>
       </div>
@@ -2414,7 +2846,7 @@
     <!-- ==================== SCREEN: TRANSACTION RECORDS ==================== -->
     <div class="screen" id="screen-transaction-records">
       <div class="page-header">
-        <button class="icon-btn" onclick="toggleMenu()" style="font-size:18px;">&#9776;</button>
+        <button class="icon-btn" onclick="toggleMenu()"><svg viewBox="0 0 1024 1024" width="22" height="22"><path d="M867.995 459.647h-711.99c-27.921 0-52.353 24.434-52.353 52.353s24.434 52.353 52.353 52.353h711.99c27.921 0 52.353-24.434 52.353-52.353s-24.434-52.353-52.353-52.353z"/><path d="M867.995 763.291h-711.99c-27.921 0-52.353 24.434-52.353 52.353s24.434 52.353 52.353 52.353h711.99c27.921 0 52.353-24.434 52.353-52.353s-24.434-52.353-52.353-52.353z"/><path d="M156.005 260.709h711.99c27.921 0 52.353-24.434 52.353-52.353s-24.434-52.353-52.353-52.353h-711.99c-27.921 0-52.353 24.434-52.353 52.353s24.434 52.353 52.353 52.353z"/></svg></button>
         <h1>交易記錄</h1>
         <div style="width:36px;"></div>
       </div>
@@ -2423,7 +2855,177 @@
       </div>
     </div>
 
+    <!-- ==================== SCREEN: GOLD CONVERTER ==================== -->
+    <div class="screen" id="screen-converter">
+      <div class="page-header">
+        <button class="icon-btn" onclick="toggleMenu()"><svg viewBox="0 0 1024 1024" width="22" height="22"><path d="M867.995 459.647h-711.99c-27.921 0-52.353 24.434-52.353 52.353s24.434 52.353 52.353 52.353h711.99c27.921 0 52.353-24.434 52.353-52.353s-24.434-52.353-52.353-52.353z"/><path d="M867.995 763.291h-711.99c-27.921 0-52.353 24.434-52.353 52.353s24.434 52.353 52.353 52.353h711.99c27.921 0 52.353-24.434 52.353-52.353s-24.434-52.353-52.353-52.353z"/><path d="M156.005 260.709h711.99c27.921 0 52.353-24.434 52.353-52.353s-24.434-52.353-52.353-52.353h-711.99c-27.921 0-52.353 24.434-52.353 52.353s24.434 52.353 52.353 52.353z"/></svg></button>
+        <h1>黃金重量換算</h1>
+        <div style="width:36px;"></div>
+      </div>
+      <div class="section" style="padding-top:24px;">
+        <div class="converter-card">
+          <div class="converter-row">
+            <div class="converter-label">從</div>
+            <div class="converter-input-wrap">
+              <span class="converter-unit-label" id="conv-from-label">克 (g)</span>
+              <input type="number" class="converter-input" id="conv-from-value" value="1" oninput="convertWeight()">
+            </div>
+            <select class="converter-unit-select" id="conv-from-unit" onchange="updateConverterLabels(); convertWeight()">
+              <option value="g">克 (g)</option>
+              <option value="tael">兩 (tael)</option>
+              <option value="oz">金衡盎司 (oz)</option>
+              <option value="kg">公斤 (kg)</option>
+              <option value="tola">托拉 (tola)</option>
+              <option value="pennyweight">英錢 (dwt)</option>
+            </select>
+          </div>
+          <button class="converter-swap" onclick="swapConverter()">⇅</button>
+          <div class="converter-row">
+            <div class="converter-label">到</div>
+            <div class="converter-input-wrap">
+              <span class="converter-unit-label" id="conv-to-label">兩 (tael)</span>
+              <input type="text" class="converter-output" id="conv-to-value" readonly>
+            </div>
+            <select class="converter-unit-select" id="conv-to-unit" onchange="updateConverterLabels(); convertWeight()">
+              <option value="g">克 (g)</option>
+              <option value="tael" selected>兩 (tael)</option>
+              <option value="oz">金衡盎司 (oz)</option>
+              <option value="kg">公斤 (kg)</option>
+              <option value="tola">托拉 (tola)</option>
+              <option value="pennyweight">英錢 (dwt)</option>
+            </select>
+          </div>
+        </div>
+        <div class="converter-reference">
+          <div class="converter-ref-title">Reference:</div>
+          <div class="converter-ref-grid">
+            <div class="converter-ref-item"><span>1 金衡盎司</span> = 31.1035 克</div>
+            <div class="converter-ref-item"><span>1 兩</span> = 37.5 克</div>
+            <div class="converter-ref-item"><span>1 金衡盎司</span> = 0.8294 兩</div>
+            <div class="converter-ref-item"><span>1 托拉</span> = 11.6638 克</div>
+            <div class="converter-ref-item"><span>1 英錢</span> = 1.55517 克</div>
+            <div class="converter-ref-item"><span>1 公斤</span> = 1000 克</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== SCREEN: TRUST INFO ==================== -->
+    <div class="screen" id="screen-trust">
+      <div class="page-header" style="border-bottom:none;">
+        <button class="icon-btn" onclick="toggleMenu()"><svg viewBox="0 0 1024 1024" width="22" height="22"><path d="M867.995 459.647h-711.99c-27.921 0-52.353 24.434-52.353 52.353s24.434 52.353 52.353 52.353h711.99c27.921 0 52.353-24.434 52.353-52.353s-24.434-52.353-52.353-52.353z"/><path d="M867.995 763.291h-711.99c-27.921 0-52.353 24.434-52.353 52.353s24.434 52.353 52.353 52.353h711.99c27.921 0 52.353-24.434 52.353-52.353s-24.434-52.353-52.353-52.353z"/><path d="M156.005 260.709h711.99c27.921 0 52.353-24.434 52.353-52.353s-24.434-52.353-52.353-52.353h-711.99c-27.921 0-52.353 24.434-52.353 52.353s24.434 52.353 52.353 52.353z"/></svg></button>
+        <h1>信賴證明</h1>
+        <div style="width:36px;"></div>
+      </div>
+      <div class="section trust-section" style="padding-top:24px;">
+        <div style="text-align:center; margin-bottom:32px;">
+          <img src="https://upload.wikimedia.org/wikipedia/zh/thumb/8/82/Customs_and_Excise_Department_%28Hong_Kong%29.svg/1280px-Customs_and_Excise_Department_%28Hong_Kong%29.svg.png" alt="香港海關" style="width:100px; height:100px; object-fit:contain; margin-bottom:20px;">
+          <div style="font-family:'Noto Serif SC',serif; font-size:24px; font-weight:700; color:var(--gold); margin-bottom:8px;">- 信賴證明 -</div>
+          <div style="font-family:'Noto Serif SC',serif; font-size:22px; font-weight:600; color:var(--gold); margin-bottom:24px;">香港海關認可</div>
+        </div>
+        <div class="info-card" style="border:none; background:transparent; text-align:center; padding:0;">
+          <div style="font-size:15px; color:var(--text-secondary); line-height:2; margin-bottom:24px;">
+            Passto Bullion 已註冊貴金屬及寶石交易商<br>
+            註冊號碼：A-B-26-06-11046<br>
+            受香港海關監管，符合《打擊洗錢及恐怖分子資金籌集條例》要求
+          </div>
+          <div style="font-size:13px; color:var(--text-muted); line-height:1.8;">
+            我們致力為客戶提供安全、透明、合規的貴金屬交易服務。所有交易均按照香港法例進行，並接受香港海關的監督與審查。
+          </div>
+        </div>
+        <div style="text-align:center; margin-top:40px;">
+          <img src="https://passtobullion.com/registration/qrCode.png" alt="QR Code" style="width:160px; height:160px; object-fit:contain; border-radius:12px; margin-bottom:12px;">
+          <div style="font-size:13px; color:var(--text-secondary);">掃描 QR Code 查詢</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== SCREEN: TERMS ==================== -->
+    <div class="screen" id="screen-terms">
+      <div class="page-header" style="border-bottom:none;">
+        <button class="icon-btn" onclick="toggleMenu()"><svg viewBox="0 0 1024 1024" width="22" height="22"><path d="M867.995 459.647h-711.99c-27.921 0-52.353 24.434-52.353 52.353s24.434 52.353 52.353 52.353h711.99c27.921 0 52.353-24.434 52.353-52.353s-24.434-52.353-52.353-52.353z"/><path d="M867.995 763.291h-711.99c-27.921 0-52.353 24.434-52.353 52.353s24.434 52.353 52.353 52.353h711.99c27.921 0 52.353-24.434 52.353-52.353s-24.434-52.353-52.353-52.353z"/><path d="M156.005 260.709h711.99c27.921 0 52.353-24.434 52.353-52.353s-24.434-52.353-52.353-52.353h-711.99c-27.921 0-52.353 24.434-52.353 52.353s24.434 52.353 52.353 52.353z"/></svg></button>
+        <h1>條款及細則</h1>
+        <div style="width:36px;"></div>
+      </div>
+      <div class="section" style="padding-top:20px; max-width:600px; margin:0 auto;">
+        <div class="terms-content" id="terms-content" style="font-size:14px; line-height:1.8; color:var(--text-secondary); white-space:pre-wrap;">
+線上投資金條購買協議
+甲方（賣方/平臺）：Passto Bullion
+
+為香港《打擊洗錢及恐怖分子資金籌集條例》（第615章）下的 A 類註冊人
+
+乙方（買方/消費者）
+
+【特別提示】
+在您（乙方）確認購買並支付前，請仔細閱讀本協議。
+
+投資金條價格受國際/國內黃金市場價格波動影響，具有投資風險。一旦訂單鎖定並支付成功，非因產品品質問題，不支持七天無理由退貨。
+
+您點擊「同意」或進行支付操作，即視為完全理解並接受本協議全部條款。
+
+第一條 產品
+產品名稱：投資金條。
+
+產品規格：重量、成色（如 Au99.99%）、品牌及外觀以乙方在甲方平臺最終提交確認的訂單詳情為準。
+
+品質標準：甲方保證所售黃金產品符合相關品質標準（如 GB/T 4134-2015 或同等國際標準），並提供相應的品質保證書或檢測證書。
+
+第二條 價格與支付
+計價方式：本產品的價格由「即時基礎金價」加「加工費/升水」構成。
+
+價格鎖定：乙方在平臺提交訂單時，系統將鎖定當前交易價格。乙方須在訂單提交後的 [15/30] 分鐘內完成全額支付。逾期未支付的，系統將自動取消訂單，甲方不承擔任何責任。
+
+支付方式：乙方應通過甲方平臺支持的合法線上支付管道（如銀行卡、第三方支付等）完成全額付款。
+
+銀行轉賬：接受銀行轉賬且不收取任何費用，但從銀行轉賬所產生的行政費用將由客戶自行承擔。如果您選擇銀行轉賬作為付款方式，您可在下訂單後 2 天內安排銀行轉賬。如 2 天內無法完成付款，甲方有權撤銷交易。
+
+交易上限：每張訂單的交易上限為 100,000 美元（或等值港幣兌換額）。如果您下單時遇到任何問題，請聯繫我們的客戶服務部。
+
+第三條 發貨與交付
+物流承運：甲方將委託具有貴重物品承運資質的第三方物流公司（如順豐速運）進行配送，並為標的物購買全額物流保價險。
+
+發貨時效：甲方將在乙方支付成功後的 [3-5] 個工作日內安排發貨（法定節假日、預售商品除外）。
+
+收貨與驗貨（核心條款）：乙方或其授權代收人必須當面簽收並拆箱驗貨。
+
+強烈建議乙方在拆分快遞包裝及產品內包裝時，進行全程無中斷點的視頻錄製。
+
+若發現外包裝破損、產品短缺、防偽標籤損壞或產品型號不符，乙方應直接拒收，並立即聯繫甲方客服。
+
+乙方一旦簽收（含驛站、門衛或授權他人代簽），即視為認可產品外觀無損、數量準確。
+
+第四條 風險轉移與所有權
+標的物毀損、滅失的風險，在標的物交付（即乙方或其指定收件人簽收）之前由甲方承擔，交付之後由乙方承擔。
+
+標的物的所有權自乙方付清全額貨款且實際交付完成之日起轉移至乙方。
+
+第五條 退換貨及回購政策
+不支持無理由退貨：鑒於黃金屬於價格受金融市場波動影響的特殊商品，本協議項下的投資金條一經售出，除產品自身存在成色不足、克重短缺等品質問題外，不支持「七天無理由退貨」。
+
+品質問題處理：如乙方對黃金純度或重量有異議，需提供香港法定或甲方認可的第三方貴金屬檢測機構出具的書面檢測報告。若確屬甲方產品品質問題，檢測費用及退換貨費用由甲方承擔；否則由乙方自行承擔。
+
+回購服務：如甲方平臺提供回購服務，回購價格、手續費及具體流程按甲方平臺屆時公示的《黃金回購規則》執行，本協議不做另行約定。
+
+第六條 反洗錢與合規聲明
+乙方承諾購買黃金的資金來源合法，並非犯罪所得及其收益。
+
+根據《打擊洗錢及恐怖分子資金籌集條例》（香港法例第615章）及相關規定，如乙方單筆或累計交易金額達到法定大額標準，甲方有權要求乙方提供有效身份證件影印件等相關證明材料，乙方應予以配合。
+
+第七條 不可抗力
+因颱風、地震、海嘯、洪水、戰爭、網路癱瘓、電信故障、政府行為或重大金融市場異常停牌等不可抗力因素，導致甲方未能按時履行本協議的，甲方不承擔違約責任，但應及時通知乙方並採取合理措施減少損失。
+
+第八條 爭議解決
+本協議的簽署、效力、履行、解釋及爭議解決均適用中華人民共和國香港特別行政區法律。雙方在履行本協議過程中發生的任何爭議，應首先協商解決；協商不成的，任何一方均有權向甲方所在地的香港特別行政區有管轄權的法院提起訴訟。
+        </div>
+      </div>
+    </div>
+
   </div>
+
+  <!-- 全局右側 WhatsApp 懸浮氣泡 -->
+  <a class="whatsapp-fab" id="whatsapp-fab" href="https://wa.me/85212345678" target="_blank" aria-label="WhatsApp 即時諮詢">
+    <svg viewBox="0 0 1024 1024" width="26" height="26"><path d="M511.872427 0h0.256C794.45376 0 1024.000427 229.674667 1024.000427 512s-229.589333 512-511.872 512c-104.106667 0-200.704-31.018667-281.6-84.565333L33.707093 1002.325333l63.786667-190.250666A508.245333 508.245333 0 0 1 0.000427 512C0.000427 229.674667 229.58976 0 511.872427 0zM365.39776 281.429333c-9.770667-23.338667-17.194667-24.234667-32-24.832A285.525333 285.525333 0 0 0 316.50176 256c-19.285333 0-39.424 5.632-51.626667 18.048C250.155093 289.109333 213.33376 324.266667 213.33376 396.501333c0 72.149333 52.778667 141.952 59.861333 151.722667 7.424 9.728 102.912 160 251.093334 221.226667 115.925333 47.914667 150.314667 43.477333 176.725333 37.845333 38.528-8.277333 86.826667-36.693333 98.986667-70.954667 12.16-34.346667 12.16-63.616 8.618666-69.845333-3.584-6.186667-13.354667-9.728-28.16-17.152-14.848-7.381333-86.869333-42.88-100.522666-47.616-13.354667-4.992-26.069333-3.242667-36.138667 10.965333-14.250667 19.797333-28.16 39.936-39.466667 52.053334-8.874667 9.472-23.424 10.666667-35.541333 5.632-16.298667-6.826667-61.952-22.784-118.314667-72.789334-43.562667-38.741333-73.216-86.954667-81.792-101.418666-8.618667-14.805333-0.896-23.381333 5.930667-31.36 7.381333-9.173333 14.506667-15.658667 21.930667-24.234667 7.424-8.576 11.52-13.013333 16.298666-23.082667 5.034667-9.770667 1.493333-19.84-2.090666-27.221333-3.541333-7.381333-33.194667-79.573333-45.354667-108.8z" fill="#000"/></svg>
+  </a>
 
   <script>
     // ==================== STATE ====================
@@ -2440,7 +3042,8 @@
       currentProduct: products[0],
       qty: 1,
       selectedSpec: '50克',
-      pendingAction: null
+      pendingAction: null,
+      activeServiceIndex: -1
     };
 
     // ==================== PRODUCT SWIPE ====================
@@ -2522,6 +3125,12 @@
     // ==================== SIDE MENU ====================
     function toggleMenu() {
       document.getElementById('side-menu').classList.toggle('open');
+    }
+    function toggleContactPopup(show) {
+      const overlay = document.getElementById('contact-popup-overlay');
+      if (!overlay) return;
+      if (show) overlay.classList.add('active');
+      else overlay.classList.remove('active');
     }
     function closeMenu(e) {
       if (e.target === e.currentTarget) toggleMenu();
@@ -2621,11 +3230,6 @@
     // ==================== CART ====================
     function addToCart() {
       if (!state.currentProduct) return;
-      if (!state.user) {
-        state.pendingAction = 'cart';
-        goTo('login');
-        return;
-      }
       const existing = state.cart.find(item => item.id === state.currentProduct.id && item.spec === state.selectedSpec);
       if (existing) {
         existing.qty += state.qty;
@@ -2656,25 +3260,23 @@
         state.checkoutCart.forEach(item => {
           baseTotal += parseInt(item.price.replace(/,/g, '')) * item.qty;
         });
-        productText = state.checkoutCart.map(item => item.name + ' x ' + item.qty).join('<br>');
+        productText = mergeCheckoutCartForDisplay().map(item => item.name + ' x ' + item.qty).join('<br>');
       } else {
         const p = state.currentProduct;
         baseTotal = parseInt(p.price.replace(/,/g, '')) * state.qty;
         productText = p.name + ' x ' + state.qty;
       }
-      let serviceTotal = 0;
-      if (serviceState.chars) serviceTotal += 260;
-      if (serviceState.big) serviceTotal += 88;
-      if (serviceState.small) serviceTotal += 52;
+      const serviceCounts = countCheckoutServices();
+      const serviceTotal = serviceCounts.chars * 260 + serviceCounts.big * 88 + serviceCounts.small * 52;
       const finalTotal = baseTotal + serviceTotal;
 
-      // Update service rows visibility
-      document.getElementById('row-service-chars').style.display = serviceState.chars ? 'flex' : 'none';
-      document.getElementById('row-service-big').style.display = serviceState.big ? 'flex' : 'none';
-      document.getElementById('row-service-small').style.display = serviceState.small ? 'flex' : 'none';
-      document.getElementById('row-high-service-chars').style.display = serviceState.chars ? 'flex' : 'none';
-      document.getElementById('row-high-service-big').style.display = serviceState.big ? 'flex' : 'none';
-      document.getElementById('row-high-service-small').style.display = serviceState.small ? 'flex' : 'none';
+      // Update service rows visibility and amounts
+      updateServiceRow('service-chars', serviceCounts.chars, 260);
+      updateServiceRow('service-big', serviceCounts.big, 88);
+      updateServiceRow('service-small', serviceCounts.small, 52);
+      updateServiceRow('high-service-chars', serviceCounts.chars, 260);
+      updateServiceRow('high-service-big', serviceCounts.big, 88);
+      updateServiceRow('high-service-small', serviceCounts.small, 52);
 
       if (baseTotal >= 120000) {
         document.getElementById('checkout-high-product').innerHTML = productText;
@@ -2689,18 +3291,68 @@
       }
     }
 
+    function mergeCheckoutCartForDisplay() {
+      const map = {};
+      if (!state.checkoutCart || state.checkoutCart.length === 0) return [];
+      state.checkoutCart.forEach(item => {
+        const key = (item.id || item.name) + '|' + (item.spec || '');
+        if (!map[key]) {
+          map[key] = { name: item.name, spec: item.spec, qty: 0 };
+        }
+        map[key].qty += item.qty;
+      });
+      return Object.values(map);
+    }
+
+    function countCheckoutServices() {
+      const counts = { chars: 0, big: 0, small: 0 };
+      if (!state.checkoutCart || state.checkoutCart.length === 0) return counts;
+      state.checkoutCart.forEach(item => {
+        const svc = item.services || {};
+        const q = item.qty || 1;
+        if (svc.chars) counts.chars += q;
+        if (svc.big) counts.big += q;
+        if (svc.small) counts.small += q;
+      });
+      return counts;
+    }
+
+    function updateServiceRow(prefix, count, unitPrice) {
+      const row = document.getElementById('row-' + prefix);
+      const label = document.getElementById('label-' + prefix);
+      const price = document.getElementById('price-' + prefix);
+      if (!row || !label || !price) return;
+      if (count > 0) {
+        row.style.display = 'flex';
+        label.textContent = serviceLabelFromPrefix(prefix) + (count > 1 ? ' x' + count : '');
+        price.textContent = 'HK$' + (count * unitPrice).toLocaleString();
+      } else {
+        row.style.display = 'none';
+      }
+    }
+
+    function serviceLabelFromPrefix(prefix) {
+      if (prefix.includes('chars')) return '自選字元';
+      if (prefix.includes('big')) return '印圖案（大）';
+      if (prefix.includes('small')) return '印圖案（小）';
+      return '';
+    }
+
     function updateProfileUser() {
       const welcomeEl = document.getElementById('profile-welcome');
+      const welcomeSubEl = document.getElementById('profile-welcome-sub');
       const surnameEl = document.getElementById('profile-surname');
       const phoneEl = document.getElementById('profile-phone');
       const emailEl = document.getElementById('profile-email');
       if (state.user && state.user.name) {
         if (welcomeEl) welcomeEl.textContent = state.user.name + '，歡迎回來';
+        if (welcomeSubEl) welcomeSubEl.textContent = '查看並管理您的個人資料';
         if (surnameEl) surnameEl.textContent = state.user.name;
         if (phoneEl) phoneEl.textContent = state.user.phone || '--';
         if (emailEl) emailEl.textContent = state.user.email || (state.user.phone ? 'user' + state.user.phone.replace(/\D/g,'') + '@passtobullion.com' : '--');
       } else {
         if (welcomeEl) welcomeEl.textContent = '歡迎回來';
+        if (welcomeSubEl) welcomeSubEl.textContent = '登入以查看您的個人資料';
         if (surnameEl) surnameEl.textContent = '--';
         if (phoneEl) phoneEl.textContent = '--';
         if (emailEl) emailEl.textContent = '--';
@@ -2736,16 +3388,33 @@
       let html = '<div class="section">';
       state.cart.forEach((item, i) => {
         const price = parseInt(item.price.replace(/,/g, ''));
-        total += price * item.qty;
+        const lineTotal = price * item.qty + cartItemServiceTotal(item);
+        total += lineTotal;
+        const svc = item.services || {};
+        const hasService = svc.chars || svc.big || svc.small;
+        const active = state.activeServiceIndex === i;
+        const serviceLabels = [];
+        if (svc.chars) serviceLabels.push('自選字元');
+        if (svc.big) serviceLabels.push('印圖案（大）');
+        if (svc.small) serviceLabels.push('印圖案（小）');
         html += `
-          <div class="info-card" style="display:flex; gap:12px; align-items:center;">
-            <div style="width:60px; height:60px; background:var(--surface-2); border-radius:10px; display:flex; align-items:center; justify-content:center; overflow:hidden;"><img src="${item.img || ''}" alt="" style="width:100%;height:100%;object-fit:cover;"></div>
-            <div style="flex:1;">
-              <div style="font-weight:600; font-size:14px;">${item.name}</div>
-              <div style="font-size:12px; color:var(--text-muted); margin-top:2px;">${item.spec} · x${item.qty}</div>
-              <div style="color:var(--gold); font-family:'Noto Serif SC',serif; font-weight:600; margin-top:4px;">HK$${(price * item.qty).toLocaleString()}</div>
+          <div class="info-card" style="margin-bottom:12px;">
+            <div style="display:flex; gap:12px; align-items:flex-start;">
+              <div style="width:60px; height:60px; flex-shrink:0; background:var(--surface-2); border-radius:10px; display:flex; align-items:center; justify-content:center; overflow:hidden;"><img src="${item.img || ''}" alt="" style="width:100%;height:100%;object-fit:cover;"></div>
+              <div style="flex:1;">
+                <div style="font-weight:600; font-size:14px;">${item.name}</div>
+                <div style="font-size:12px; color:var(--text-muted); margin-top:2px;">${item.spec} · x${item.qty}</div>
+                <div style="color:var(--gold); font-family:'Noto Serif SC',serif; font-weight:600; margin-top:4px;">HK$${lineTotal.toLocaleString()}</div>
+                ${serviceLabels.length ? `<div class="cart-item-service-labels">${serviceLabels.map(l => `<span class="cart-item-service-label">${l}</span>`).join('')}</div>` : ''}
+              </div>
+              <button class="icon-btn" onclick="removeFromCart(${i})" style="background:transparent; border:none; color:var(--error);">&#10005;</button>
             </div>
-            <button class="icon-btn" onclick="removeFromCart(${i})" style="background:transparent; border:none; color:var(--error);">&#10005;</button>
+            ${active ? renderCartServicePanel(i, svc) : `
+              <div class="service-toggle" style="margin:12px 0 0 0; font-size:13px; padding:10px;" onclick="openCartService(${i})">
+                <span>${hasService ? '編輯心意服务' : '添加心意服务'}</span>
+                <span>${hasService ? '›' : '+'}</span>
+              </div>
+            `}
           </div>`;
       });
       html += `
@@ -2755,21 +3424,158 @@
             <span class="value">HK$${total.toLocaleString()}</span>
           </div>
         </div>
-        <button class="btn btn-primary btn-full" style="margin-top:16px;" onclick="checkoutFromCart()">去結算</button>
+        <div style="display:flex; gap:10px; margin-top:16px;">
+          <button class="btn btn-secondary" style="flex:1;" onclick="checkoutToStorePickup()">到店支付</button>
+          <button class="btn btn-primary" style="flex:1;" onclick="checkoutFromCart()">线上支付</button>
+        </div>
         </div>`;
       container.innerHTML = html;
     }
 
+    function renderCartServicePanel(index, svc) {
+      const charsChecked = svc.chars ? 'checked' : '';
+      const bigChecked = svc.big ? 'checked' : '';
+      const smallChecked = svc.small ? 'checked' : '';
+      const patternCount = (svc.big ? 1 : 0) + (svc.small ? 1 : 0);
+      return `
+        <div class="cart-service-panel">
+          <div class="service-option" onclick="toggleCartService(${index}, 'chars')">
+            <div class="checkbox ${charsChecked}" id="cart-chk-chars-${index}">${svc.chars ? '\u2713' : ''}</div>
+            <div style="flex:1;">
+              <div class="service-option-title">自選字元</div>
+              <div class="service-option-desc">可選 1 - 8 個字符</div>
+              <div class="service-option-price">HK$260</div>
+            </div>
+          </div>
+          <div class="service-chars-input" id="cart-chars-input-${index}" style="display:${svc.chars ? 'block' : 'none'}; margin-bottom:8px;">
+            <input type="text" class="form-input" id="cart-chars-text-${index}" maxlength="8" value="${svc.charsText || ''}" placeholder="請輸入想印製的字符" oninput="updateCartServiceChars(${index}, this.value)">
+          </div>
+          <div class="service-option" onclick="toggleCartService(${index}, 'big')">
+            <div class="checkbox ${bigChecked}" id="cart-chk-big-${index}">${svc.big ? '\u2713' : ''}</div>
+            <div style="flex:1;">
+              <div class="service-option-title">印圖案（大）</div>
+              <div class="service-option-desc">尺寸約 30mm x 30mm</div>
+              <div class="service-option-price">HK$88</div>
+            </div>
+          </div>
+          <div class="service-option" onclick="toggleCartService(${index}, 'small')">
+            <div class="checkbox ${smallChecked}" id="cart-chk-small-${index}">${svc.small ? '\u2713' : ''}</div>
+            <div style="flex:1;">
+              <div class="service-option-title">印圖案（小）</div>
+              <div class="service-option-desc">尺寸約 15mm x 15mm</div>
+              <div class="service-option-price">HK$52</div>
+            </div>
+          </div>
+          <div class="service-wa" id="cart-service-wa-${index}" style="display:${patternCount >= 1 ? 'block' : 'none'};">
+            圖案印製需由專人跟進，請於付款後透過 WhatsApp 將圖檔傳送給我們的客戶服務員。
+          </div>
+          <div style="text-align:center; margin-top:8px;">
+            <span style="font-size:12px; color:var(--text-muted); text-decoration:underline;" onclick="event.stopPropagation(); closeCartService()">收起</span>
+          </div>
+        </div>`;
+    }
+
+    function cartItemServiceTotal(item) {
+      const svc = item.services || {};
+      let total = 0;
+      if (svc.chars) total += 260;
+      if (svc.big) total += 88;
+      if (svc.small) total += 52;
+      return total * (item.qty || 1);
+    }
+
+    function openCartService(index) {
+      state.activeServiceIndex = index;
+      renderCart();
+    }
+
+    function closeCartService() {
+      state.activeServiceIndex = -1;
+      renderCart();
+    }
+
+    function updateCartServiceChars(index, value) {
+      const item = state.cart[index];
+      if (!item) return;
+      if (!item.services) item.services = {};
+      item.services.charsText = value;
+    }
+
+    function toggleCartService(index, type) {
+      const item = state.cart[index];
+      if (!item) return;
+      if (!item.services) item.services = { chars: false, big: false, small: false, charsText: '' };
+      const svc = item.services;
+      const wasOn = svc[type];
+
+      // When enabling the first service on a multi-qty non-service line,
+      // split one unit out as a new service line, keeping the rest non-service.
+      if (!wasOn && item.qty > 1 && !hasAnyService(svc)) {
+        item.qty -= 1;
+        const newItem = {
+          ...item,
+          qty: 1,
+          services: { chars: false, big: false, small: false, charsText: '', [type]: true }
+        };
+        state.cart.splice(index + 1, 0, newItem);
+        state.activeServiceIndex = index + 1;
+        renderCart();
+        return;
+      }
+
+      svc[type] = !wasOn;
+
+      // When all services disabled on a single-qty service line, merge back if possible
+      if (!svc[type] && item.qty === 1 && !hasAnyService(svc)) {
+        const mergeIndex = state.cart.findIndex((other, idx) =>
+          idx !== index && other.id === item.id && other.spec === item.spec && !hasAnyService(other.services)
+        );
+        if (mergeIndex !== -1) {
+          state.cart[mergeIndex].qty += 1;
+          state.cart.splice(index, 1);
+          state.activeServiceIndex = -1;
+          renderCart();
+          updateCartBadge();
+          return;
+        }
+      }
+
+      renderCart();
+    }
+
+    function hasAnyService(svc, excludeType) {
+      if (!svc) return false;
+      return Object.keys(svc).some(k => k !== 'charsText' && k !== excludeType && svc[k]);
+    }
+
     function removeFromCart(index) {
       state.cart.splice(index, 1);
+      if (state.activeServiceIndex === index) state.activeServiceIndex = -1;
+      else if (state.activeServiceIndex > index) state.activeServiceIndex -= 1;
       updateCartBadge();
       renderCart();
     }
 
     function checkoutFromCart() {
       if (state.cart.length === 0) return;
+      if (!state.user) {
+        state.pendingAction = 'cartCheckout';
+        goTo('login');
+        return;
+      }
       state.checkoutCart = [...state.cart];
       goTo('confirm');
+    }
+
+    function checkoutToStorePickup() {
+      if (state.cart.length === 0) return;
+      if (!state.user) {
+        state.pendingAction = 'storePickup';
+        goTo('login');
+        return;
+      }
+      state.checkoutCart = [...state.cart];
+      goTo('store-appointment');
     }
 
     // ==================== LOGIN ====================
@@ -2861,26 +3667,45 @@
     }
 
     function doRegister() {
-      const surname = document.getElementById('reg-surname').value.trim();
-      const givenName = document.getElementById('reg-given-name').value.trim();
+      const name = document.getElementById('reg-name').value.trim();
       const phone = document.getElementById('reg-phone').value.trim();
-      const code = document.getElementById('reg-code').value.trim();
       const email = document.getElementById('reg-email').value.trim();
-      const dobDay = document.getElementById('reg-dob-day').value;
-      const dobMonth = document.getElementById('reg-dob-month').value;
-      const ageGroup = document.getElementById('reg-age-group').value;
-      const titleEl = document.querySelector('.register-title-option[data-selected="true"]');
-      const title = titleEl ? titleEl.dataset.value : '';
+      const password = document.getElementById('reg-password').value;
+      const passwordConfirm = document.getElementById('reg-password-confirm').value;
+      const agree = document.getElementById('reg-agree').checked;
 
-      if (!title || !surname || !givenName || !phone || !code || !email || !dobDay || !dobMonth || !ageGroup) {
+      if (!name || !phone || !email || !password || !passwordConfirm) {
         showToast('請填寫所有必填欄位');
         return;
       }
-      state.user = { phone, name: surname + givenName, email };
-      state.kycLevel = 1;
+      if (password.length < 8 || password.length > 15 || !/[A-Z]/.test(password) || !/[a-z]/.test(password) || !/[0-9]/.test(password)) {
+        showToast('密碼需為8-15位，並包含大小寫字母及數字');
+        return;
+      }
+      if (password !== passwordConfirm) {
+        showToast('兩次輸入的密碼不一致');
+        return;
+      }
+      if (!agree) {
+        showToast('請閱讀並同意條款及細則');
+        return;
+      }
+      state.user = { phone, name, email };
       showToast('登記成功');
       updateProfileUser();
-      goTo('home');
+      const action = state.pendingAction;
+      state.pendingAction = null;
+      if (action === 'cartCheckout') {
+        checkoutFromCart();
+      } else if (action === 'buyFlow') {
+        buyNow();
+      } else if (action === 'checkout') {
+        goToCheckout();
+      } else if (action === 'recycleAppointment') {
+        goTo('recycle-appointment');
+      } else {
+        goTo('home');
+      }
     }
 
     function doLogin() {
@@ -2891,7 +3716,6 @@
         return;
       }
       state.user = { phone, name: '用戶' };
-      state.kycLevel = 1;
       showToast('登入成功');
       updateProfileUser();
       const action = state.pendingAction;
@@ -2900,6 +3724,12 @@
         addToCart();
         updateProductButtons();
         goBack();
+      } else if (action === 'cartCheckout') {
+        checkoutFromCart();
+      } else if (action === 'storePickup') {
+        checkoutToStorePickup();
+      } else if (action === 'buyFlow') {
+        buyNow();
       } else if (action === 'recycleAppointment') {
         goTo('recycle-appointment');
       } else {
@@ -2973,7 +3803,7 @@
         showToast('請填寫取貨人姓名和手機號碼');
         return;
       }
-      goTo('service');
+      goToCheckout();
     }
 
     function confirmPickupAndShowQR() {
@@ -2984,10 +3814,16 @@
         return;
       }
       const qrCode = 'PK' + Math.random().toString(36).substring(2, 10).toUpperCase();
+      let productName = '傳世金條';
+      if (state.checkoutCart && state.checkoutCart.length > 0) {
+        productName = mergeCheckoutCartForDisplay().map(item => item.name + ' x ' + item.qty).join(', ');
+      } else if (state.currentProduct) {
+        productName = state.currentProduct.name;
+      }
       mockAppointments.push({
         type: 'pickup',
         title: '門店提金',
-        product: state.currentProduct ? state.currentProduct.name : '傳世金條',
+        product: productName,
         date: date + ' ' + time.split(' - ')[0],
         store: '中港城門店',
         status: '待到店',
@@ -2997,9 +3833,39 @@
       document.getElementById('qr-popup').classList.add('active');
     }
 
+    function confirmStoreAppointmentAndShowQR() {
+      const date = document.getElementById('store-appointment-date').value;
+      const time = document.getElementById('store-appointment-time').value;
+      if (!date) {
+        showToast('請選擇預約日期');
+        return;
+      }
+      const code = 'AP' + Math.random().toString(36).substring(2, 10).toUpperCase();
+      let productName = '傳世金條';
+      if (state.checkoutCart && state.checkoutCart.length > 0) {
+        productName = mergeCheckoutCartForDisplay().map(item => item.name + ' x ' + item.qty).join(', ');
+      } else if (state.currentProduct) {
+        productName = state.currentProduct.name;
+      }
+      mockAppointments.push({
+        type: 'store-appointment',
+        title: '預約看金',
+        product: productName,
+        date: date + ' ' + time.split(' - ')[0],
+        store: '中港城門店',
+        status: '待到店',
+        qrCode: code
+      });
+      document.getElementById('store-appointment-code-text').textContent = code;
+      document.getElementById('store-appointment-popup').classList.add('active');
+    }
+
+    function closeStoreAppointmentPopup() {
+      document.getElementById('store-appointment-popup').classList.remove('active');
+    }
+
     function closeQRPopup() {
       document.getElementById('qr-popup').classList.remove('active');
-      goTo('home');
     }
 
     function showQRZoom(code) {
@@ -3013,18 +3879,21 @@
 
     // ==================== KYC ====================
     function getCheckoutSummary() {
+      let baseTotal = 0;
+      let text = '';
       if (state.checkoutCart && state.checkoutCart.length > 0) {
-        let total = 0;
         state.checkoutCart.forEach(item => {
-          total += parseInt(item.price.replace(/,/g, '')) * item.qty;
+          baseTotal += parseInt(item.price.replace(/,/g, '')) * item.qty;
         });
-        const text = state.checkoutCart.map(item => item.name + ' x ' + item.qty).join('<br>');
-        return { total, text };
+        text = mergeCheckoutCartForDisplay().map(item => item.name + ' x ' + item.qty).join('<br>');
+      } else {
+        const p = state.currentProduct;
+        baseTotal = p ? (parseInt(p.price.replace(/,/g, '')) * state.qty) : 122800;
+        text = p ? p.name + ' x ' + state.qty : '足金金條 50g x 1';
       }
-      const p = state.currentProduct;
-      const total = p ? (parseInt(p.price.replace(/,/g, '')) * state.qty) : 122800;
-      const text = p ? p.name + ' x ' + state.qty : '足金金條 50g x 1';
-      return { total, text };
+      const serviceCounts = countCheckoutServices();
+      const serviceTotal = serviceCounts.chars * 260 + serviceCounts.big * 88 + serviceCounts.small * 52;
+      return { total: baseTotal + serviceTotal, text };
     }
 
     function goToPaymentFromCheckoutLow() {
@@ -3035,18 +3904,82 @@
     }
 
     function submitBasicKYC() {
-      state.kycLevel = 2;
-      showToast('基礎信息認證 驗證通過');
-      const summary = getCheckoutSummary();
-      document.getElementById('payment-product').innerHTML = summary.text;
-      document.getElementById('payment-total').textContent = 'HK$' + summary.total.toLocaleString();
-      goTo('payment');
+      const name = document.getElementById('kyc-name').value.trim();
+      const phone = document.getElementById('kyc-phone').value.trim();
+      const email = document.getElementById('kyc-email').value.trim();
+      if (!name || !phone || !email) {
+        showToast('請填寫姓名、電話和電子郵件');
+        return;
+      }
+      if (state.user) {
+        state.user.name = name;
+        state.user.phone = phone;
+        state.user.email = email;
+      } else {
+        state.user = { name, phone, email };
+      }
+      showToast('資料已保存');
+      updateProfileUser();
+      goTo('profile');
     }
 
-    function submitFullKYC() {
-      state.kycLevel = 3;
-      showToast('資料已提交，等待審核');
-      goTo('kyc-pending');
+    function convertWeight() {
+      const rates = {
+        g: 1,
+        tael: 37.5,
+        oz: 31.1035,
+        kg: 1000,
+        tola: 11.6638,
+        pennyweight: 1.55517
+      };
+      const fromValue = parseFloat(document.getElementById('conv-from-value').value);
+      const fromUnit = document.getElementById('conv-from-unit').value;
+      const toUnit = document.getElementById('conv-to-unit').value;
+      if (isNaN(fromValue)) {
+        document.getElementById('conv-to-value').value = '';
+        return;
+      }
+      const grams = fromValue * rates[fromUnit];
+      const result = grams / rates[toUnit];
+      document.getElementById('conv-to-value').value = result.toLocaleString('en-US', { maximumFractionDigits: 6 });
+    }
+
+    function swapConverter() {
+      const fromUnit = document.getElementById('conv-from-unit').value;
+      const toUnit = document.getElementById('conv-to-unit').value;
+      document.getElementById('conv-from-unit').value = toUnit;
+      document.getElementById('conv-to-unit').value = fromUnit;
+      updateConverterLabels();
+      const toValue = document.getElementById('conv-to-value').value.replace(/,/g, '');
+      if (toValue) {
+        document.getElementById('conv-from-value').value = parseFloat(toValue);
+      }
+      convertWeight();
+    }
+
+    function updateConverterLabels() {
+      const fromUnit = document.getElementById('conv-from-unit');
+      const toUnit = document.getElementById('conv-to-unit');
+      document.getElementById('conv-from-label').textContent = fromUnit.options[fromUnit.selectedIndex].text;
+      document.getElementById('conv-to-label').textContent = toUnit.options[toUnit.selectedIndex].text;
+    }
+
+    function calcHomeRecycle() {
+      const rates = {
+        g: 1,
+        tael: 37.5,
+        oz: 31.1035,
+        kg: 1000,
+        tola: 11.6638,
+        pennyweight: 1.55517
+      };
+      const pricePerGram = 2456;
+      const weight = parseFloat(document.getElementById('home-recycle-weight').value) || 0;
+      const unit = document.getElementById('home-recycle-unit').value;
+      const purity = 0.999;
+      const grams = weight * rates[unit];
+      const total = grams * pricePerGram * purity;
+      document.getElementById('home-recycle-price').textContent = 'HKD ' + Math.round(total).toLocaleString('en-US');
     }
 
     // ==================== PAYMENT ====================
@@ -3096,16 +4029,6 @@
       setTimeout(() => toast.remove(), 2000);
     }
 
-    function toggleChatMenu() {
-      document.getElementById('chat-overlay').classList.toggle('open');
-      document.getElementById('chat-menu').classList.toggle('open');
-    }
-
-    function toggleContactDropdown() {
-      document.getElementById('contact-dropdown-overlay').classList.toggle('open');
-      document.getElementById('contact-dropdown').classList.toggle('open');
-    }
-
     function toggleCartPopup() {
       document.getElementById('cart-popup-overlay').classList.toggle('open');
       document.getElementById('cart-popup').classList.toggle('open');
@@ -3140,6 +4063,8 @@
     goTo = function(screenId, data) {
       if (screenId === 'cart') renderCart();
       if (screenId === 'confirm') loadConfirm();
+      if (screenId === 'pickup') loadPickupSummary();
+      if (screenId === 'store-appointment') loadStoreAppointmentSummary();
       if (screenId === 'appointment-records') renderAppointmentRecords();
       if (screenId === 'transaction-records') renderTransactionRecords();
       if (screenId === 'profile') updateProfileUser();
@@ -3155,8 +4080,49 @@
           if (phoneInput) phoneInput.value = state.user.phone;
         }
       }
+      if (screenId === 'converter') {
+        convertWeight();
+      }
       origGoTo(screenId, data);
     };
+    function loadPickupSummary() {
+      const summaryCard = document.getElementById('pickup-summary');
+      const summaryContent = document.getElementById('pickup-summary-content');
+      if (!summaryCard || !summaryContent) return;
+      if (state.checkoutCart && state.checkoutCart.length > 0) {
+        const merged = mergeCheckoutCartForDisplay();
+        const total = getCheckoutSummary().total;
+        summaryContent.innerHTML = merged.map(item => `<div>${item.name} x ${item.qty}</div>`).join('') +
+          `<div style="margin-top:8px; color:var(--gold); font-weight:600;">總額 HK$${total.toLocaleString()}</div>`;
+        summaryCard.style.display = 'block';
+      } else if (state.currentProduct) {
+        summaryContent.innerHTML = `<div>${state.currentProduct.name} x ${state.qty}</div>` +
+          `<div style="margin-top:8px; color:var(--gold); font-weight:600;">總額 HK$${(parseInt(state.currentProduct.price.replace(/,/g, '')) * state.qty).toLocaleString()}</div>`;
+        summaryCard.style.display = 'block';
+      } else {
+        summaryCard.style.display = 'none';
+      }
+    }
+
+    function loadStoreAppointmentSummary() {
+      const summaryCard = document.getElementById('store-appointment-summary');
+      const summaryContent = document.getElementById('store-appointment-summary-content');
+      if (!summaryCard || !summaryContent) return;
+      if (state.checkoutCart && state.checkoutCart.length > 0) {
+        const merged = mergeCheckoutCartForDisplay();
+        const total = getCheckoutSummary().total;
+        summaryContent.innerHTML = merged.map(item => `<div>${item.name} x ${item.qty}</div>`).join('') +
+          `<div style="margin-top:8px; color:var(--gold); font-weight:600;">總額 HK$${total.toLocaleString()}</div>`;
+        summaryCard.style.display = 'block';
+      } else if (state.currentProduct) {
+        summaryContent.innerHTML = `<div>${state.currentProduct.name} x ${state.qty}</div>` +
+          `<div style="margin-top:8px; color:var(--gold); font-weight:600;">總額 HK$${(parseInt(state.currentProduct.price.replace(/,/g, '')) * state.qty).toLocaleString()}</div>`;
+        summaryCard.style.display = 'block';
+      } else {
+        summaryCard.style.display = 'none';
+      }
+    }
+
     function loadConfirm() {
       const container = document.getElementById('confirm-items');
       if (!container) return;
@@ -3167,14 +4133,21 @@
         let totalQty = 0;
         state.checkoutCart.forEach(item => {
           const price = parseInt(item.price.replace(/,/g, ''));
-          total += price * item.qty;
+          const svc = item.services || {};
+          const serviceLabels = [];
+          if (svc.chars) serviceLabels.push('自選字元');
+          if (svc.big) serviceLabels.push('印圖案（大）');
+          if (svc.small) serviceLabels.push('印圖案（小）');
+          const lineTotal = price * item.qty + cartItemServiceTotal(item);
+          total += lineTotal;
           totalQty += item.qty;
           html += `
-            <div class="info-card" style="display:flex; gap:14px; align-items:center; margin-bottom:12px;">
-              <img src="${item.img || ''}" alt="" style="width:80px; height:80px; object-fit:cover; border-radius:10px; background:var(--surface-2);">
+            <div class="info-card" style="display:flex; gap:14px; align-items:flex-start; margin-bottom:12px;">
+              <img src="${item.img || ''}" alt="" style="width:80px; height:80px; flex-shrink:0; object-fit:cover; border-radius:10px; background:var(--surface-2);">
               <div style="flex:1;">
                 <div style="font-weight:600; font-size:15px;">${item.name}</div>
                 <div style="font-size:12px; color:var(--text-muted); margin-top:2px;">${item.spec || ''}</div>
+                ${serviceLabels.length ? `<div class="cart-item-service-labels" style="margin-top:4px;">${serviceLabels.map(l => `<span class="cart-item-service-label">${l}</span>`).join('')}</div>` : ''}
                 <div style="color:var(--gold); font-family:'Noto Serif SC',serif; font-weight:600; margin-top:6px;">HK$${item.price}/件</div>
               </div>
               <div style="font-size:14px; color:var(--text-secondary);">x${item.qty}</div>
@@ -3187,8 +4160,8 @@
         const p = state.currentProduct;
         if (!p) return;
         container.innerHTML = `
-          <div class="info-card" style="display:flex; gap:14px; align-items:center;">
-            <img src="${p.img || ''}" alt="" style="width:80px; height:80px; object-fit:cover; border-radius:10px; background:var(--surface-2);">
+          <div class="info-card" style="display:flex; gap:14px; align-items:flex-start;">
+            <img src="${p.img || ''}" alt="" style="width:80px; height:80px; flex-shrink:0; object-fit:cover; border-radius:10px; background:var(--surface-2);">
             <div style="flex:1;">
               <div style="font-weight:600; font-size:15px;">${p.name}</div>
               <div style="font-size:12px; color:var(--text-muted); margin-top:2px;">${state.selectedSpec || p.specs[0]}</div>
@@ -3267,26 +4240,6 @@
       container.innerHTML = html || '<div style="text-align:center; padding:40px; color:var(--text-muted);">暫無交易記錄</div>';
     }
 
-    const serviceState = { chars: false, big: false, small: false };
-    function toggleService(type) {
-      serviceState[type] = !serviceState[type];
-      const chkId = type === 'chars' ? 'chk-chars' : type === 'big' ? 'chk-big' : 'chk-small';
-      const chk = document.getElementById(chkId);
-      if (serviceState[type]) {
-        chk.classList.add('checked');
-        chk.textContent = '\u2713';
-      } else {
-        chk.classList.remove('checked');
-        chk.textContent = '';
-      }
-      if (type === 'chars') {
-        document.getElementById('chars-input').style.display = serviceState.chars ? 'block' : 'none';
-      }
-      // Show WA hint if any pattern selected
-      const patternCount = (serviceState.big ? 1 : 0) + (serviceState.small ? 1 : 0);
-      document.getElementById('service-wa').style.display = patternCount >= 1 ? 'block' : 'none';
-    }
-
     // Toast animation
     const style = document.createElement('style');
     style.textContent = `
@@ -3299,6 +4252,7 @@
     `;
     document.head.appendChild(style);
     loadProduct(products[0]);
+    calcHomeRecycle();
   </script>
 </body>
 </html>
