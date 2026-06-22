@@ -929,80 +929,54 @@
     }
 
     /* Profile */
-    .profile-card {
+    .profile-header {
+      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+      color: #000;
+      padding: 36px 20px 48px;
+      margin: -20px -16px 0;
+      border-radius: 0 0 28px 28px;
+    }
+    .profile-header-name {
+      font-size: 26px;
+      font-weight: 700;
+      line-height: 1.3;
+    }
+    .profile-header-sub {
+      font-size: 14px;
+      opacity: 0.85;
+      margin-top: 6px;
+    }
+    .profile-fields-card {
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: 20px;
-      padding: 24px;
-      margin-bottom: 16px;
+      padding: 8px 20px;
+      margin-top: -32px;
+      position: relative;
+      z-index: 1;
+      cursor: pointer;
     }
-    .profile-user-header {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      margin-bottom: 20px;
+    .profile-field {
+      padding: 18px 0;
+      border-bottom: 1px solid var(--border);
     }
-    .profile-avatar {
-      width: 56px;
-      height: 56px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
-      color: #000;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 22px;
-      font-weight: 700;
-      flex-shrink: 0;
+    .profile-field:last-child {
+      border-bottom: none;
     }
-    .profile-welcome-text {
-      font-size: 20px;
-      font-weight: 600;
-      line-height: 1.4;
-    }
-    .profile-welcome-sub {
-      font-size: 13px;
-      color: var(--text-muted);
-      margin-top: 2px;
-    }
-    .profile-info-grid {
-      display: grid;
-      gap: 16px;
-    }
-    .profile-info-item {
-      display: flex;
-      align-items: flex-start;
-      gap: 12px;
-    }
-    .profile-info-icon {
-      width: 36px;
-      height: 36px;
-      border-radius: 10px;
-      background: var(--surface-2);
-      color: var(--gold);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 16px;
-      flex-shrink: 0;
-    }
-    .profile-info-body {
-      flex: 1;
-      min-width: 0;
-    }
-    .profile-info-label {
+    .profile-field-label {
       font-size: 12px;
       color: var(--text-muted);
-      margin-bottom: 2px;
+      margin-bottom: 6px;
     }
-    .profile-info-value {
-      font-size: 15px;
+    .profile-field-value {
+      font-size: 16px;
       font-weight: 500;
       word-break: break-all;
     }
     .profile-menu-list {
       display: grid;
       gap: 12px;
+      margin-top: 16px;
     }
     .profile-menu-item {
       background: var(--surface);
@@ -1017,18 +991,6 @@
     }
     .profile-menu-item:active {
       background: var(--surface-2);
-    }
-    .profile-menu-icon {
-      width: 40px;
-      height: 40px;
-      border-radius: 12px;
-      background: var(--surface-2);
-      color: var(--gold);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 18px;
-      flex-shrink: 0;
     }
     .profile-menu-text {
       flex: 1;
@@ -1836,9 +1798,15 @@
           <div class="gold-banner-label">今日金價 / GOLD PRICE</div>
           <div class="gold-price-main shimmer">HK$ 2,456<span class="unit">/g</span></div>
           <div class="gold-banner-time">更新時間 2026-06-12 14:30 HKT</div>
-          <video autoplay muted loop playsinline style="width:100%; max-width:260px; margin:20px auto 16px; display:block; border-radius:12px; object-fit:cover;">
-            <source src="video/金店視頻.mp4" type="video/mp4">
-          </video>
+          <div style="width:100%; max-width:260px; margin:20px auto 16px; border-radius:12px; overflow:hidden; position:relative; aspect-ratio:9/16; background:#000;">
+            <iframe
+              src="https://www.youtube.com/embed/lxqKIjjT72M?autoplay=1&mute=1&controls=0&modestbranding=1&rel=0&playsinline=1&loop=1&playlist=lxqKIjjT72M&fs=0&iv_load_policy=3"
+              style="position:absolute; inset:0; width:100%; height:100%; border:none; pointer-events:none;"
+              allow="autoplay; encrypted-media"
+              loading="eager"
+              title="Passto Bullion">
+            </iframe>
+          </div>
         </div>
       </div>
 
@@ -2782,34 +2750,26 @@
         <h1>個人中心</h1>
         <div style="width:36px;"></div>
       </div>
-      <div class="section" style="padding-top:20px;">
-        <!-- Personal Info -->
-        <div class="profile-card" id="profile-info-card" onclick="handleProfileInfoClick()">
-          <div class="profile-user-header">
-            <div>
-              <div class="profile-welcome-text" id="profile-welcome">歡迎回來</div>
-              <div class="profile-welcome-sub" id="profile-welcome-sub">查看並管理您的個人資料</div>
-            </div>
+      <div class="section" style="padding-top:0;">
+        <!-- Profile Header -->
+        <div class="profile-header">
+          <div class="profile-header-name" id="profile-name">訪客</div>
+          <div class="profile-header-sub" id="profile-welcome">歡迎回來</div>
+        </div>
+
+        <!-- Personal Info Fields -->
+        <div class="profile-fields-card" id="profile-info-card" onclick="handleProfileInfoClick()">
+          <div class="profile-field">
+            <div class="profile-field-label">姓名</div>
+            <div class="profile-field-value" id="profile-surname">--</div>
           </div>
-          <div class="profile-info-grid">
-            <div class="profile-info-item">
-              <div class="profile-info-body">
-                <div class="profile-info-label">姓名</div>
-                <div class="profile-info-value" id="profile-surname">--</div>
-              </div>
-            </div>
-            <div class="profile-info-item">
-              <div class="profile-info-body">
-                <div class="profile-info-label">手機號碼</div>
-                <div class="profile-info-value" id="profile-phone">--</div>
-              </div>
-            </div>
-            <div class="profile-info-item">
-              <div class="profile-info-body">
-                <div class="profile-info-label">電郵</div>
-                <div class="profile-info-value" id="profile-email">--</div>
-              </div>
-            </div>
+          <div class="profile-field">
+            <div class="profile-field-label">手機號碼</div>
+            <div class="profile-field-value" id="profile-phone">--</div>
+          </div>
+          <div class="profile-field">
+            <div class="profile-field-label">電郵</div>
+            <div class="profile-field-value" id="profile-email">--</div>
           </div>
         </div>
 
@@ -3043,6 +3003,7 @@
       qty: 1,
       selectedSpec: '50克',
       pendingAction: null,
+      returnTo: null,
       activeServiceIndex: -1
     };
 
@@ -3138,6 +3099,7 @@
     function menuGoTo(screenId, data) {
       toggleMenu();
       if (screenId === 'profile' && !state.user) {
+        state.returnTo = 'profile';
         goTo('login');
         return;
       }
@@ -3163,6 +3125,7 @@
     // ==================== NAVIGATION ====================
     function goTo(screenId, data) {
       if (screenId === 'profile' && !state.user) {
+        state.returnTo = 'profile';
         goTo('login');
         return;
       }
@@ -3339,20 +3302,20 @@
     }
 
     function updateProfileUser() {
+      const nameEl = document.getElementById('profile-name');
       const welcomeEl = document.getElementById('profile-welcome');
-      const welcomeSubEl = document.getElementById('profile-welcome-sub');
       const surnameEl = document.getElementById('profile-surname');
       const phoneEl = document.getElementById('profile-phone');
       const emailEl = document.getElementById('profile-email');
       if (state.user && state.user.name) {
-        if (welcomeEl) welcomeEl.textContent = state.user.name + '，歡迎回來';
-        if (welcomeSubEl) welcomeSubEl.textContent = '查看並管理您的個人資料';
+        if (nameEl) nameEl.textContent = state.user.name;
+        if (welcomeEl) welcomeEl.textContent = '歡迎回到 Passto Bullion';
         if (surnameEl) surnameEl.textContent = state.user.name;
         if (phoneEl) phoneEl.textContent = state.user.phone || '--';
         if (emailEl) emailEl.textContent = state.user.email || (state.user.phone ? 'user' + state.user.phone.replace(/\D/g,'') + '@passtobullion.com' : '--');
       } else {
+        if (nameEl) nameEl.textContent = '訪客';
         if (welcomeEl) welcomeEl.textContent = '歡迎回來';
-        if (welcomeSubEl) welcomeSubEl.textContent = '登入以查看您的個人資料';
         if (surnameEl) surnameEl.textContent = '--';
         if (phoneEl) phoneEl.textContent = '--';
         if (emailEl) emailEl.textContent = '--';
@@ -3361,6 +3324,7 @@
 
     function handleProfileInfoClick() {
       if (!state.user) {
+        state.returnTo = 'profile';
         goTo('login');
       }
     }
@@ -3703,6 +3667,10 @@
         goToCheckout();
       } else if (action === 'recycleAppointment') {
         goTo('recycle-appointment');
+      } else if (state.returnTo) {
+        const target = state.returnTo;
+        state.returnTo = null;
+        goTo(target);
       } else {
         goTo('home');
       }
@@ -3732,6 +3700,10 @@
         buyNow();
       } else if (action === 'recycleAppointment') {
         goTo('recycle-appointment');
+      } else if (state.returnTo) {
+        const target = state.returnTo;
+        state.returnTo = null;
+        goTo(target);
       } else {
         goBack();
       }
