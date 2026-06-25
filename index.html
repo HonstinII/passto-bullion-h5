@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
-  <meta name="theme-color" content="#0a0a0a">
+  <meta name="theme-color" content="#F5F5F0">
   <title>Passto Bullion — 實物黃金</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700&family=Noto+Sans+TC:wght@300;400;500;600&display=swap" rel="stylesheet">
   <style>
     :root {
       --bg: #0a0a0a;
@@ -44,7 +44,7 @@
     * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
     html { font-size: 16px; }
     body {
-      font-family: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-family: 'Noto Sans TC', -apple-system, BlinkMacSystemFont, sans-serif;
       background: #000;
       color: var(--text);
       min-height: 100dvh;
@@ -132,6 +132,29 @@
       padding: 0;
     }
     .contact-popup-overlay.active { display: flex; }
+    .nav-popup-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 360;
+      background: rgba(0,0,0,0.6);
+      display: none;
+      align-items: flex-end;
+      justify-content: center;
+      padding: 0;
+    }
+    .nav-popup-overlay.active { display: flex; }
+    .nav-popup {
+      background: var(--surface);
+      border-radius: 20px 20px 0 0;
+      padding: 24px 20px calc(24px + env(safe-area-inset-bottom));
+      max-width: 430px;
+      width: 100%;
+      transform: translateY(100%);
+      transition: transform 300ms ease;
+    }
+    .nav-popup-overlay.active .nav-popup {
+      transform: translateY(0);
+    }
     .contact-popup {
       background: var(--surface);
       border-radius: 20px 20px 0 0;
@@ -165,19 +188,6 @@
       font-weight: 500;
     }
     .contact-popup-option:active { background: var(--surface-3); }
-    .contact-popup-cancel {
-      display: block;
-      width: 100%;
-      padding: 14px;
-      margin-top: 8px;
-      background: transparent;
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      color: var(--text-secondary);
-      font-size: 15px;
-      text-align: center;
-      cursor: pointer;
-    }
     .cart-popup-item {
       display: flex;
       gap: 14px;
@@ -205,7 +215,7 @@
       margin-bottom: 4px;
     }
     .cart-popup-item-price {
-      font-family: 'Noto Serif SC', serif;
+      font-family: 'Noto Serif TC', serif;
       font-size: 16px;
       font-weight: 600;
       color: var(--gold);
@@ -274,7 +284,7 @@
     .screen { scrollbar-width: none; -ms-overflow-style: none; }
 
     /* Typography */
-    .font-serif { font-family: 'Noto Serif SC', serif; }
+    .font-serif { font-family: 'Noto Serif TC', serif; }
     .text-gold { color: var(--gold); }
     .text-muted { color: var(--text-muted); }
     .text-secondary { color: var(--text-secondary); }
@@ -304,7 +314,7 @@
       z-index: 2;
     }
     .page-header h1 {
-      font-family: 'Noto Serif SC', serif;
+      font-family: 'Noto Serif TC', serif;
       font-size: 18px;
       font-weight: 600;
       letter-spacing: 2px;
@@ -352,6 +362,9 @@
       height: 22px;
       fill: currentColor;
     }
+    #screen-product .icon-btn {
+      color: #fff;
+    }
     .page-header > button.icon-btn:first-of-type {
       margin-left: 4px;
     }
@@ -371,9 +384,8 @@
 
     /* Gold Price Banner */
     .gold-banner {
-      background: linear-gradient(135deg, #1a1510 0%, #0f0d0a 50%, #1a1510 100%);
-      border-bottom: 1px solid rgba(201,169,110,0.15);
-      padding: 24px max(20px, calc((100vw - 430px) / 2));
+      background: #f3f3ee;
+      padding: 16px max(20px, calc((100vw - 430px) / 2)) 20px;
       position: relative;
       overflow: hidden;
       width: 100vw;
@@ -396,7 +408,7 @@
       text-align: center;
     }
     .gold-price-main {
-      font-family: 'Noto Serif SC', serif;
+      font-family: 'Noto Serif TC', serif;
       font-size: 42px;
       font-weight: 700;
       color: var(--gold);
@@ -429,11 +441,137 @@
       margin-top: 12px;
       text-align: center;
     }
+    .hero-banner {
+      width: 100%;
+      border-radius: 0;
+      overflow: hidden;
+      position: relative;
+      aspect-ratio: 3/2;
+      background: var(--surface);
+    }
+    .hero-banner-track {
+      display: flex;
+      height: 100%;
+      transition: transform 0.5s ease;
+    }
+    .hero-banner-slide {
+      min-width: 100%;
+      height: 100%;
+      flex-shrink: 0;
+    }
+    .hero-banner-slide img,
+    .hero-banner-slide .banner-placeholder {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center center;
+      display: block;
+    }
+    .banner-placeholder {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #1a1510 0%, #0f0d0a 50%, #1a1510 100%);
+      color: var(--gold);
+      text-align: center;
+      padding: 20px;
+    }
+    .banner-placeholder .price {
+      font-family: 'Noto Serif TC', serif;
+      font-size: 32px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .banner-placeholder .label {
+      font-size: 12px;
+      color: var(--text-secondary);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+    .banner-segments {
+      position: absolute;
+      bottom: 12px;
+      left: 16px;
+      right: 16px;
+      display: flex;
+      gap: 6px;
+      z-index: 2;
+    }
+    .banner-segment {
+      flex: 1;
+      height: 3px;
+      border-radius: 2px;
+      background: rgba(0,0,0,0.15);
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .banner-segment.active {
+      background: var(--gold);
+    }
+    [data-theme="light"] .banner-placeholder {
+      background: linear-gradient(135deg, #f5f0e8 0%, #ebe5d8 50%, #f5f0e8 100%);
+    }
+
+    /* Price Ticker */
+    .price-ticker {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 36px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      overflow: hidden;
+      white-space: nowrap;
+      z-index: 1001;
+      display: flex;
+      align-items: center;
+    }
+    .price-ticker-track {
+      display: inline-flex;
+      align-items: center;
+      animation: tickerScroll 15s linear infinite;
+    }
+    .price-ticker-track:hover {
+      animation-play-state: paused;
+    }
+    .price-ticker-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 0 24px;
+      font-size: 13px;
+      color: var(--text-secondary);
+      flex-shrink: 0;
+    }
+    .price-ticker-item .value {
+      color: var(--gold);
+      font-weight: 600;
+    }
+    @keyframes tickerScroll {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+    .screen.with-ticker {
+      padding-top: 96px;
+    }
+    .screen.with-ticker .page-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1002;
+    }
+    .screen.with-ticker .price-ticker {
+      top: 60px;
+      z-index: 1001;
+    }
 
     /* Section */
     .section { padding: 24px 20px; }
     .section-title {
-      font-family: 'Noto Serif SC', serif;
+      font-family: 'Noto Serif TC', serif;
       font-size: 20px;
       font-weight: 600;
       margin-bottom: 16px;
@@ -442,7 +580,7 @@
       justify-content: space-between;
     }
     .section-title .more {
-      font-family: 'Noto Sans SC', sans-serif;
+      font-family: 'Noto Sans TC', sans-serif;
       font-size: 13px;
       color: var(--gold);
       font-weight: 400;
@@ -495,7 +633,7 @@
       margin-bottom: 8px;
     }
     .product-card-price {
-      font-family: 'Noto Serif SC', serif;
+      font-family: 'Noto Serif TC', serif;
       font-size: 18px;
       font-weight: 600;
       color: var(--gold);
@@ -503,7 +641,7 @@
     .product-card-price .from {
       font-size: 11px;
       color: var(--text-muted);
-      font-family: 'Noto Sans SC', sans-serif;
+      font-family: 'Noto Sans TC', sans-serif;
       font-weight: 400;
     }
 
@@ -578,7 +716,7 @@
     }
     .product-info { padding: 20px; }
     .product-info-name {
-      font-family: 'Noto Serif SC', serif;
+      font-family: 'Noto Serif TC', serif;
       font-size: 22px;
       font-weight: 600;
       margin-bottom: 6px;
@@ -589,7 +727,7 @@
       margin-bottom: 16px;
     }
     .product-info-price {
-      font-family: 'Noto Serif SC', serif;
+      font-family: 'Noto Serif TC', serif;
       font-size: 32px;
       font-weight: 700;
       color: var(--gold);
@@ -631,12 +769,6 @@
     }
 
     /* Quantity */
-    .qty-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 20px;
-    }
     .qty-control {
       display: flex;
       align-items: center;
@@ -683,6 +815,9 @@
       background: rgba(255,255,255,0.95);
       border-top: 1px solid var(--border);
     }
+    .bottom-bar.absolute {
+      position: absolute;
+    }
     [data-theme="light"] .page-header {
       background: rgba(255,255,255,0.92);
     }
@@ -692,7 +827,21 @@
       color: var(--text);
     }
     [data-theme="light"] .gold-banner {
-      background: linear-gradient(135deg, #f5f0e8 0%, #ebe5d8 50%, #f5f0e8 100%);
+      background: #f3f3ee;
+    }
+    [data-theme="dark"] .page-header img[alt="Passto Bullion"],
+    [data-theme="dark"] .side-menu-header img[alt="Passto Bullion"] {
+      filter: brightness(0) invert(1);
+    }
+    .home-section:first-of-type .gold-banner {
+      padding: 16px max(20px, calc((100vw - 430px) / 2)) 20px;
+      background: #f3f3ee;
+      border: none;
+    }
+    .home-section:first-of-type .hero-banner {
+      border-radius: 0;
+      width: 100vw;
+      margin-left: calc(50% - 50vw);
     }
     [data-theme="light"] .btn-primary {
       background: #000;
@@ -927,24 +1076,94 @@
       color: var(--text-secondary);
       line-height: 1.6;
     }
+    .payment-option {
+      transition: border-color 200ms;
+    }
+    .payment-option.selected {
+      border-color: var(--gold);
+    }
+    .agreement-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-top: 20px;
+      cursor: pointer;
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+    .agreement-row .checkbox {
+      margin-top: 1px;
+    }
+    .agreement-row .agreement-text {
+      flex: 1;
+    }
+    .agreement-row .agreement-link {
+      color: var(--gold);
+      text-decoration: underline;
+    }
+    @keyframes shakeX {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-6px); }
+      40%, 80% { transform: translateX(6px); }
+    }
+    .shake {
+      animation: shakeX 0.4s ease;
+    }
+    .agreement-sheet-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 370;
+      background: rgba(0,0,0,0.6);
+      display: none;
+      align-items: flex-end;
+      justify-content: center;
+      padding: 0;
+    }
+    .agreement-sheet-overlay.active { display: flex; }
+    .agreement-sheet {
+      background: var(--surface);
+      border-radius: 20px 20px 0 0;
+      padding: 24px 20px calc(24px + env(safe-area-inset-bottom));
+      max-width: 430px;
+      width: 100%;
+      max-height: 80vh;
+      display: flex;
+      flex-direction: column;
+      transform: translateY(100%);
+      transition: transform 300ms ease;
+    }
+    .agreement-sheet-overlay.active .agreement-sheet {
+      transform: translateY(0);
+    }
+    .agreement-sheet-content {
+      flex: 1;
+      overflow-y: auto;
+      font-size: 14px;
+      line-height: 1.8;
+      color: var(--text-secondary);
+      margin: 16px 0;
+      padding-right: 8px;
+    }
 
     /* Profile */
     .profile-header {
-      background: linear-gradient(135deg, var(--gold), var(--gold-dim));
-      color: #000;
+      background: #1c4942;
+      color: #fff;
       padding: 58px 20px 90px;
-      margin: -20px -16px 0;
+      margin: -24px calc(50% - 50vw) 0;
       border-radius: 0 0 28px 28px;
       text-align: center;
+      width: 100vw;
     }
     .profile-header-name {
       font-size: 24px;
-      font-weight: 700;
+      font-weight: 400;
       line-height: 1.4;
-      color: #000;
+      color: #fff;
     }
     .profile-header-name span {
-      font-weight: 800;
+      font-weight: 500;
     }
     .profile-fields-card {
       background: var(--surface);
@@ -1024,7 +1243,7 @@
       font-weight: 600;
     }
     .order-summary-row .label { color: var(--text-secondary); }
-    .order-summary-row .value { color: var(--gold); font-family: 'Noto Serif SC', serif; }
+    .order-summary-row .value { color: var(--gold); font-family: 'Noto Serif TC', serif; }
 
     /* Upload Area */
     .upload-area {
@@ -1110,7 +1329,7 @@
       to { transform: scale(1); opacity: 1; }
     }
     .success-title {
-      font-family: 'Noto Serif SC', serif;
+      font-family: 'Noto Serif TC', serif;
       font-size: 24px;
       text-align: center;
       margin-bottom: 8px;
@@ -1334,7 +1553,7 @@
       min-width: 0;
     }
     .recycle-card-title {
-      font-family: 'Noto Serif SC', serif;
+      font-family: 'Noto Serif TC', serif;
       font-size: 18px;
       font-weight: 600;
       margin-bottom: 8px;
@@ -1383,7 +1602,7 @@
       text-align: center;
     }
     .brand-card h2 {
-      font-family: 'Noto Serif SC', serif;
+      font-family: 'Noto Serif TC', serif;
       font-size: 28px;
       font-weight: 700;
       margin-bottom: 8px;
@@ -1433,32 +1652,81 @@
       height: 100%;
       object-fit: cover;
     }
-    .whatsapp-fab {
+    .fab-wrapper {
       position: fixed;
       right: 16px;
       top: 62%;
       transform: translateY(-50%);
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+    }
+    .fab-bubble {
+      position: absolute;
+      right: 0;
+      bottom: calc(100% + 12px);
+      width: 190px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px 16px 12px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.35);
+      display: none;
+    }
+    .fab-bubble.active { display: block; }
+    .fab-bubble-close {
+      position: absolute;
+      top: 4px;
+      right: 8px;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 18px;
+      line-height: 1;
+      cursor: pointer;
+      padding: 4px;
+    }
+    .fab-bubble-option {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 0;
+      color: var(--text);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      border-bottom: 1px solid var(--border);
+    }
+    .fab-bubble-option:last-child {
+      border-bottom: none;
+    }
+    .fab-bubble-option:active {
+      color: var(--gold);
+    }
+    .whatsapp-fab {
       width: 56px;
       height: 56px;
       border-radius: 50%;
       background: linear-gradient(135deg, var(--gold), var(--gold-dim));
       color: #000;
+      border: none;
       display: flex;
       align-items: center;
       justify-content: center;
       text-decoration: none;
-      z-index: 1000;
       box-shadow: 0 4px 20px rgba(201,169,110,0.35);
       transition: transform 200ms, box-shadow 200ms;
+      cursor: pointer;
     }
     .whatsapp-fab:active {
-      transform: translateY(-50%) scale(0.95);
+      transform: scale(0.95);
     }
     .about-section {
       text-align: center;
     }
     .about-title {
-      font-family: 'Noto Serif SC', serif;
+      font-family: 'Noto Serif TC', serif;
       font-size: 24px;
       font-weight: 700;
       margin-bottom: 16px;
@@ -1517,7 +1785,7 @@
     }
     .recycle-calc-result > div:last-child {
       color: #000;
-      font-family: 'Noto Serif SC', serif;
+      font-family: 'Noto Serif TC', serif;
       font-size: 22px;
       font-weight: 700;
     }
@@ -1603,6 +1871,15 @@
       display: flex;
       flex-direction: column;
       gap: 4px;
+      flex: 1;
+      position: relative;
+    }
+    .side-menu-item.contact-item {
+      position: absolute;
+      top: 50%;
+      left: 12px;
+      right: 12px;
+      transform: translateY(-50%);
     }
     .side-menu-item {
       display: flex;
@@ -1631,8 +1908,8 @@
     }
   </style>
 </head>
-<body>
-  <button class="theme-toggle" onclick="toggleTheme()" title="切換主題">&#127769;</button>
+<body data-theme="light">
+  <button class="theme-toggle" onclick="toggleTheme()" title="切換主題">&#9728;</button>
   <div class="cart-popup-overlay" id="cart-popup-overlay" onclick="toggleCartPopup()"></div>
   <div class="cart-popup" id="cart-popup">
     <div class="cart-popup-title">已加入購物袋</div>
@@ -1653,10 +1930,49 @@
         <span>电话联系</span>
       </a>
       <a class="contact-popup-option" href="https://wa.me/85212345678" target="_blank">
-        <span style="font-size:20px;">&#128172;</span>
+        <svg viewBox="0 0 1024 1024" width="20" height="20" style="fill:currentColor;flex-shrink:0;"><path d="M511.872427 0h0.256C794.45376 0 1024.000427 229.674667 1024.000427 512s-229.589333 512-511.872 512c-104.106667 0-200.704-31.018667-281.6-84.565333L33.707093 1002.325333l63.786667-190.250666A508.245333 508.245333 0 0 1 0.000427 512C0.000427 229.674667 229.58976 0 511.872427 0zM365.39776 281.429333c-9.770667-23.338667-17.194667-24.234667-32-24.832A285.525333 285.525333 0 0 0 316.50176 256c-19.285333 0-39.424 5.632-51.626667 18.048C250.155093 289.109333 213.33376 324.266667 213.33376 396.501333c0 72.149333 52.778667 141.952 59.861333 151.722667 7.424 9.728 102.912 160 251.093334 221.226667 115.925333 47.914667 150.314667 43.477333 176.725333 37.845333 38.528-8.277333 86.826667-36.693333 98.986667-70.954667 12.16-34.346667 12.16-63.616 8.618666-69.845333-3.584-6.186667-13.354667-9.728-28.16-17.152-14.848-7.381333-86.869333-42.88-100.522666-47.616-13.354667-4.992-26.069333-3.242667-36.138667 10.965333-14.250667 19.797333-28.16 39.936-39.466667 52.053334-8.874667 9.472-23.424 10.666667-35.541333 5.632-16.298667-6.826667-61.952-22.784-118.314667-72.789334-43.562667-38.741333-73.216-86.954667-81.792-101.418666-8.618667-14.805333-0.896-23.381333 5.930667-31.36 7.381333-9.173333 14.506667-15.658667 21.930667-24.234667 7.424-8.576 11.52-13.013333 16.298666-23.082667 5.034667-9.770667 1.493333-19.84-2.090666-27.221333-3.541333-7.381333-33.194667-79.573333-45.354667-108.8z"/></svg>
         <span>WhatsApp 联系</span>
       </a>
-      <button class="contact-popup-cancel" onclick="toggleContactPopup(false)">取消</button>
+    </div>
+  </div>
+
+  <div class="nav-popup-overlay" id="nav-popup-overlay" onclick="toggleNavPopup(false)">
+    <div class="nav-popup" onclick="event.stopPropagation()">
+      <div class="contact-popup-title">選擇導航應用</div>
+      <a class="contact-popup-option" href="https://uri.amap.com/search?keyword=%E9%A6%99%E6%B8%AF%E4%B9%9D%E9%BE%8D%E5%BB%A3%E6%9D%B1%E9%81%9333%E8%99%9F%E4%B8%AD%E6%B8%AF%E5%9F%8E2%E5%BA%A7%E5%B9%B3%E5%8F%B01%265%E8%99%9F%E8%88%96" target="_blank">
+        <span>高德地圖</span>
+      </a>
+      <a class="contact-popup-option" href="https://www.google.com/maps/search/?api=1&query=%E9%A6%99%E6%B8%AF%E4%B9%9D%E9%BE%8D%E5%BB%A3%E6%9D%B1%E9%81%9333%E8%99%9F%E4%B8%AD%E6%B8%AF%E5%9F%8E2%E5%BA%A7%E5%B9%B3%E5%8F%B01%265%E8%99%9F%E8%88%96" target="_blank">
+        <span>Google 地圖</span>
+      </a>
+      <a class="contact-popup-option" href="https://maps.apple.com/?q=%E9%A6%99%E6%B8%AF%E4%B9%9D%E9%BE%8D%E5%BB%A3%E6%9D%B1%E9%81%9333%E8%99%9F%E4%B8%AD%E6%B8%AF%E5%9F%8E2%E5%BA%A7%E5%B9%B3%E5%8F%B01%265%E8%99%9F%E8%88%96" target="_blank">
+        <span>Apple 地圖</span>
+      </a>
+    </div>
+  </div>
+
+  <div class="agreement-sheet-overlay" id="agreement-sheet-overlay" onclick="closeAgreementSheet()">
+    <div class="agreement-sheet" onclick="event.stopPropagation()">
+      <div class="contact-popup-title">黃金購買協議</div>
+      <div class="agreement-sheet-content">
+        <p><strong>第一條 協議範圍</strong></p>
+        <p>本協議由閣下（以下簡稱「買方」）與 Passto Bullion（以下簡稱「賣方」）共同簽訂，適用於買方通過賣方平台購買實體黃金產品及相關服務的所有交易。</p>
+        <p><strong>第二條 產品說明</strong></p>
+        <p>賣方所售黃金產品均為實物貴金屬，產品規格、純度、重量以訂單確認頁面及實物標識為準。所有產品均來自 LBMA 認證精煉廠，並附相應品質證明。</p>
+        <p><strong>第三條 價格與付款</strong></p>
+        <p>產品價格以閣下提交訂單時系統顯示的價格為準，價格可能隨市場金價實時波動。買方應在規定時間內完成付款，否則賣方有權取消訂單。</p>
+        <p><strong>第四條 提貨與驗收</strong></p>
+        <p>買方可選擇到店提貨或賣方提供的其他取貨方式。提貨時買方須出示有效身份證明文件，並當場驗收產品。一旦離櫃，視為驗收無異議。</p>
+        <p><strong>第五條 回收服務</strong></p>
+        <p>賣方提供黃金回收服務，回收價格以到店檢測時的市場價格為準。回收前須完成身份核實及產品檢測。</p>
+        <p><strong>第六條 免責條款</strong></p>
+        <p>因不可抗力、市場異常波動或第三方原因導致交易無法完成的，賣方不承擔相關責任，但應及時通知買方並協助處理。</p>
+        <p><strong>第七條 爭議解決</strong></p>
+        <p>本協議受中華人民共和國香港特別行政區法律管轄。如發生爭議，雙方應友好協商解決；協商不成的，任何一方均可向香港有管轄權的法院提起訴訟。</p>
+        <p><strong>第八條 其他</strong></p>
+        <p>賣方保留根據實際情況修訂本協議的權利，修訂後的協議將於平台公示後生效。閣下繼續使用平台服務即視為同意修訂後的協議。</p>
+      </div>
+      <button class="btn btn-primary btn-full" onclick="agreeAndCloseSheet()">我已同意</button>
     </div>
   </div>
 
@@ -1683,7 +1999,8 @@
         </svg>
       </div>
       <div style="font-size:12px; color:var(--text-muted); margin-bottom:8px;">提貨碼</div>
-      <div id="qr-code-text" style="font-size:20px; font-weight:600; letter-spacing:2px; margin-bottom:24px; font-family:monospace;">--</div>
+      <div id="qr-code-text" style="font-size:20px; font-weight:600; letter-spacing:2px; margin-bottom:12px; font-family:monospace;">--</div>
+      <div style="font-size:12px; color:var(--text-secondary); line-height:1.5; margin-bottom:24px; padding:0 8px;">到店提貨必須攜帶與身份證明文件相符，以核實身份</div>
       <button class="btn btn-primary btn-full" onclick="closeQRPopup()">完成</button>
     </div>
   </div>
@@ -1711,10 +2028,14 @@
         </svg>
       </div>
       <div style="font-size:12px; color:var(--text-muted); margin-bottom:8px;">預約信息</div>
-      <div id="store-appointment-code-text" style="font-size:20px; font-weight:600; letter-spacing:2px; margin-bottom:24px; font-family:monospace;">--</div>
+      <div id="store-appointment-code-text" style="font-size:20px; font-weight:600; letter-spacing:2px; margin-bottom:12px; font-family:monospace;">--</div>
+      <div style="font-size:12px; color:var(--text-secondary); line-height:1.5; margin-bottom:24px; padding:0 8px;">到店提貨必須攜帶與身份證明文件相符，以核實身份</div>
       <div style="display:flex; gap:10px;">
         <button class="btn btn-secondary" style="flex:1;" onclick="closeStoreAppointmentPopup()">關閉</button>
-        <a class="btn btn-primary" style="flex:1; text-align:center; text-decoration:none;" href="https://wa.me/85212345678" target="_blank">WhatsApp 联系</a>
+        <a class="btn btn-primary" style="flex:1; text-align:center; text-decoration:none; gap:8px;" href="https://wa.me/85212345678" target="_blank">
+          <svg viewBox="0 0 1024 1024" width="18" height="18" style="fill:currentColor;flex-shrink:0;"><path d="M511.872427 0h0.256C794.45376 0 1024.000427 229.674667 1024.000427 512s-229.589333 512-511.872 512c-104.106667 0-200.704-31.018667-281.6-84.565333L33.707093 1002.325333l63.786667-190.250666A508.245333 508.245333 0 0 1 0.000427 512C0.000427 229.674667 229.58976 0 511.872427 0zM365.39776 281.429333c-9.770667-23.338667-17.194667-24.234667-32-24.832A285.525333 285.525333 0 0 0 316.50176 256c-19.285333 0-39.424 5.632-51.626667 18.048C250.155093 289.109333 213.33376 324.266667 213.33376 396.501333c0 72.149333 52.778667 141.952 59.861333 151.722667 7.424 9.728 102.912 160 251.093334 221.226667 115.925333 47.914667 150.314667 43.477333 176.725333 37.845333 38.528-8.277333 86.826667-36.693333 98.986667-70.954667 12.16-34.346667 12.16-63.616 8.618666-69.845333-3.584-6.186667-13.354667-9.728-28.16-17.152-14.848-7.381333-86.869333-42.88-100.522666-47.616-13.354667-4.992-26.069333-3.242667-36.138667 10.965333-14.250667 19.797333-28.16 39.936-39.466667 52.053334-8.874667 9.472-23.424 10.666667-35.541333 5.632-16.298667-6.826667-61.952-22.784-118.314667-72.789334-43.562667-38.741333-73.216-86.954667-81.792-101.418666-8.618667-14.805333-0.896-23.381333 5.930667-31.36 7.381333-9.173333 14.506667-15.658667 21.930667-24.234667 7.424-8.576 11.52-13.013333 16.298666-23.082667 5.034667-9.770667 1.493333-19.84-2.090666-27.221333-3.541333-7.381333-33.194667-79.573333-45.354667-108.8z"/></svg>
+          <span>WhatsApp 联系</span>
+        </a>
       </div>
     </div>
   </div>
@@ -1739,7 +2060,8 @@
           <rect x="160" y="120" width="10" height="10" fill="black"/>
         </svg>
       </div>
-      <div id="qr-zoom-code" style="font-size:22px; font-weight:600; letter-spacing:3px; font-family:monospace; margin-bottom:24px;">--</div>
+      <div id="qr-zoom-code" style="font-size:22px; font-weight:600; letter-spacing:3px; font-family:monospace; margin-bottom:12px;">--</div>
+      <div style="font-size:12px; color:var(--text-secondary); line-height:1.5; margin-bottom:24px; padding:0 8px;">到店提貨必須攜帶與身份證明文件相符，以核實身份</div>
       <button class="btn btn-primary btn-full" onclick="closeQRZoom()">關閉</button>
     </div>
   </div>
@@ -1750,7 +2072,7 @@
     <div id="side-menu" class="side-menu" onclick="closeMenu(event)">
       <div class="side-menu-panel" onclick="event.stopPropagation()">
         <div class="side-menu-header">
-          <img src="https://i.postimg.cc/LXxDf7wY/passto-trust-black-1.png" alt="Passto Bullion" style="height:24px; object-fit:contain; max-width:180px;">
+          <img src="https://i.postimg.cc/YqPfbZCf/passto-trust-black.png" alt="Passto Bullion" style="height:11px; object-fit:contain; max-width:110px;">
           <button class="back-btn" onclick="toggleMenu()" style="background:transparent; border:none;">&#10005;</button>
         </div>
         <nav class="side-menu-nav">
@@ -1764,12 +2086,12 @@
             <span>黃金回收</span>
           </a>
           <a class="side-menu-item" onclick="menuGoTo('converter')">
-            <span>黃金重量換算</span>
+            <span>重量換算</span>
           </a>
           <a class="side-menu-item" onclick="menuGoTo('profile')">
             <span>個人中心</span>
           </a>
-          <a class="side-menu-item" onclick="toggleMenu(); toggleContactPopup(true);">
+          <a class="side-menu-item contact-item" onclick="toggleMenu(); toggleContactPopup(true);">
             <span>联系客服</span>
           </a>
         </nav>
@@ -1777,15 +2099,23 @@
     </div>
 
     <!-- ==================== SCREEN: HOME ==================== -->
-    <div class="screen active" id="screen-home">
-      <!-- 第一屏：今日金價 -->
+    <div class="screen active with-ticker" id="screen-home">
+      <div class="price-ticker">
+        <div class="price-ticker-track">
+          <span class="price-ticker-item">零售参考：<span class="value">HKD 2,456/克</span></span>
+          <span class="price-ticker-item">回收参考：<span class="value">HKD 2,380/克</span></span>
+          <span class="price-ticker-item">零售参考：<span class="value">HKD 2,456/克</span></span>
+          <span class="price-ticker-item">回收参考：<span class="value">HKD 2,380/克</span></span>
+        </div>
+      </div>
+      <!-- 第一屏：輪播 Banner -->
       <div class="home-section">
         <div class="page-header" style="border-bottom:none;">
           <div style="display:flex; align-items:center; gap:10px;">
             <button class="icon-btn" onclick="toggleMenu()">
               <svg viewBox="0 0 1024 1024" width="22" height="22"><path d="M867.995 459.647h-711.99c-27.921 0-52.353 24.434-52.353 52.353s24.434 52.353 52.353 52.353h711.99c27.921 0 52.353-24.434 52.353-52.353s-24.434-52.353-52.353-52.353z"/><path d="M867.995 763.291h-711.99c-27.921 0-52.353 24.434-52.353 52.353s24.434 52.353 52.353 52.353h711.99c27.921 0 52.353-24.434 52.353-52.353s-24.434-52.353-52.353-52.353z"/><path d="M156.005 260.709h711.99c27.921 0 52.353-24.434 52.353-52.353s-24.434-52.353-52.353-52.353h-711.99c-27.921 0-52.353 24.434-52.353 52.353s24.434 52.353 52.353 52.353z"/></svg>
             </button>
-            <img src="https://i.postimg.cc/LXxDf7wY/passto-trust-black-1.png" alt="Passto Bullion" style="height:22px; object-fit:contain; max-width:160px;">
+            <span style="font-size:18px; font-weight:700; color:var(--text);">首頁</span>
           </div>
           <div class="header-actions">
             <button class="icon-btn" onclick="goTo('cart')" style="width:40px; height:40px; padding:0; background:transparent; border:none; position:relative;">
@@ -1794,23 +2124,46 @@
             </button>
           </div>
         </div>
+        <div style="text-align:center; margin:20px 0 16px;">
+          <img src="https://i.postimg.cc/YqPfbZCf/passto-trust-black.png" alt="Passto Bullion" style="height:28px; object-fit:contain; max-width:280px;">
+        </div>
         <div class="gold-banner">
-          <div class="gold-banner-label">今日金價 / GOLD PRICE</div>
-          <div class="gold-price-main shimmer">HK$ 2,456<span class="unit">/g</span></div>
-          <div class="gold-banner-time">更新時間 2026-06-12 14:30 HKT</div>
-          <div style="width:100%; max-width:260px; margin:20px auto 16px; border-radius:12px; overflow:hidden; position:relative; aspect-ratio:9/16; background:#000;">
-            <iframe
-              src="https://www.youtube.com/embed/lxqKIjjT72M?autoplay=1&mute=1&controls=0&modestbranding=1&rel=0&playsinline=1&loop=1&playlist=lxqKIjjT72M&fs=0&iv_load_policy=3"
-              style="position:absolute; inset:0; width:100%; height:100%; border:none; pointer-events:none;"
-              allow="autoplay; encrypted-media"
-              loading="eager"
-              title="Passto Bullion">
-            </iframe>
+          <div class="hero-banner" id="hero-banner">
+            <div class="hero-banner-track" id="hero-banner-track">
+              <div class="hero-banner-slide">
+                <img src="https://i.postimg.cc/ydtgK43d/image.png" alt="Passto Bullion 金條">
+              </div>
+              <div class="hero-banner-slide">
+                <img src="https://i.postimg.cc/1RVVHtbf/image.png" alt="Passto Bullion 產品">
+              </div>
+              <div class="hero-banner-slide">
+                <img src="https://i.postimg.cc/q7cjgwXL/image.png" alt="Passto Bullion 活動">
+              </div>
+            </div>
+            <div class="banner-segments">
+              <span class="banner-segment active" onclick="goToHeroSlide(0)"></span>
+              <span class="banner-segment" onclick="goToHeroSlide(1)"></span>
+              <span class="banner-segment" onclick="goToHeroSlide(2)"></span>
+            </div>
           </div>
         </div>
       </div>
 
-      <!-- 第二屏：認證說明 -->
+      <!-- 第二屏：投資金首選 -->
+      <div class="home-section" style="padding-top:48px; padding-bottom:48px;">
+        <div class="section-title" style="margin-bottom:16px; text-align:center; justify-content:center;">
+          <span style="font-size:24px;">投資金首選</span>
+        </div>
+        <div class="hot-product-banner" style="cursor:pointer;">
+          <img src="https://i.postimg.cc/TPVYhGXC/image.png" alt="熱銷商品" style="width:100%; height:auto; border-radius:16px; display:block;">
+          <button class="btn btn-primary" style="width:280px; margin:16px auto 0; display:flex; align-items:center; justify-content:center; gap:8px;" onclick="goTo('shop')">
+            <span>查看詳情</span>
+            <span>&#10095;</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- 第三屏：認證說明 -->
       <div class="home-section" style="padding-top:32px; padding-bottom:32px;">
         <div class="trust-summary-card" onclick="goTo('trust')" style="background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:20px; text-align:center; cursor:pointer;">
           <div style="display:flex; align-items:center; justify-content:center; gap:12px; margin-bottom:12px;">
@@ -1828,56 +2181,19 @@
         </div>
       </div>
 
-      <!-- 第三屏：線下門店 -->
-      <div class="home-section">
-        <div class="store-photo" style="aspect-ratio:16/10; margin-bottom:20px; border-radius:16px;">
-          <img src="icon/store.png" alt="Passto Bullion 門店" style="width:100%; height:100%; object-fit:cover;">
-        </div>
-        <div style="text-align:center;">
-          <div style="font-family:'Noto Serif SC',serif; font-size:28px; font-weight:700; color:var(--gold); margin-bottom:10px;">NEW OPEN!</div>
-          <div style="font-size:14px; color:var(--text-secondary); line-height:1.6; margin-bottom:8px;">
-            Passto Bullion 香港中港城門店
-          </div>
-          <div style="font-size:13px; color:var(--text-muted); line-height:1.6; margin-bottom:20px;">
-            香港九龍廣東道33號中港城2座平台1&5號舖
-          </div>
-          <a class="btn btn-primary" style="width:100%; max-width:280px; display:inline-flex; align-items:center; justify-content:center; gap:8px; text-decoration:none;" href="https://wa.me/85212345678" target="_blank">
-            WhatsApp諮詢 <span>&#10095;</span>
-          </a>
-        </div>
-      </div>
-
-      <!-- 第三屏：熱銷商品 + 黃金回收 -->
+      <!-- 第四屏：黃金回收 -->
       <div class="home-section" style="padding-top:48px; padding-bottom:48px;">
-        <div class="section-title" style="margin-bottom:16px;">
-          <span>熱銷商品</span>
-          <span class="more" onclick="goTo('shop')">查看全部 ›</span>
+        <div class="section-title" style="margin-bottom:16px; text-align:center; justify-content:center;">
+          <span style="font-size:24px;">黃金回收</span>
         </div>
-        <div class="product-grid">
-          <div class="product-card" onclick="goTo('product', {id:1,name:'傳世金條 50克',price:'122,800',purity:'Au 99.99%',img:'https://dev.passtobullion.com/profile/upload/2026/06/04/50g-traditional-final-set_20260604145016A006.png',specs:['50克']})">
-            <div class="product-card-img"><img src="https://dev.passtobullion.com/profile/upload/2026/06/04/50g-traditional-final-set_20260604145016A006.png" alt="50克金條" style="width:100%;height:100%;object-fit:cover;"></div>
-            <div class="product-card-body">
-              <div class="product-card-name">傳世金條 50克</div>
-              <div class="product-card-purity">Au 99.99%</div>
-              <div class="product-card-price"><span class="from">約</span> HK$122,800</div>
-            </div>
-          </div>
-          <div class="product-card" onclick="goTo('product', {id:2,name:'傳世金條 100克',price:'245,600',purity:'Au 99.99%',img:'https://dev.passtobullion.com/profile/upload/2026/06/04/100g-traditional-final-set_20260604145028A009.png',specs:['100克']})">
-            <div class="product-card-img"><img src="https://dev.passtobullion.com/profile/upload/2026/06/04/100g-traditional-final-set_20260604145028A009.png" alt="100克金條" style="width:100%;height:100%;object-fit:cover;"></div>
-            <div class="product-card-body">
-              <div class="product-card-name">傳世金條 100克</div>
-              <div class="product-card-purity">Au 99.99%</div>
-              <div class="product-card-price"><span class="from">約</span> HK$245,600</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="section-title" style="margin-top:28px; margin-bottom:16px;">
-          <span>黃金回收</span>
-        </div>
+        <img src="https://i.postimg.cc/SxKvJGFr/image.png" alt="黃金回收" style="width:100%; height:auto; border-radius:16px; display:block; margin-bottom:16px;">
 
         <!-- 黃金回收計算器 -->
         <div class="recycle-calc-card">
+          <div style="text-align:center; margin-bottom:16px;">
+            <div style="font-size:18px; font-weight:700; color:var(--gold);">黃金價值預估</div>
+            <div style="font-size:12px; color:var(--text-muted); margin-top:4px;">實時參考回收價格</div>
+          </div>
           <div class="form-group" style="display:flex; align-items:center; gap:12px; margin-bottom:16px;">
             <label style="color:var(--gold); font-weight:600; font-size:14px; flex-shrink:0; width:48px; text-align:right;">成色</label>
             <div class="form-input" style="flex:1; display:flex; align-items:center; color:var(--text); min-height:48px; padding:10px 14px;">足金 99.99%</div>
@@ -1898,7 +2214,7 @@
           </div>
           <div class="recycle-calc-result">
             <div style="font-size:13px; color:var(--text-secondary);">參考價格</div>
-            <div style="font-family:'Noto Serif SC',serif; font-size:28px; font-weight:700; color:var(--gold);" id="home-recycle-price">HKD 245,600</div>
+            <div style="font-family:'Noto Serif TC',serif; font-size:28px; font-weight:700; color:var(--gold);" id="home-recycle-price">HKD 245,600</div>
           </div>
           <button class="btn btn-primary btn-full" onclick="goTo('recycle-appointment')" style="margin-top:16px;">立即預約</button>
           <div style="font-size:11px; color:var(--text-muted); text-align:center; margin-top:12px; line-height:1.5;">
@@ -1907,7 +2223,28 @@
         </div>
       </div>
 
-      <!-- 第四屏：關於 PASSTO BULLION -->
+      <!-- 第五屏：線下門店 -->
+      <div class="home-section">
+        <div class="store-photo" style="aspect-ratio:16/10; margin-bottom:20px; border-radius:16px;">
+          <img src="icon/store.png" alt="Passto Bullion 門店" style="width:100%; height:100%; object-fit:cover;">
+        </div>
+        <div style="text-align:center;">
+          <div style="font-family:'Noto Serif TC',serif; font-size:28px; font-weight:700; color:var(--gold); margin-bottom:10px;">NEW OPEN!</div>
+          <div style="font-size:14px; color:var(--text-secondary); line-height:1.6; margin-bottom:8px;">
+            Passto Bullion 香港中港城門店
+          </div>
+          <div style="font-size:13px; color:var(--text-muted); line-height:1.6; margin-bottom:20px; cursor:pointer; text-decoration:underline;" onclick="toggleNavPopup(true)">
+            香港九龍廣東道33號中港城2座平台1&5號舖
+          </div>
+          <a class="btn btn-primary" style="width:100%; max-width:280px; display:inline-flex; align-items:center; justify-content:center; gap:8px; text-decoration:none;" href="https://wa.me/85212345678" target="_blank">
+            <svg viewBox="0 0 1024 1024" width="18" height="18" style="fill:#fff;flex-shrink:0;"><path d="M511.872427 0h0.256C794.45376 0 1024.000427 229.674667 1024.000427 512s-229.589333 512-511.872 512c-104.106667 0-200.704-31.018667-281.6-84.565333L33.707093 1002.325333l63.786667-190.250666A508.245333 508.245333 0 0 1 0.000427 512C0.000427 229.674667 229.58976 0 511.872427 0zM365.39776 281.429333c-9.770667-23.338667-17.194667-24.234667-32-24.832A285.525333 285.525333 0 0 0 316.50176 256c-19.285333 0-39.424 5.632-51.626667 18.048C250.155093 289.109333 213.33376 324.266667 213.33376 396.501333c0 72.149333 52.778667 141.952 59.861333 151.722667 7.424 9.728 102.912 160 251.093334 221.226667 115.925333 47.914667 150.314667 43.477333 176.725333 37.845333 38.528-8.277333 86.826667-36.693333 98.986667-70.954667 12.16-34.346667 12.16-63.616 8.618666-69.845333-3.584-6.186667-13.354667-9.728-28.16-17.152-14.848-7.381333-86.869333-42.88-100.522666-47.616-13.354667-4.992-26.069333-3.242667-36.138667 10.965333-14.250667 19.797333-28.16 39.936-39.466667 52.053334-8.874667 9.472-23.424 10.666667-35.541333 5.632-16.298667-6.826667-61.952-22.784-118.314667-72.789334-43.562667-38.741333-73.216-86.954667-81.792-101.418666-8.618667-14.805333-0.896-23.381333 5.930667-31.36 7.381333-9.173333 14.506667-15.658667 21.930667-24.234667 7.424-8.576 11.52-13.013333 16.298666-23.082667 5.034667-9.770667 1.493333-19.84-2.090666-27.221333-3.541333-7.381333-33.194667-79.573333-45.354667-108.8z"/></svg>
+            <span>WhatsApp諮詢</span>
+            <span>&#10095;</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- 第五屏：關於 PASSTO BULLION -->
       <div class="home-section about-section">
         <div class="about-title">關於 PASSTO BULLION</div>
         <div class="about-desc">PASSTO BULLION 是香港持牌貴金屬經銷商，致力於提供專業的實體黃金交易服務。我們與 LBMA 認證精煉廠合作，確保每件黃金產品符合最高品質標準。</div>
@@ -1934,22 +2271,26 @@
     </div>
 
     <!-- ==================== SCREEN: SHOP ==================== -->
-    <div class="screen" id="screen-shop">
+    <div class="screen with-ticker" id="screen-shop">
+      <div class="price-ticker">
+        <div class="price-ticker-track">
+          <span class="price-ticker-item">零售参考：<span class="value">HKD 2,456/克</span></span>
+          <span class="price-ticker-item">回收参考：<span class="value">HKD 2,380/克</span></span>
+          <span class="price-ticker-item">零售参考：<span class="value">HKD 2,456/克</span></span>
+          <span class="price-ticker-item">回收参考：<span class="value">HKD 2,380/克</span></span>
+        </div>
+      </div>
       <div class="page-header">
         <button class="icon-btn" onclick="toggleMenu()">
           <svg viewBox="0 0 1024 1024" width="22" height="22"><path d="M867.995 459.647h-711.99c-27.921 0-52.353 24.434-52.353 52.353s24.434 52.353 52.353 52.353h711.99c27.921 0 52.353-24.434 52.353-52.353s-24.434-52.353-52.353-52.353z"/><path d="M867.995 763.291h-711.99c-27.921 0-52.353 24.434-52.353 52.353s24.434 52.353 52.353 52.353h711.99c27.921 0 52.353-24.434 52.353-52.353s-24.434-52.353-52.353-52.353z"/><path d="M156.005 260.709h711.99c27.921 0 52.353-24.434 52.353-52.353s-24.434-52.353-52.353-52.353h-711.99c-27.921 0-52.353 24.434-52.353 52.353s24.434 52.353 52.353 52.353z"/></svg>
         </button>
-        <h1>瀏覽商品</h1>
+        <h1>黃金投資</h1>
         <button class="icon-btn" onclick="goTo('cart')" style="width:40px; height:40px; padding:0; background:transparent; border:none; position:relative;">
           <svg viewBox="0 0 1024 1024" width="22" height="22" style="display:block;"><path d="M384 256a128 128 0 1 1 256 0H384zM298.666667 256H170.666667a42.666667 42.666667 0 0 0-42.666667 42.666667v597.333333a42.666667 42.666667 0 0 0 42.666667 42.666667h682.666666a42.666667 42.666667 0 0 0 42.666667-42.666667V298.666667a42.666667 42.666667 0 0 0-42.666667-42.666667h-128A213.333333 213.333333 0 0 0 298.666667 256z m85.333333 170.666667a128 128 0 1 0 256 0h85.333333a213.333333 213.333333 0 0 1-426.666666 0h85.333333z" fill="currentColor"/></svg>
           <span class="badge" id="cart-badge-shop" style="display:none; position:absolute; top:-2px; right:2px; min-width:18px; height:18px; padding:0 4px; font-size:10px;">0</span>
         </button>
       </div>
-      <div class="gold-banner">
-        <div class="gold-banner-label">今日金價 / GOLD PRICE</div>
-        <div class="gold-price-main shimmer">HK$ 2,456<span class="unit">/g</span></div>
-        <div class="gold-banner-time">更新時間 2026-06-12 14:30 HKT</div>
-      </div>
+      <img src="https://i.postimg.cc/1RVVHtbf/image.png" alt="黃金投資" style="width:100%; height:auto; display:block;">
       <div class="section">
         <div class="section-title">
           <span>熱銷商品</span>
@@ -1989,23 +2330,18 @@
           </div>
         </div>
       </div>
-      <div class="section" style="padding-top:0;">
-        <div class="section-title">
-          <span>回收服務</span>
-        </div>
-        <div class="recycle-card" onclick="goTo('recycle')" style="cursor:pointer;">
-          <div class="recycle-card-body">
-            <div class="recycle-card-title">黃金回收</div>
-            <div class="recycle-card-price">今日回收價 HK$2,380/g</div>
-            <div class="recycle-card-desc">預約到店 · 門店交割 · 當場打款</div>
-          </div>
-          <div class="recycle-card-arrow">&#10095;</div>
-        </div>
-      </div>
     </div>
 
     <!-- ==================== SCREEN: PRODUCT DETAIL ==================== -->
-    <div class="screen" id="screen-product" style="display:flex; flex-direction:column;">
+    <div class="screen with-ticker" id="screen-product" style="display:flex; flex-direction:column;">
+      <div class="price-ticker">
+        <div class="price-ticker-track">
+          <span class="price-ticker-item">零售参考：<span class="value">HKD 2,456/克</span></span>
+          <span class="price-ticker-item">回收参考：<span class="value">HKD 2,380/克</span></span>
+          <span class="price-ticker-item">零售参考：<span class="value">HKD 2,456/克</span></span>
+          <span class="price-ticker-item">回收参考：<span class="value">HKD 2,380/克</span></span>
+        </div>
+      </div>
       <div class="page-header" style="flex-shrink:0;">
         <button class="icon-btn" onclick="toggleMenu()">
           <svg viewBox="0 0 1024 1024" width="22" height="22"><path d="M867.995 459.647h-711.99c-27.921 0-52.353 24.434-52.353 52.353s24.434 52.353 52.353 52.353h711.99c27.921 0 52.353-24.434 52.353-52.353s-24.434-52.353-52.353-52.353z"/><path d="M867.995 763.291h-711.99c-27.921 0-52.353 24.434-52.353 52.353s24.434 52.353 52.353 52.353h711.99c27.921 0 52.353-24.434 52.353-52.353s-24.434-52.353-52.353-52.353z"/><path d="M156.005 260.709h711.99c27.921 0 52.353-24.434 52.353-52.353s-24.434-52.353-52.353-52.353h-711.99c-27.921 0-52.353 24.434-52.353 52.353s24.434 52.353 52.353 52.353z"/></svg>
@@ -2033,16 +2369,12 @@
           <div class="product-info-price" id="product-price">HK$122,800</div>
           <div class="product-info-estimate">以上價格為估算價，以實際成交價為準</div>
 
-          <div class="spec-group">
-            <div class="spec-label">規格</div>
+          <div class="spec-group" style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+            <div class="spec-label" style="margin-bottom:0;">規格</div>
             <div class="spec-options" id="spec-options">
               <div class="spec-option active" onclick="selectSpec(this, '50克')">50克</div>
             </div>
-          </div>
-
-          <div class="qty-row">
-            <span class="spec-label">數量</span>
-            <div class="qty-control">
+            <div class="qty-control" style="margin-left:auto;">
               <button class="qty-btn" onclick="changeQty(-1)">&#8722;</button>
               <div class="qty-value" id="qty-value">1</div>
               <button class="qty-btn" onclick="changeQty(1)">+</button>
@@ -2101,7 +2433,7 @@
 
         <div style="display:flex; justify-content:space-between; align-items:center; padding:16px 0; border-top:1px solid var(--border); margin-top:16px;">
           <span style="font-size:14px; color:var(--text-secondary);">總額</span>
-          <span style="font-family:'Noto Serif SC',serif; font-size:20px; font-weight:600; color:var(--gold);" id="confirm-total">--</span>
+          <span style="font-family:'Noto Serif TC',serif; font-size:20px; font-weight:600; color:var(--gold);" id="confirm-total">--</span>
         </div>
       </div>
       <div class="bottom-bar">
@@ -2154,11 +2486,11 @@
         <div style="margin-top:24px;">
           <div style="font-size:16px; font-weight:600; margin-bottom:16px;">取貨人資料</div>
           <div class="input-row" style="gap:10px; margin-bottom:12px;">
-            <select class="form-input" id="pickup-title" style="width:100px; flex:none;">
-              <option>先生</option>
+            <select class="form-input" id="pickup-title" style="width:100px; flex:none; opacity:0.7;" disabled>
+              <option selected>先生</option>
               <option>女士</option>
             </select>
-            <input type="text" id="pickup-name" class="form-input" placeholder="請輸入姓名" style="flex:1;">
+            <input type="text" id="pickup-name" class="form-input" value="陳先生" readonly style="flex:1; opacity:0.7;">
           </div>
           <div class="input-row" style="gap:10px; margin-bottom:12px;">
             <select class="form-input" id="pickup-code" style="width:100px; flex:none;">
@@ -2166,9 +2498,6 @@
               <option>+86</option>
             </select>
             <input type="tel" id="pickup-phone" class="form-input" placeholder="請輸入手機號碼" style="flex:1;">
-          </div>
-          <div style="font-size:12px; color:var(--text-muted); line-height:1.6;">
-            * 取貨人須出示附有效的身份證明文件正本，而輸入的取貨人姓名資料必須與身份證明文件相符，以核實身份。
           </div>
         </div>
       </div>
@@ -2251,6 +2580,9 @@
         <div class="form-group">
           <label class="form-label" style="font-size:14px; color:var(--text-secondary);">姓名 <span style="color:var(--gold);">*</span></label>
           <input type="text" class="form-input" id="reg-name" placeholder="請輸入姓名" style="border-radius:12px;">
+          <div style="font-size:12px; color:var(--text-muted); margin-top:6px; line-height:1.5;">
+            姓名資料必須與身份證明文件相符，以核實身份
+          </div>
         </div>
 
         <!-- Phone -->
@@ -2347,7 +2679,7 @@
           <div style="border-top:1px solid var(--border); margin:12px 0;"></div>
           <div style="display:flex; justify-content:space-between; align-items:center;">
             <span style="font-size:14px; color:var(--text-secondary);">總計</span>
-            <span style="font-family:'Noto Serif SC',serif; font-size:22px; font-weight:600; color:var(--gold);" id="checkout-low-total">HK$122,800</span>
+            <span style="font-family:'Noto Serif TC',serif; font-size:22px; font-weight:600; color:var(--gold);" id="checkout-low-total">HK$122,800</span>
           </div>
           <div class="order-summary-row" style="margin-top:8px;">
             <span class="label" style="font-size:12px;">預估關稅、稅項及費用</span>
@@ -2372,6 +2704,9 @@
         <div class="form-group">
           <label class="form-label">姓名</label>
           <input type="text" class="form-input" id="kyc-name" placeholder="請輸入姓名">
+          <div style="font-size:12px; color:var(--text-muted); margin-top:6px; line-height:1.5;">
+            姓名資料必須與身份證明文件相符，以核實身份
+          </div>
         </div>
         <div class="form-group">
           <label class="form-label">電話</label>
@@ -2437,7 +2772,7 @@
           <div style="border-top:1px solid var(--border); margin:12px 0;"></div>
           <div style="display:flex; justify-content:space-between; align-items:center;">
             <span style="font-size:14px; color:var(--text-secondary);">總計</span>
-            <span style="font-family:'Noto Serif SC',serif; font-size:22px; font-weight:600; color:var(--gold);" id="checkout-high-total">HK$245,600</span>
+            <span style="font-family:'Noto Serif TC',serif; font-size:22px; font-weight:600; color:var(--gold);" id="checkout-high-total">HK$245,600</span>
           </div>
           <div class="order-summary-row" style="margin-top:8px;">
             <span class="label" style="font-size:12px;">預估關稅、稅項及費用</span>
@@ -2463,7 +2798,7 @@
           <div style="font-weight:600; margin-bottom:12px; font-size:15px;">付款資料</div>
           <div class="order-summary-row">
             <span class="label">訂單號</span>
-            <span style="font-family:'Inter','PingFang SC','Noto Sans SC',sans-serif; font-size:12px; letter-spacing:0.5px;">PT-20260612-001</span>
+            <span style="font-family:'Inter','PingFang TC','Noto Sans TC',sans-serif; font-size:12px; letter-spacing:0.5px;">PT-20260612-001</span>
           </div>
           <div class="order-summary-row">
             <span class="label">商品</span>
@@ -2476,24 +2811,19 @@
         </div>
 
         <div style="font-size:14px; font-weight:600; margin-bottom:12px;">選擇支付方式</div>
-        <div class="info-card" style="cursor:pointer; border-color:var(--gold);" onclick="selectPayment(this)">
-          <div class="checkbox-row">
-            <div class="checkbox checked">&#10003;</div>
-            <div style="flex:1;">
-              <div style="font-weight:600; font-size:14px;">信用卡支付</div>
-              <div style="font-size:12px; color:var(--text-muted); margin-top:2px;">**** 8888</div>
-            </div>
-            <span style="font-size:20px;">&#128179;</span>
-          </div>
+        <div class="info-card payment-option selected" style="cursor:pointer;" onclick="selectPayment(this)">
+          <div style="font-weight:600; font-size:14px;">信用卡支付</div>
+          <div style="font-size:12px; color:var(--text-muted); margin-top:2px;">**** 8888</div>
         </div>
-        <div class="info-card" style="cursor:pointer;" onclick="selectPayment(this)">
-          <div class="checkbox-row">
-            <div class="checkbox"></div>
-            <div style="flex:1;">
-              <div style="font-weight:600; font-size:14px;">銀行轉賬</div>
-              <div style="font-size:12px; color:var(--text-muted); margin-top:2px;">轉賬後上傳憑證</div>
-            </div>
-            <span style="font-size:20px;">&#127974;</span>
+        <div class="info-card payment-option" style="cursor:pointer;" onclick="selectPayment(this)">
+          <div style="font-weight:600; font-size:14px;">銀行轉賬</div>
+          <div style="font-size:12px; color:var(--text-muted); margin-top:2px;">轉賬後上傳憑證</div>
+        </div>
+
+        <div class="agreement-row" id="payment-agreement-row" onclick="togglePaymentAgreement()">
+          <div class="checkbox" id="payment-agreement-chk"></div>
+          <div class="agreement-text">
+            閣下確認已閱讀並同意 Passto Bullion 之<span class="agreement-link" onclick="event.stopPropagation(); openAgreementSheet();">黃金購買協議</span>。
           </div>
         </div>
 
@@ -2522,7 +2852,7 @@
         <div class="order-summary" style="margin-top:20px;">
           <div class="order-summary-row">
             <span class="label">訂單號</span>
-            <span style="font-family:'Inter','PingFang SC','Noto Sans SC',sans-serif; font-size:12px; letter-spacing:0.5px;">PT-20260612-001</span>
+            <span style="font-family:'Inter','PingFang TC','Noto Sans TC',sans-serif; font-size:12px; letter-spacing:0.5px;">PT-20260612-001</span>
           </div>
           <div class="order-summary-row">
             <span class="label">商品</span>
@@ -2542,38 +2872,42 @@
     </div>
 
     <!-- ==================== SCREEN: RECYCLE (参考 hkkc) ==================== -->
-    <div class="screen" id="screen-recycle">
+    <div class="screen with-ticker" id="screen-recycle">
+      <div class="price-ticker">
+        <div class="price-ticker-track">
+          <span class="price-ticker-item">零售参考：<span class="value">HKD 2,456/克</span></span>
+          <span class="price-ticker-item">回收参考：<span class="value">HKD 2,380/克</span></span>
+          <span class="price-ticker-item">零售参考：<span class="value">HKD 2,456/克</span></span>
+          <span class="price-ticker-item">回收参考：<span class="value">HKD 2,380/克</span></span>
+        </div>
+      </div>
       <div class="page-header">
         <button class="icon-btn" onclick="toggleMenu()"><svg viewBox="0 0 1024 1024" width="22" height="22"><path d="M867.995 459.647h-711.99c-27.921 0-52.353 24.434-52.353 52.353s24.434 52.353 52.353 52.353h711.99c27.921 0 52.353-24.434 52.353-52.353s-24.434-52.353-52.353-52.353z"/><path d="M867.995 763.291h-711.99c-27.921 0-52.353 24.434-52.353 52.353s24.434 52.353 52.353 52.353h711.99c27.921 0 52.353-24.434 52.353-52.353s-24.434-52.353-52.353-52.353z"/><path d="M156.005 260.709h711.99c27.921 0 52.353-24.434 52.353-52.353s-24.434-52.353-52.353-52.353h-711.99c-27.921 0-52.353 24.434-52.353 52.353s24.434 52.353 52.353 52.353z"/></svg></button>
         <h1>黃金回收</h1>
         <div style="width:36px;"></div>
       </div>
       <div class="section">
-        <div class="gold-banner" style="border-radius:0 0 16px 16px; margin-top:-24px; margin-bottom:24px;">
-          <div class="gold-banner-label">今日回收價</div>
-          <div class="gold-price-main shimmer">HK$ 2,380<span class="unit">/g</span></div>
-          <div class="gold-banner-time">純度 ≥99.9% · 實時報價</div>
-        </div>
+        <img src="https://i.postimg.cc/c132NRVs/image.png" alt="今日回收價" style="width:100vw; margin-left:calc(50% - 50vw); height:auto; border-radius:0; display:block; margin-bottom:0;">
 
-        <div style="font-size:14px; font-weight:600; margin-bottom:16px;">回收流程</div>
+        <div style="font-size:14px; font-weight:600; margin-top:24px; margin-bottom:16px;">回收流程</div>
         <div class="info-card" style="border:none;">
           <div style="display:flex; gap:16px; align-items:center;">
             <div style="text-align:center; flex:1;">
-              <div style="font-size:14px; font-weight:600; color:var(--gold); margin-bottom:4px; white-space:nowrap;">預約到店</div>
+              <div class="recycle-step-text" style="font-size:14px; font-weight:600; color:var(--gold); margin-bottom:4px; line-height:1.3;">預約到店</div>
               <div style="font-size:11px; color:var(--text-muted);">Step 1</div>
             </div>
             <div style="flex:1; padding-top:0;">
               <div style="height:2px; background:var(--surface-3); border-radius:1px;"></div>
             </div>
             <div style="text-align:center; flex:1;">
-              <div style="font-size:14px; font-weight:500; color:var(--text-secondary); margin-bottom:4px;">到店核驗</div>
+              <div class="recycle-step-text" style="font-size:14px; font-weight:500; color:var(--text-secondary); margin-bottom:4px; line-height:1.3;">到店核驗</div>
               <div style="font-size:11px; color:var(--text-muted);">Step 2</div>
             </div>
             <div style="flex:1; padding-top:0;">
               <div style="height:2px; background:var(--surface-3); border-radius:1px;"></div>
             </div>
             <div style="text-align:center; flex:1;">
-              <div style="font-size:14px; font-weight:500; color:var(--text-secondary); margin-bottom:4px;">當場打款</div>
+              <div class="recycle-step-text" style="font-size:14px; font-weight:500; color:var(--text-secondary); margin-bottom:4px; line-height:1.3;">當場打款</div>
               <div style="font-size:11px; color:var(--text-muted);">Step 3</div>
             </div>
           </div>
@@ -2593,7 +2927,7 @@
           <div class="info-card-text">全程透明操作：火槍檢測、光譜儀驗純、當面稱重、當場確認價格、先收款後交貨。</div>
         </div>
 
-        <div class="bottom-bar">
+        <div style="margin-top:24px;">
           <button class="btn btn-primary btn-full" onclick="goToRecycleAppointment()">預約到店回收</button>
         </div>
       </div>
@@ -2606,10 +2940,13 @@
         <h1>回收預約</h1>
         <div style="width:36px;"></div>
       </div>
-      <div class="section" style="padding-bottom:100px;">
+      <div class="section">
         <div style="margin-bottom:20px;">
           <div style="font-size:14px; font-weight:600; margin-bottom:8px;">客戶姓名</div>
           <input class="form-input" id="recycle-name" placeholder="請輸入真實姓名" type="text">
+          <div style="font-size:12px; color:var(--text-muted); margin-top:6px; line-height:1.5;">
+            姓名資料必須與身份證明文件相符，以核實身份
+          </div>
         </div>
         <div style="margin-bottom:20px;">
           <div style="font-size:14px; font-weight:600; margin-bottom:8px;">手機號碼</div>
@@ -2659,9 +2996,9 @@
             <option>16:00 - 18:00</option>
           </select>
         </div>
-      </div>
-      <div class="bottom-bar">
-        <button class="btn btn-primary btn-full" onclick="submitRecycleAppointment()">提交預約</button>
+        <div style="margin-top:24px;">
+          <button class="btn btn-primary btn-full" onclick="submitRecycleAppointment()">提交預約</button>
+        </div>
       </div>
     </div>
 
@@ -2818,7 +3155,7 @@
     <div class="screen" id="screen-converter">
       <div class="page-header">
         <button class="icon-btn" onclick="toggleMenu()"><svg viewBox="0 0 1024 1024" width="22" height="22"><path d="M867.995 459.647h-711.99c-27.921 0-52.353 24.434-52.353 52.353s24.434 52.353 52.353 52.353h711.99c27.921 0 52.353-24.434 52.353-52.353s-24.434-52.353-52.353-52.353z"/><path d="M867.995 763.291h-711.99c-27.921 0-52.353 24.434-52.353 52.353s24.434 52.353 52.353 52.353h711.99c27.921 0 52.353-24.434 52.353-52.353s-24.434-52.353-52.353-52.353z"/><path d="M156.005 260.709h711.99c27.921 0 52.353-24.434 52.353-52.353s-24.434-52.353-52.353-52.353h-711.99c-27.921 0-52.353 24.434-52.353 52.353s24.434 52.353 52.353 52.353z"/></svg></button>
-        <h1>黃金重量換算</h1>
+        <h1>重量換算</h1>
         <div style="width:36px;"></div>
       </div>
       <div class="section" style="padding-top:24px;">
@@ -2879,8 +3216,8 @@
       <div class="section trust-section" style="padding-top:24px;">
         <div style="text-align:center; margin-bottom:32px;">
           <img src="https://upload.wikimedia.org/wikipedia/zh/thumb/8/82/Customs_and_Excise_Department_%28Hong_Kong%29.svg/1280px-Customs_and_Excise_Department_%28Hong_Kong%29.svg.png" alt="香港海關" style="width:100px; height:100px; object-fit:contain; margin-bottom:20px;">
-          <div style="font-family:'Noto Serif SC',serif; font-size:24px; font-weight:700; color:var(--gold); margin-bottom:8px;">- 信賴證明 -</div>
-          <div style="font-family:'Noto Serif SC',serif; font-size:22px; font-weight:600; color:var(--gold); margin-bottom:24px;">香港海關認可</div>
+          <div style="font-family:'Noto Serif TC',serif; font-size:24px; font-weight:700; color:var(--gold); margin-bottom:8px;">- 信賴證明 -</div>
+          <div style="font-family:'Noto Serif TC',serif; font-size:22px; font-weight:600; color:var(--gold); margin-bottom:24px;">香港海關認可</div>
         </div>
         <div class="info-card" style="border:none; background:transparent; text-align:center; padding:0;">
           <div style="font-size:15px; color:var(--text-secondary); line-height:2; margin-bottom:24px;">
@@ -2982,9 +3319,22 @@
   </div>
 
   <!-- 全局右側 WhatsApp 懸浮氣泡 -->
-  <a class="whatsapp-fab" id="whatsapp-fab" href="https://wa.me/85212345678" target="_blank" aria-label="WhatsApp 即時諮詢">
-    <svg viewBox="0 0 1024 1024" width="26" height="26"><path d="M511.872427 0h0.256C794.45376 0 1024.000427 229.674667 1024.000427 512s-229.589333 512-511.872 512c-104.106667 0-200.704-31.018667-281.6-84.565333L33.707093 1002.325333l63.786667-190.250666A508.245333 508.245333 0 0 1 0.000427 512C0.000427 229.674667 229.58976 0 511.872427 0zM365.39776 281.429333c-9.770667-23.338667-17.194667-24.234667-32-24.832A285.525333 285.525333 0 0 0 316.50176 256c-19.285333 0-39.424 5.632-51.626667 18.048C250.155093 289.109333 213.33376 324.266667 213.33376 396.501333c0 72.149333 52.778667 141.952 59.861333 151.722667 7.424 9.728 102.912 160 251.093334 221.226667 115.925333 47.914667 150.314667 43.477333 176.725333 37.845333 38.528-8.277333 86.826667-36.693333 98.986667-70.954667 12.16-34.346667 12.16-63.616 8.618666-69.845333-3.584-6.186667-13.354667-9.728-28.16-17.152-14.848-7.381333-86.869333-42.88-100.522666-47.616-13.354667-4.992-26.069333-3.242667-36.138667 10.965333-14.250667 19.797333-28.16 39.936-39.466667 52.053334-8.874667 9.472-23.424 10.666667-35.541333 5.632-16.298667-6.826667-61.952-22.784-118.314667-72.789334-43.562667-38.741333-73.216-86.954667-81.792-101.418666-8.618667-14.805333-0.896-23.381333 5.930667-31.36 7.381333-9.173333 14.506667-15.658667 21.930667-24.234667 7.424-8.576 11.52-13.013333 16.298666-23.082667 5.034667-9.770667 1.493333-19.84-2.090666-27.221333-3.541333-7.381333-33.194667-79.573333-45.354667-108.8z" fill="#000"/></svg>
-  </a>
+  <div class="fab-wrapper">
+    <div class="fab-bubble" id="fab-bubble">
+      <button class="fab-bubble-close" onclick="toggleFabBubble(false)">&#10005;</button>
+      <a class="fab-bubble-option" href="https://wa.me/85212345678" target="_blank" onclick="toggleFabBubble(false)">
+        <svg viewBox="0 0 1024 1024" width="18" height="18" style="fill:currentColor;flex-shrink:0;"><path d="M511.872427 0h0.256C794.45376 0 1024.000427 229.674667 1024.000427 512s-229.589333 512-511.872 512c-104.106667 0-200.704-31.018667-281.6-84.565333L33.707093 1002.325333l63.786667-190.250666A508.245333 508.245333 0 0 1 0.000427 512C0.000427 229.674667 229.58976 0 511.872427 0zM365.39776 281.429333c-9.770667-23.338667-17.194667-24.234667-32-24.832A285.525333 285.525333 0 0 0 316.50176 256c-19.285333 0-39.424 5.632-51.626667 18.048C250.155093 289.109333 213.33376 324.266667 213.33376 396.501333c0 72.149333 52.778667 141.952 59.861333 151.722667 7.424 9.728 102.912 160 251.093334 221.226667 115.925333 47.914667 150.314667 43.477333 176.725333 37.845333 38.528-8.277333 86.826667-36.693333 98.986667-70.954667 12.16-34.346667 12.16-63.616 8.618666-69.845333-3.584-6.186667-13.354667-9.728-28.16-17.152-14.848-7.381333-86.869333-42.88-100.522666-47.616-13.354667-4.992-26.069333-3.242667-36.138667 10.965333-14.250667 19.797333-28.16 39.936-39.466667 52.053334-8.874667 9.472-23.424 10.666667-35.541333 5.632-16.298667-6.826667-61.952-22.784-118.314667-72.789334-43.562667-38.741333-73.216-86.954667-81.792-101.418666-8.618667-14.805333-0.896-23.381333 5.930667-31.36 7.381333-9.173333 14.506667-15.658667 21.930667-24.234667 7.424-8.576 11.52-13.013333 16.298666-23.082667 5.034667-9.770667 1.493333-19.84-2.090666-27.221333-3.541333-7.381333-33.194667-79.573333-45.354667-108.8z"/></svg>
+        <span>WhatsApp 联系</span>
+      </a>
+      <a class="fab-bubble-option" href="tel:+85212345678" onclick="toggleFabBubble(false)">
+        <span style="font-size:18px;">&#9742;</span>
+        <span>电话联系</span>
+      </a>
+    </div>
+    <button class="whatsapp-fab" id="whatsapp-fab" onclick="toggleFabBubble()" aria-label="联系客服">
+      <svg viewBox="0 0 1024 1024" width="26" height="26" style="fill:currentColor;"><path d="M511.872427 0h0.256C794.45376 0 1024.000427 229.674667 1024.000427 512s-229.589333 512-511.872 512c-104.106667 0-200.704-31.018667-281.6-84.565333L33.707093 1002.325333l63.786667-190.250666A508.245333 508.245333 0 0 1 0.000427 512C0.000427 229.674667 229.58976 0 511.872427 0zM365.39776 281.429333c-9.770667-23.338667-17.194667-24.234667-32-24.832A285.525333 285.525333 0 0 0 316.50176 256c-19.285333 0-39.424 5.632-51.626667 18.048C250.155093 289.109333 213.33376 324.266667 213.33376 396.501333c0 72.149333 52.778667 141.952 59.861333 151.722667 7.424 9.728 102.912 160 251.093334 221.226667 115.925333 47.914667 150.314667 43.477333 176.725333 37.845333 38.528-8.277333 86.826667-36.693333 98.986667-70.954667 12.16-34.346667 12.16-63.616 8.618666-69.845333-3.584-6.186667-13.354667-9.728-28.16-17.152-14.848-7.381333-86.869333-42.88-100.522666-47.616-13.354667-4.992-26.069333-3.242667-36.138667 10.965333-14.250667 19.797333-28.16 39.936-39.466667 52.053334-8.874667 9.472-23.424 10.666667-35.541333 5.632-16.298667-6.826667-61.952-22.784-118.314667-72.789334-43.562667-38.741333-73.216-86.954667-81.792-101.418666-8.618667-14.805333-0.896-23.381333 5.930667-31.36 7.381333-9.173333 14.506667-15.658667 21.930667-24.234667 7.424-8.576 11.52-13.013333 16.298666-23.082667 5.034667-9.770667 1.493333-19.84-2.090666-27.221333-3.541333-7.381333-33.194667-79.573333-45.354667-108.8z"/></svg>
+    </button>
+  </div>
 
   <script>
     // ==================== STATE ====================
@@ -3092,6 +3442,21 @@
       if (show) overlay.classList.add('active');
       else overlay.classList.remove('active');
     }
+    function toggleNavPopup(show) {
+      const overlay = document.getElementById('nav-popup-overlay');
+      if (!overlay) return;
+      if (show) overlay.classList.add('active');
+      else overlay.classList.remove('active');
+    }
+    function toggleFabBubble(force) {
+      const bubble = document.getElementById('fab-bubble');
+      if (!bubble) return;
+      if (typeof force === 'boolean') {
+        bubble.classList.toggle('active', force);
+      } else {
+        bubble.classList.toggle('active');
+      }
+    }
     function closeMenu(e) {
       if (e.target === e.currentTarget) toggleMenu();
     }
@@ -3143,10 +3508,20 @@
       if (screenId === 'product') {
         updateProductButtons();
       }
+      if (screenId === 'pickup-method') {
+        fillPickupUserName();
+      }
       if (data) {
         state.currentProduct = data;
         updateProductDetail();
       }
+    }
+
+    function fillPickupUserName() {
+      const nameInput = document.getElementById('pickup-name');
+      if (!nameInput) return;
+      const userName = state.user && state.user.name && state.user.name !== '用戶' ? state.user.name : '陳先生';
+      nameInput.value = userName;
     }
 
     function goBack() {
@@ -3364,7 +3739,7 @@
               <div style="flex:1;">
                 <div style="font-weight:600; font-size:14px;">${item.name}</div>
                 <div style="font-size:12px; color:var(--text-muted); margin-top:2px;">${item.spec} · x${item.qty}</div>
-                <div style="color:var(--gold); font-family:'Noto Serif SC',serif; font-weight:600; margin-top:4px;">HK$${lineTotal.toLocaleString()}</div>
+                <div style="color:var(--gold); font-family:'Noto Serif TC',serif; font-weight:600; margin-top:4px;">HK$${lineTotal.toLocaleString()}</div>
                 ${serviceLabels.length ? `<div class="cart-item-service-labels">${serviceLabels.map(l => `<span class="cart-item-service-label">${l}</span>`).join('')}</div>` : ''}
               </div>
               <button class="icon-btn" onclick="removeFromCart(${i})" style="background:transparent; border:none; color:var(--error);">&#10005;</button>
@@ -3952,17 +4327,55 @@
 
     // ==================== PAYMENT ====================
     function selectPayment(card) {
-      document.querySelectorAll('.info-card').forEach(c => {
+      document.querySelectorAll('#screen-payment .payment-option').forEach(c => {
+        c.classList.remove('selected');
         c.style.borderColor = 'var(--border)';
-        c.querySelector('.checkbox').classList.remove('checked');
-        c.querySelector('.checkbox').textContent = '';
       });
+      card.classList.add('selected');
       card.style.borderColor = 'var(--gold)';
-      card.querySelector('.checkbox').classList.add('checked');
-      card.querySelector('.checkbox').textContent = '\u2713';
+    }
+
+    function togglePaymentAgreement() {
+      const chk = document.getElementById('payment-agreement-chk');
+      if (!chk) return;
+      chk.classList.toggle('checked');
+      chk.textContent = chk.classList.contains('checked') ? '\u2713' : '';
+    }
+
+    function openAgreementSheet() {
+      const overlay = document.getElementById('agreement-sheet-overlay');
+      if (overlay) overlay.classList.add('active');
+    }
+
+    function closeAgreementSheet() {
+      const overlay = document.getElementById('agreement-sheet-overlay');
+      if (overlay) overlay.classList.remove('active');
+    }
+
+    function agreeAndCloseSheet() {
+      const chk = document.getElementById('payment-agreement-chk');
+      if (chk) {
+        chk.classList.add('checked');
+        chk.textContent = '\u2713';
+      }
+      closeAgreementSheet();
+    }
+
+    function shakeAgreementRow() {
+      const row = document.getElementById('payment-agreement-row');
+      if (!row) return;
+      row.classList.remove('shake');
+      void row.offsetWidth;
+      row.classList.add('shake');
+      setTimeout(() => row.classList.remove('shake'), 400);
     }
 
     function doPayment() {
+      const chk = document.getElementById('payment-agreement-chk');
+      if (!chk || !chk.classList.contains('checked')) {
+        shakeAgreementRow();
+        return;
+      }
       const summary = getCheckoutSummary();
       document.getElementById('success-product').innerHTML = summary.text;
       document.getElementById('success-total').textContent = 'HK$' + summary.total.toLocaleString();
@@ -4060,12 +4473,29 @@
       if (state.checkoutCart && state.checkoutCart.length > 0) {
         const merged = mergeCheckoutCartForDisplay();
         const total = getCheckoutSummary().total;
-        summaryContent.innerHTML = merged.map(item => `<div>${item.name} x ${item.qty}</div>`).join('') +
+        summaryContent.innerHTML = merged.map(item => `
+          <div style="display:flex; gap:12px; align-items:center; margin-bottom:10px;">
+            <img src="${item.img || ''}" alt="" style="width:60px; height:60px; object-fit:cover; border-radius:8px; background:var(--surface-2); flex-shrink:0;">
+            <div style="flex:1;">
+              <div style="font-weight:600; font-size:14px;">${item.name}</div>
+              <div style="font-size:12px; color:var(--text-muted);">${item.spec || ''}</div>
+              <div style="font-size:13px; color:var(--text-secondary);">x${item.qty}</div>
+            </div>
+          </div>`).join('') +
           `<div style="margin-top:8px; color:var(--gold); font-weight:600;">總額 HK$${total.toLocaleString()}</div>`;
         summaryCard.style.display = 'block';
       } else if (state.currentProduct) {
-        summaryContent.innerHTML = `<div>${state.currentProduct.name} x ${state.qty}</div>` +
-          `<div style="margin-top:8px; color:var(--gold); font-weight:600;">總額 HK$${(parseInt(state.currentProduct.price.replace(/,/g, '')) * state.qty).toLocaleString()}</div>`;
+        const p = state.currentProduct;
+        summaryContent.innerHTML = `
+          <div style="display:flex; gap:12px; align-items:center; margin-bottom:10px;">
+            <img src="${p.img || ''}" alt="" style="width:60px; height:60px; object-fit:cover; border-radius:8px; background:var(--surface-2); flex-shrink:0;">
+            <div style="flex:1;">
+              <div style="font-weight:600; font-size:14px;">${p.name}</div>
+              <div style="font-size:12px; color:var(--text-muted);">${state.selectedSpec || p.specs[0]}</div>
+              <div style="font-size:13px; color:var(--text-secondary);">x${state.qty}</div>
+            </div>
+          </div>` +
+          `<div style="margin-top:8px; color:var(--gold); font-weight:600;">總額 HK$${(parseInt(p.price.replace(/,/g, '')) * state.qty).toLocaleString()}</div>`;
         summaryCard.style.display = 'block';
       } else {
         summaryCard.style.display = 'none';
@@ -4116,7 +4546,7 @@
                 <div style="font-weight:600; font-size:15px;">${item.name}</div>
                 <div style="font-size:12px; color:var(--text-muted); margin-top:2px;">${item.spec || ''}</div>
                 ${serviceLabels.length ? `<div class="cart-item-service-labels" style="margin-top:4px;">${serviceLabels.map(l => `<span class="cart-item-service-label">${l}</span>`).join('')}</div>` : ''}
-                <div style="color:var(--gold); font-family:'Noto Serif SC',serif; font-weight:600; margin-top:6px;">HK$${item.price}/件</div>
+                <div style="color:var(--gold); font-family:'Noto Serif TC',serif; font-weight:600; margin-top:6px;">HK$${item.price}/件</div>
               </div>
               <div style="font-size:14px; color:var(--text-secondary);">x${item.qty}</div>
             </div>`;
@@ -4133,7 +4563,7 @@
             <div style="flex:1;">
               <div style="font-weight:600; font-size:15px;">${p.name}</div>
               <div style="font-size:12px; color:var(--text-muted); margin-top:2px;">${state.selectedSpec || p.specs[0]}</div>
-              <div style="color:var(--gold); font-family:'Noto Serif SC',serif; font-weight:600; margin-top:6px;">HK$${p.price}/件</div>
+              <div style="color:var(--gold); font-family:'Noto Serif TC',serif; font-weight:600; margin-top:6px;">HK$${p.price}/件</div>
             </div>
             <div style="font-size:14px; color:var(--text-secondary);">x${state.qty}</div>
           </div>`;
@@ -4144,8 +4574,8 @@
     }
     // Mock data for records
     const mockAppointments = [
-      { type: 'pickup', title: '門店提金', product: '傳世金條 50克', date: '2026-06-15 14:00', store: '中港城門店', status: '已確認' },
-      { type: 'pickup', title: '門店提金', product: '傳世金條 100克', date: '2026-06-18 10:30', store: '中港城門店', status: '待到店' },
+      { type: 'pickup', title: '門店提金', product: '傳世金條 50克', date: '2026-06-15 14:00', store: '中港城門店', status: '已確認', qrCode: 'PK8A2B4C1D' },
+      { type: 'pickup', title: '門店提金', product: '傳世金條 100克', date: '2026-06-18 10:30', store: '中港城門店', status: '待到店', qrCode: 'PK9E7F3G2H' },
       { type: 'recycle', title: '黃金回收', product: '舊金飾 20克', date: '2026-06-10 11:00', store: '中港城門店', status: '已完成' }
     ];
     const mockTransactions = [
@@ -4175,6 +4605,10 @@
           </div>
           <div style="font-size:13px; color:var(--text-secondary); margin-bottom:4px;">${item.product}</div>
           <div style="font-size:12px; color:var(--text-muted);">${item.date} · ${item.store}</div>
+          ${item.qrCode ? `<div style="display:flex; justify-content:space-between; align-items:center; margin-top:10px; padding-top:10px; border-top:1px solid var(--border);">
+            <div style="font-size:13px; color:var(--text);">提貨碼：${item.qrCode}</div>
+            <svg viewBox="0 0 180 180" width="22" height="22" style="cursor:pointer;" onclick="showQRZoom('${item.qrCode}')"><rect x="0" y="0" width="180" height="180" fill="var(--gold)"/><rect x="10" y="10" width="50" height="50" fill="black"/><rect x="20" y="20" width="30" height="30" fill="white"/><rect x="25" y="25" width="20" height="20" fill="black"/><rect x="120" y="10" width="50" height="50" fill="black"/><rect x="130" y="20" width="30" height="30" fill="white"/><rect x="135" y="25" width="20" height="20" fill="black"/><rect x="10" y="120" width="50" height="50" fill="black"/><rect x="20" y="130" width="30" height="30" fill="white"/><rect x="25" y="135" width="20" height="20" fill="black"/><rect x="70" y="10" width="10" height="10" fill="black"/><rect x="90" y="20" width="10" height="10" fill="black"/><rect x="70" y="40" width="10" height="10" fill="black"/><rect x="80" y="30" width="10" height="10" fill="black"/><rect x="100" y="40" width="10" height="10" fill="black"/><rect x="70" y="70" width="10" height="10" fill="black"/><rect x="90" y="80" width="10" height="10" fill="black"/><rect x="110" y="70" width="10" height="10" fill="black"/><rect x="70" y="100" width="10" height="10" fill="black"/><rect x="80" y="110" width="10" height="10" fill="black"/><rect x="100" y="100" width="10" height="10" fill="black"/><rect x="110" y="120" width="10" height="10" fill="black"/><rect x="130" y="70" width="10" height="10" fill="black"/><rect x="150" y="80" width="10" height="10" fill="black"/><rect x="140" y="100" width="10" height="10" fill="black"/><rect x="130" y="130" width="10" height="10" fill="black"/><rect x="150" y="140" width="10" height="10" fill="black"/><rect x="10" y="70" width="10" height="10" fill="black"/><rect x="30" y="80" width="10" height="10" fill="black"/><rect x="40" y="100" width="10" height="10" fill="black"/><rect x="10" y="100" width="10" height="10" fill="black"/><rect x="40" y="70" width="10" height="10" fill="black"/><rect x="70" y="130" width="10" height="10" fill="black"/><rect x="90" y="150" width="10" height="10" fill="black"/><rect x="100" y="140" width="10" height="10" fill="black"/><rect x="120" y="150" width="10" height="10" fill="black"/><rect x="140" y="160" width="10" height="10" fill="black"/><rect x="160" y="120" width="10" height="10" fill="black"/></svg>
+          </div>` : ''}
         </div>`;
       });
       container.innerHTML = html || '<div style="text-align:center; padding:40px; color:var(--text-muted);">暫無預約記錄</div>';
@@ -4219,8 +4653,84 @@
       }
     `;
     document.head.appendChild(style);
+
+    function initHeroBanner() {
+      const banner = document.getElementById('hero-banner');
+      const track = document.getElementById('hero-banner-track');
+      const segments = document.querySelectorAll('.banner-segment');
+      const slides = track.querySelectorAll('.hero-banner-slide');
+      if (!banner || !track || segments.length === 0) return;
+      let current = 0;
+      const total = slides.length || segments.length;
+      let startX = 0;
+      let startY = 0;
+      let isDragging = false;
+      let autoTimer = null;
+
+      function goTo(index) {
+        current = ((index % total) + total) % total;
+        track.style.transform = 'translateX(-' + (current * 100) + '%)';
+        segments.forEach((seg, i) => seg.classList.toggle('active', i === current));
+      }
+      window.goToHeroSlide = goTo;
+
+      function startAuto() {
+        if (autoTimer) clearInterval(autoTimer);
+        autoTimer = setInterval(function() {
+          goTo(current + 1);
+        }, 4000);
+      }
+
+      banner.addEventListener('touchstart', function(e) {
+        startX = e.touches[0].clientX;
+        startY = e.touches[0].clientY;
+        isDragging = true;
+        if (autoTimer) clearInterval(autoTimer);
+      }, { passive: true });
+
+      banner.addEventListener('touchmove', function(e) {
+        if (!isDragging) return;
+        const x = e.touches[0].clientX;
+        const y = e.touches[0].clientY;
+        const dx = startX - x;
+        const dy = startY - y;
+        if (Math.abs(dx) > Math.abs(dy)) {
+          e.preventDefault();
+        }
+      }, { passive: false });
+
+      banner.addEventListener('touchend', function(e) {
+        if (!isDragging) return;
+        isDragging = false;
+        const endX = e.changedTouches[0].clientX;
+        const diff = startX - endX;
+        if (Math.abs(diff) > 40) {
+          if (diff > 0) goTo(current + 1);
+          else goTo(current - 1);
+        }
+        startAuto();
+      });
+
+      startAuto();
+    }
+
+    function adjustRecycleStepFont() {
+      const texts = document.querySelectorAll('.recycle-step-text');
+      texts.forEach(el => {
+        let size = 14;
+        el.style.fontSize = size + 'px';
+        while (size > 8 && el.getClientRects().length > 1) {
+          size -= 2;
+          el.style.fontSize = size + 'px';
+        }
+      });
+    }
+    window.addEventListener('resize', adjustRecycleStepFont);
+
     loadProduct(products[0]);
     calcHomeRecycle();
+    initHeroBanner();
+    adjustRecycleStepFont();
   </script>
 </body>
 </html>
